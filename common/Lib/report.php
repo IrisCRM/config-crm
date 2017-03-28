@@ -1437,9 +1437,10 @@ function BuildReportGraph($p_data, $p_show_info, $p_reportid)
     $i = 0;
     if (count($groups) >= 1) {
         foreach ($p_data as $row) {
-            if (!$group_colors[ $row[ $groups[ count($groups) - 1 ]['FieldName'] ] ]) {
-                $group_colors[ $row[ $groups[ count($groups) - 1 ]['FieldName'] ] ] = $colors[ $i % count($colors) ];
-                $group_litecolors[ $row[ $groups[ count($groups) - 1 ]['FieldName'] ] ] = $litecolors[ $i % count($litecolors) ];
+            $field = $groups[count($groups) - 1]['FieldName'];
+            if (isset($row[$field]) && !empty($group_colors[$row[$field]])) {
+                $group_colors[$row[$field]] = $colors[$i % count($colors)];
+                $group_litecolors[$row[$field]] = $litecolors[$i % count($litecolors)];
                 $i++;
             }
         }
