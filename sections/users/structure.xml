@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Пользователи" table="iris_Contact" order_pos="17" image_name="users.bmp">
+      <GRID name="g_users" lines_count="1">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="ФИО" width="20%" row_type="common"/>
+            <ITEM db_field="ContactTypeID" caption="Тип" width="15%" row_type="fk_column" row_type_parent_table="iris_ContactType" row_type_parent_display_column="name"/>
+            <ITEM db_field="AccountID" caption="Контрагент" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="name"/>
+            <ITEM db_field="Login" caption="Логин" width="15%" row_type="common"/>
+            <ITEM db_field="AccessRoleID" caption="Роль доступа" width="15%" row_type="fk_column" row_type_parent_table="iris_AccessRole" row_type_parent_display_column="name" row_type_alias="URole"/>
+            <ITEM caption="Активен" db_field="isActive" width="10%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все пользователи" item_style="font-weight: bold;" where_clause="1=1"/>
+            <ITEM caption="Сотрудники" item_style="font-weight: bold;" where_clause="T0.ContactTypeID in (select ID from iris_ContactType where Code='Your')" default_selected="no"/>
+            <ITEM caption="Активные" item_style="font-weight: bold;" where_clause="T0.isActive='1'" default_selected="yes"/>
+            <ITEM caption="В сети" item_style="font-weight: bold;" where_clause="(now()-T0.last_presence &lt; '_iris_presence_timeout[] sec'::interval)"/>
+			<ITEM caption="Роль" item_style="font-weight: bold;" auto_table="iris_AccessRole" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.AccessRoleID='#VALUE#'" />
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" caption="Сотрудники" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Фамилия" width="20%" row_type="common"/>
+            <ITEM db_field="Name" caption="Имя" width="20%" row_type="common"/>
+            <ITEM db_field="Login" caption="Логин" width="15%" row_type="common"/>
+            <ITEM db_field="AccessRoleID" caption="Роль доступа" width="15%" row_type="fk_column" row_type_parent_table="iris_AccessRole" row_type_parent_display_column="name"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_users" caption="Пользователь системы" width="800" height="340" layout="1, 2, 2, 2, 2, 1, 2, 1, 2, 1, 1,   2, 2, 2, 2">
+         <TABS>
+            <TAB caption="Основная информация" rows="11"/>
+            <TAB caption="Уведомления" rows="4"/>
+         </TABS>
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="ФИО" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Логин" db_field="Login" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Псевдоним" db_field="PseudoName" mandatory="no" datatype="string" row_type="common" title="Используется для интеграции"/>
+
+            <FIELD elem_type="password" caption="Новый пароль" db_field="Password" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="select" caption="Роль доступа" db_field="AccessRoleID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_AccessRole" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Активен в системе" db_field="isActive" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary" title="Если да, то пользователь может войти в систему"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="spacer"/>
+			
+            <FIELD elem_type="splitter" caption="Для сотрудников"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Распределять новых клиентов" db_field="isClientDistribution" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="При самостоятельной регистрации пользователя в системе ему будет назначаться отвественный из тех пользователей, у корых установлен этот признак"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="splitter" caption="О контакте"/>
+            <FIELD elem_type="select" caption="Тип" db_field="ContactTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ContactType" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Компания" db_field="AccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="splitter" caption="Email"/>
+			<FIELD elem_type="lookup" caption="Шаблон по умолчанию" db_field="emailtemplateid" mandatory="no" filter_where="T0.emailtypeid in (select id from iris_emailtype where code='Template')" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Email" row_type_parent_display_column="subject" title="Шаблон email, на основе которого по умолчанию будут формироваться исходящие письма"/>
+
+			   
+			<!-- Уведомления -->
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Разрешить использовать информацию" db_field="ispersonalinfoagree" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Разрешить использовать указанную информацию только внутри компании"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по email" db_field="isnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления для не будут отправляться на email, указанный в карточке"/>
+			<FIELD elem_type="spacer"/>
+            <!--
+			<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по icq" db_field="isicqnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+			<FIELD elem_type="spacer"/>
+			-->
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по GTalk" db_field="isgtalknotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться по Jabber на указанный в карточке Google account"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по SMS" db_field="issmsnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться на мобильный телефон, указанный в карточке"/>
+			<FIELD elem_type="spacer"/>			   
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="События авторизации" name="d_Contact_Authevent" detail_fk_column="ContactID" detail_table="iris_authevent">
+            <GRID lines_count="1" sort_column="1" sort_direction="desc" hide_buttons="yes" display_search="yes">
+               <COLUMNS>
+                  <ITEM db_field="eventdate" caption="Дата" width="20%" row_type="common" row_datatype="datetime"/>
+                  <ITEM db_field="ip_address" caption="IP" width="20%" row_type="common"/>
+                  <ITEM db_field="autheventtypeid" caption="Событие" width="60%" row_type="fk_column" row_type_parent_table="iris_autheventtype" row_type_parent_display_column="Name"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Contact_Authevent" caption="Событие авторизации" width="600" height="210" layout="1, 2, 2, 2">
+               <ELEMENTS>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+
+         <DETAIL caption="Учетные записи" name="d_Contact_Login" detail_fk_column="ContactID" detail_table="iris_Contact_Login">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="LoginTypeID" caption="Тип" width="20%" row_type="fk_column" row_type_parent_table="iris_LoginType" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Login" caption="Логин" width="20%" row_type="common"/>
+                  <ITEM db_field="IsActive" caption="Активен" width="20%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                  <ITEM db_field="ExpireDate" caption="Действует до" width="20%" row_type="common" row_datatype="datetime"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Project_Contact" caption="Учетная запись" width="600" height="210" layout="1, 2, 2, 2">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+
+                  <FIELD elem_type="select" caption="Тип учетной записи" db_field="LoginTypeID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_LoginType" row_type_parent_display_column="Name" order_by="orderpos"/>
+				  <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Активен в системе" db_field="isActive" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary" title="Если да, то пользователь может войти в систему"/>
+                  <FIELD elem_type="text" caption="Действует до" db_field="ExpireDate" mandatory="no" datatype="datetime" row_type="date"/>
+				  <FIELD elem_type="spacer"/>
+				  
+                  <FIELD elem_type="text" caption="Логин" db_field="Login" mandatory="yes" datatype="string" row_type="common"/>
+                  <FIELD elem_type="text" caption="Пароль" db_field="Password" mandatory="yes" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>	  
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_FactInvoice">
+      <GRID lines_count="1" sort_column="1" sort_direction="desc" name="g_FactInvoice" display_search="no">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Накладная" width="25%" row_type="common"/>
+            <ITEM db_field="Number" caption="Номер" display_format="none" width="10%" row_type="common"/>
+            <ITEM db_field="Description" caption="Описание" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="AccountID" caption="Компания" display_format="none" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" row_type_alias="FIA"/>
+            <ITEM db_field="ContactID" caption="Контакт" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="FIC" display_format="none"/>
+            <ITEM db_field="ProjectID" caption="Проект" width="15%" row_type="fk_column" row_type_parent_table="iris_Project" row_type_parent_display_column="Name" row_type_alias="FIP"/>
+            <ITEM db_field="PactID" caption="Договор" width="15%" row_type="fk_column" row_type_parent_table="iris_Pact" row_type_parent_display_column="Name" row_type_alias="FIPact" display_format="none"/>
+            <ITEM db_field="InvoiceID" caption="Счет" width="15%" row_type="fk_column" row_type_parent_table="iris_Invoice" row_type_parent_display_column="Name" row_type_alias="FIInvoice" display_format="none"/>
+            <ITEM db_field="Date" caption="Дата" width="10%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="FactInvoiceTypeID" caption="Тип" width="10%" row_type="fk_column" row_type_parent_table="iris_FactInvoiceType" row_type_parent_display_column="Name" row_type_alias="FIT"/>
+            <ITEM db_field="FactInvoiceStateID" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_FactInvoiceState" row_type_parent_display_column="Name" row_type_alias="FIS"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" FIO=""/>
+            <ITEM db_field="CurrencyID" caption="Валюта" width="15%" row_type="fk_column" row_type_parent_table="iris_Currency" row_type_parent_display_column="Name" row_type_alias="OCurrency" display_format="none"/>
+            <ITEM db_field="Amount" caption="Сумма" width="15%" row_type="common" row_datatype="decimal"/>
+         </COLUMNS>
+      </GRID>
+      <EDITCARD name="c_FactInvoice" caption="Накладная" parent_card_source="grid" parent_card_name="FactInvoice">
+      </EDITCARD>
+   </DETAIL>
+</EXTERNAL_DETAIL>

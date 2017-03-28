@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+	<TAB section_type="common" caption="Отслеживаемые изменения" table="iris_ChangelogMonitor">
+		<GRID name="g_Changemonitor" lines_count="1" hide_buttons="yes">
+			<COLUMNS>
+				<ITEM db_field="reminddate" caption="Дата изменения" width="20%" row_type="common" row_datatype="datetime"/>
+				<ITEM db_field="TableID" caption="Таблица" width="20%" row_type="fk_column" row_type_parent_table="iris_Table" row_type_alias="TT" row_type_parent_display_column="Name"/>
+				<ITEM db_field="UserID" caption="Пользователь" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+
+				<ITEM db_field="recordid" caption="" width="" row_type="common" column_caption="recordid" display_format="hidden"/>
+				<ITEM db_field="" caption="" width="" row_type="fk_column_extended" row_type_display_column_with_alias="TS.Code" column_caption="code" row_type_joins="left join iris_section TS on TT.SectionID = TS.ID" display_format="hidden" />
+				<ITEM db_field="" caption="" width="" row_type="fk_column_extended" row_type_display_column_with_alias="TT.detail" column_caption="detail" row_type_joins="" display_format="hidden" />
+				<ITEM db_field="" caption="" width="" row_type="fk_column_extended" row_type_display_column_with_alias="TT.dictionary" column_caption="dictionary" row_type_joins="" display_format="hidden" />
+			</COLUMNS>
+			<FILTERS>
+				<ITEM caption="Все изменения" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes">
+				</ITEM>
+			</FILTERS>
+		</GRID>
+		<GRID_WND name="g_Changemonitor" lines_count="1" caption="Изменения в записях" width="600" height="280" hide_buttons="yes">
+			<COLUMNS>
+				<ITEM db_field="reminddate" caption="Дата изменения записи" width="20%" row_type="common" row_datatype="datetime"/>
+				<ITEM db_field="TableID" caption="Таблица" width="20%" row_type="fk_column" row_type_parent_table="iris_Table" row_type_alias="TT" row_type_parent_display_column="Name"/>
+				<ITEM db_field="UserID" caption="Пользователь" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+				
+				<ITEM db_field="recordid" caption="" width="" row_type="common" column_caption="recordid" display_format="hidden"/>
+				<ITEM db_field="" caption="" width="" row_type="fk_column_extended" row_type_display_column_with_alias="TS.Code" column_caption="code" row_type_joins="left join iris_section TS on TT.SectionID = TS.ID" display_format="hidden" />
+				<ITEM db_field="" caption="" width="" row_type="fk_column_extended" row_type_display_column_with_alias="TT.detail" column_caption="detail" row_type_joins="" display_format="hidden" />
+				<ITEM db_field="" caption="" width="" row_type="fk_column_extended" row_type_display_column_with_alias="TT.dictionary" column_caption="dictionary" row_type_joins="" display_format="hidden" />
+			</COLUMNS>
+		</GRID_WND>
+		<EDITCARD name="c_Changemonitor" caption="История" width="400" height="300" layout="1, 1" show_card_top_panel="no">
+			<ELEMENTS>
+				<FIELD elem_type="select" caption="Таблица" db_field="TableID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Table" row_type_parent_display_column="Name" />
+				<FIELD elem_type="text" caption="ID записи" db_field="recordid" mandatory="yes" datatype="string" row_type="common"/>
+			</ELEMENTS>
+		</EDITCARD>
+      <DETAILS>
+      </DETAILS>	  
+	</TAB>
+</MENU_TAB>

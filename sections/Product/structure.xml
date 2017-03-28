@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Продукты" table="iris_Product" order_pos="5" image_name="products.png">
+      <GRID lines_count="1">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Наименование" width="25%" row_type="common"/>
+            <ITEM db_field="Code" caption="Артикул" width="15%" row_type="common"/>
+            <ITEM db_field="ProductTypeID" caption="Тип" width="15%" row_type="fk_column" row_type_parent_table="iris_ProductType" row_type_parent_display_column="Name" row_type_alias="PType"/>
+            <ITEM db_field="UnitID" caption="Единица" width="15%" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name" row_type_alias="PUnit"/>
+
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none" row_type_alias="POwner"/>
+            <ITEM db_field="URL" caption="URL" width="15%" row_type="common" display_format="none"/>
+
+            <ITEM db_field="ProducerID" caption="Производитель" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" display_format="none" row_type_alias="PProducer"/>
+            <ITEM db_field="ProviderID" caption="Поставщик" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" display_format="none" row_type_alias="PProvider"/>
+            <ITEM db_field="Description" caption="Описание" width="15%" row_type="common" display_format="none"/>
+
+            <ITEM db_field="CostDate" caption="Дата актуальности себестоимости" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+            <ITEM db_field="Cost" caption="Себестоимость" width="15%" row_type="common" row_datatype="decimal"/>
+            <ITEM db_field="PriceDate" caption="Дата актуальности цены" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+            <ITEM db_field="Price" caption="Цена" width="15%" row_type="common" row_datatype="decimal"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все продукты" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes" >
+            </ITEM>
+            <ITEM caption="Мои продукты" item_style="font-weight: bold;" where_clause="T0.OwnerID=_iris_user_id[]">
+            </ITEM>
+			<ITEM caption="Тип" item_style="font-weight: bold;" auto_table="iris_producttype" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.producttypeid='#VALUE#'"/>
+            <ITEM caption="Наша продукция" item_style="" where_clause="T0.ProducerID in (select i_a.ID from iris_Account i_a, iris_AccountType i_at where i_at.Code='Your' and i_at.ID=i_a.AccountTypeID)" default_selected="no"/>
+            <ITEM caption="Не актуальная цена" item_style="" where_clause="T0.PriceDate not between _iris_current_date[]-30 and _iris_current_date[]" />
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" caption="Продукты" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Продукт" width="30%" row_type="common"/>
+            <ITEM db_field="Code" caption="Артикул" width="30%" row_type="common"/>
+            <ITEM db_field="ProductTypeID" caption="Тип" width="30%" row_type="fk_column" row_type_parent_table="iris_ProductType" row_type_parent_display_column="Name"/>
+            <ITEM db_field="UnitID" caption="Единица" width="15%" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="Price" caption="Цена" width="30%" row_type="common" row_datatype="int"/>
+            <ITEM db_field="ProducerID" caption="Производитель" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="ProviderID" caption="Поставщик" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="URL" caption="URL" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="Description" caption="Описание" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Product" caption="Продукт" width="780" height="440" 
+         layout="1, 2, 2, 1,  1, 2, 2, 2,  1, 2, 2,  1, 2, 1,   1, 2" 
+         draw_extra_button="yes">
+		 <TABS>
+			<TAB caption="Продукт" rows="14"/>
+			<TAB caption="Период" rows="2"/>
+		 </TABS>
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Наименование" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Артикул" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Тип" db_field="ProductTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ProductType" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Единица" db_field="UnitID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="url" caption="URL" db_field="URL" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="splitter" caption="Цена"/>
+            <FIELD elem_type="text" caption="Себестоимость" db_field="Cost" mandatory="no" datatype="decimal" row_type="common"/>
+            <FIELD elem_type="text" caption="Дата актуальности себестоимости" db_field="CostDate" mandatory="no" datatype="date" row_type="date"/>
+            <FIELD elem_type="text" caption="Цена" db_field="Price" mandatory="no" datatype="decimal" row_type="common"/>
+            <FIELD elem_type="text" caption="Дата актуальности цены" db_field="PriceDate" mandatory="no" datatype="date" row_type="date"/>
+            <FIELD elem_type="text" caption="Скидка" db_field="Discount" mandatory="no" datatype="decimal" row_type="common"/>
+			<FIELD elem_type="spacer"/>
+
+            <FIELD elem_type="splitter" caption="Склад (учет по основной единице измерения)"/>
+            <FIELD elem_type="text" caption="В наличии" db_field="have" mandatory="yes" datatype="decimal" row_type="common" title="Количество во входящих принятых накладных минус количество в исходящих переданных накладных"/>
+            <FIELD elem_type="text" caption="Зарезервировано" db_field="reserve" mandatory="yes" datatype="decimal" row_type="common" title="Количество в исходящих накладных в плане"/>
+            <FIELD elem_type="text" caption="Ожидается" db_field="wait" mandatory="yes" datatype="decimal" row_type="common" title="Количество во входящих накладных в плане"/>
+            <FIELD elem_type="spacer"/>
+
+            <FIELD elem_type="splitter" caption="Происхождение"/>
+            <FIELD elem_type="lookup" caption="Производитель" db_field="ProducerID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Поставщик" db_field="ProviderID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+			
+			<FIELD elem_type="splitter" caption="Период"/>
+		    <FIELD elem_type="text" caption="Продолжительность" db_field="Duration" mandatory="no" datatype="int" row_type="common" title="Значение этого поля влияет на суммы продукта (Сумма = Цена * Количество * Продолжительность)"/>
+		    <FIELD elem_type="select" caption="Единица времени" db_field="TimeUnit" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_product_timeunit"/>
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Аналоги" name="d_Product_Analogue" detail_fk_column="ProductID" detail_table="iris_Product_Analogue">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="AnalogueID" caption="Аналогичный продукт" width="35%" row_type="fk_column" row_type_parent_table="iris_Product" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="IsReverse" caption="Обратный аналог" width="15%" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                  <ITEM db_field="AnalogueID" caption="Цена" width="15%" row_type="fk_column" row_type_parent_table="iris_Product" row_type_parent_display_column="Price"/>
+                  <ITEM db_field="Description" caption="Описание" width="35%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Product_Analogue" caption="Аналог" width="500" height="210" 
+               layout="1, 1, 2, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Аналогичный продукт" db_field="AnalogueID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Обратный аналог" 
+                     db_field="IsReverse" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Комплектация" name="d_Product_Constituent" detail_fk_column="ProductID" detail_table="iris_Product_Constituent">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ConstituentID" caption="Комплектующий продукт" width="25%" row_type="fk_column" row_type_parent_table="iris_Product" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="UnitID" caption="Единица" width="15%" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Price" caption="Цена" width="20%" row_type="common"/>
+                  <ITEM db_field="Count" caption="Количество" width="20%" row_type="common"/>
+                  <ITEM db_field="Amount" caption="Сумма" width="20%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Product_Constituent" caption="Комплектующий продукт" width="500" height="230" 
+               layout="1, 1, 2, 2, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Комплектующий продукт" db_field="ConstituentID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Количество" db_field="Count" mandatory="no" datatype="decimal" row_type="common" />
+                  <FIELD elem_type="select" caption="Единица" db_field="UnitID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/><FIELD elem_type="text" caption="Цена" db_field="Price" mandatory="no" datatype="decimal" row_type="common" />
+                  
+                  <FIELD elem_type="text" caption="Сумма" db_field="Amount" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Поставщики" name="d_Account_Product" detail_fk_column="ProductID" detail_table="iris_Account_Product">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="AccountID" caption="Поставщик" width="30%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="ActualityDate" caption="Актуальность цены" width="20%" row_type="common" row_datatype="date"/>
+                  <ITEM db_field="Price" caption="Цена" width="15%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Product_Account" caption="Поставщик продукта" width="600" height="220" 
+               layout="1, 1, 2, 1, 1"
+               draw_extra_button="yes">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Поставщик" db_field="AccountID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Цена" db_field="Price" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Актуальность цены" db_field="ActualityDate" mandatory="no" datatype="date" row_type="date"/>
+                  <FIELD elem_type="url" caption="URL" db_field="URL" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Цены" name="d_Product_Price" detail_fk_column="ProductID" detail_table="iris_Product_Price">
+            <GRID lines_count="1" display_search="no" sort_column="5" sort_direction="desc">
+               <COLUMNS>
+                  <ITEM db_field="Name" caption="Название" width="25%" row_type="common"/>
+                  <ITEM db_field="PriceTypeID" caption="Тип цены" width="20%" row_type="fk_column" row_type_parent_table="iris_PriceType" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="UnitID" caption="Единица" width="15%" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="TimeUnit" caption="Единица времени" width="15%" row_type="domain" row_type_domain_name="d_product_timeunit"/>
+                  <ITEM db_field="Price" caption="Цена" width="20%" row_type="common"/>
+                  <ITEM db_field="Discount" caption="Скидка" width="20%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Product_Price" caption="Цена продукта" width="600" height="440" 
+               layout="1, 1, 2,  1, 2, 2,  1, 2, 2,  1, 2, 2, 2,  1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Название цены" db_field="Name" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="select" caption="Тип цены" db_field="PriceTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_PriceType" row_type_parent_display_column="Name"/>
+				  <FIELD elem_type="spacer"/>
+
+				  <FIELD elem_type="splitter" caption="Количество"/>
+                  <FIELD elem_type="select" caption="Единица" db_field="UnitID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+				  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="text" caption="Минимальное количество" db_field="MinCount" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Максимальное количество" db_field="MaxCount" mandatory="no" datatype="decimal" row_type="common"/>
+
+				  <FIELD elem_type="splitter" caption="Период"/>
+				  <FIELD elem_type="select" caption="Единица времени" db_field="TimeUnit" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_product_timeunit"/>
+				  <FIELD elem_type="spacer"/>
+				  <FIELD elem_type="text" caption="Мин. продолжительность" db_field="MinDuration" mandatory="no" datatype="int" row_type="common"/>
+				  <FIELD elem_type="text" caption="Макс. продолжительность" db_field="MaxDuration" mandatory="no" datatype="int" row_type="common"/>
+				  
+				  <FIELD elem_type="splitter" caption="Цена"/>
+                  <FIELD elem_type="text" caption="Себестоимость" db_field="Cost" mandatory="no" datatype="decimal" row_type="common"/>
+				  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="text" caption="Цена" db_field="Price" mandatory="no" datatype="decimal" row_type="common"/>
+				  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="text" caption="Скидка, %" db_field="Discount" mandatory="no" datatype="decimal" row_type="common"/>
+				  <FIELD elem_type="spacer"/>
+				  
+				  <FIELD elem_type="splitter" caption="Описание"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Преимущества" name="d_Product_Advantage" detail_fk_column="ProductID" detail_table="iris_Product_Advantage">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="Name" caption="Преимущество" width="35%" row_type="common"/>
+                  <ITEM db_field="AdvantageUnitID" caption="Единица" width="15%" row_type="fk_column" row_type_parent_table="iris_AdvantageUnit" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Value" caption="Величина" width="20%" row_type="common"/>
+                  <ITEM db_field="Description" caption="Описание" width="30%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Product_Advantage" caption="Конкурентное преимущество продукта" width="500" height="210" layout="1, 1, 2, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Преимущество" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+                  <FIELD elem_type="text" caption="Величина" db_field="Value" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="select" caption="Единица" db_field="AdvantageUnitID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_AdvantageUnit" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Возражения" name="d_Product_Disagree" detail_fk_column="ProductID" detail_table="iris_Product_Disagree">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="Disagree" caption="Возражение" width="50%" row_type="common"/>
+                  <ITEM db_field="Answer" caption="Ответ" width="50%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Product_Disagree" caption="Отработка возражения" width="500" height="315" layout="1, 1, 1, 1, 1, 1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="splitter" caption="Возражение"/>
+                  <FIELD elem_type="text" caption="Возражение" db_field="Disagree" mandatory="yes" datatype="string" row_type="common"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Возражение подробно" db_field="DisagreeFull" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="splitter" caption="Ответ"/>
+                  <FIELD elem_type="text" caption="Ответ" db_field="Answer" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Ответ подробно" db_field="AnswerFull" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Выпуски" name="d_Product_Issue" detail_fk_column="ProductID" external="yes" detail_file="Sections/Issue/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Инциденты" name="d_Product_Incident" detail_fk_column="ProductID" external="yes" detail_file="Sections/Incident/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Файлы" name="d_Product_File" detail_fk_column="ProductID" external="yes" detail_file="Sections/File/detail.xml">
+         </DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_product_timeunit">
+		<VALUES>
+			<ITEM db_value="" caption=""/>
+			<ITEM db_value="d" caption="День"/>
+			<ITEM db_value="m" caption="Месяц"/>
+			<ITEM db_value="y" caption="Год"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

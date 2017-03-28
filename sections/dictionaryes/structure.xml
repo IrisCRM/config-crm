@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Справочники" table="iris_table">
+		<GRID lines_count="1" hide_buttons="yes" ondblclick="opengridwindow('', '', 'dict', this.getAttribute('dict_code'))">
+			<COLUMNS>
+				<ITEM caption="Название" db_field="Name" width="50%" row_type="common"/>
+				<ITEM caption="Таблица" db_field="Code" width="15%" row_type="common"/>
+				<ITEM caption="Справочник" db_field="Dictionary" width="15%" row_type="common"/>
+				<ITEM caption="Описание" db_field="Description" width="20%" row_type="common"/>
+				<ITEM caption="" db_field="Dictionary" width="15%" row_type="common" column_caption="dict_code" display_format="hidden"/>
+			</COLUMNS>
+			<FILTERS overall="coalesce(T0.dictionary, '') != ''">
+				<ITEM caption="Все справочники" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes"/>
+				<ITEM caption="Без группы" item_style="font-weight: bold;" where_clause="T0.dictionarygroupid is null"/>
+				<ITEM caption="Группа" item_style="font-weight: bold;" auto_table="iris_dictionarygroup" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.dictionarygroupid='#VALUE#'"/>
+			</FILTERS>
+		</GRID>
+		<GRID_WND lines_count="1" caption="Справочники" width="600" height="280">
+			<COLUMNS>
+				<ITEM db_field="Name" caption="Название" width="50%" row_type="common"/>
+				<ITEM db_field="Code" caption="Название в БД" width="50%" row_type="common"/>
+			</COLUMNS>
+		</GRID_WND>
+		<EDITCARD name="dc_table" caption="Таблица" parent_card_source="grid" parent_card_name="Table">
+		</EDITCARD>
+		<DETAILS>
+		</DETAILS>
+   </TAB>
+</MENU_TAB>

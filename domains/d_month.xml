@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_month">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Январь" genitive="января"/>
+			<ITEM db_value="2" caption="Февраль" genitive="февраля"/>
+			<ITEM db_value="3" caption="Март" genitive="марта"/>
+			<ITEM db_value="4" caption="Апрель" genitive="апреля"/>
+			<ITEM db_value="5" caption="Май" genitive="мая"/>
+			<ITEM db_value="6" caption="Июнь" genitive="июня"/>
+			<ITEM db_value="7" caption="Июль" genitive="июля"/>
+			<ITEM db_value="8" caption="Август" genitive="августа"/>
+			<ITEM db_value="9" caption="Сентябрь" genitive="сентября"/>
+			<ITEM db_value="10" caption="Октябрь" genitive="октября"/>
+			<ITEM db_value="11" caption="Ноябрь" genitive="ноября"/>
+			<ITEM db_value="12" caption="Декабрь" genitive="декабря"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

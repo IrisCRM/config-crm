@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_field_align">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Влево" xml="left"/>
+			<ITEM db_value="2" caption="Посередине" xml="middle"/>
+			<ITEM db_value="3" caption="Вправо" xml="right"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

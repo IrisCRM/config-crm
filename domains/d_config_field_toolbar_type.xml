@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_field_toolbar_type">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Мини" xml="Mini"/>
+			<ITEM db_value="2" caption="Стандартный" xml="Standart"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

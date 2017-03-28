@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_section_type">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Обычный" xml="common"/>
+			<ITEM db_value="2" caption="Специальный" xml="special"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

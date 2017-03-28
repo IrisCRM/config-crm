@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_file_type_">
+		<VALUES>
+			<ITEM db_value="1" caption="Раздел" xml="sections"/>
+			<ITEM db_value="2" caption="Справочник" xml="dictionary"/>
+			<ITEM db_value="3" caption="Общая вкладка" xml="common"/>
+			<ITEM db_value="4" caption="Вкладка" xml="tab"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

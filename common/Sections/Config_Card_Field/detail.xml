@@ -1,0 +1,22 @@
+﻿<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+  <DETAIL detail_table="iris_Config_Card_Field">
+    <GRID lines_count="1">
+      <COLUMNS>
+        <ITEM db_field="orderpos" caption="№" width="10%" 
+          row_type="common" row_datatype="int"/>
+        <ITEM db_field="name" caption="Название" width="30%" 
+          row_type="common"/>
+        <ITEM db_field="ColumnID" caption="Колонка" width="20%" 
+          row_type="fk_column" row_type_parent_table="iris_Table_Column" row_type_parent_display_column="Name"/>
+        <ITEM db_field="rownumber" caption="Строка" width="10%" 
+          row_type="common" row_datatype="int"/>
+        <ITEM db_field="colnumber" caption="Столбец" width="10%" 
+          row_type="common" row_datatype="int"/>
+      </COLUMNS>
+    </GRID>
+    <EDITCARD name="dс_Config_Card_Field" caption="Поле карточки конфигуратора" 
+      parent_card_source="grid" parent_card_name="Config_Card_Field">
+    </EDITCARD>
+  </DETAIL>
+</EXTERNAL_DETAIL>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_file_type_tab">
+		<VALUES>
+			<ITEM db_value="4" caption="Вкладка"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

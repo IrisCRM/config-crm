@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Email">
+            <GRID name="g_Email" lines_count="1" display_search="yes" sort_column="11" sort_direction="desc">
+               <COLUMNS>
+            <ITEM caption="" width="26px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="CASE WHEN exists (select 1 from iris_file where emailid=T0.id) or exists (select 1 from iris_email_file where emailid=T0.id)=true THEN '@' ELSE '' END" column_caption="files" display_format="ongrid"/>
+            <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="case when (select count(E.id) from iris_email E where E.parentemailid = T0.id) &gt; 0 then 'r' else null end" column_caption="reply" display_format="ongrid"/>
+            <ITEM caption="" width="" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="(select count(E.id) from iris_email E where E.parentemailid = T0.id)" column_caption="replycnt" display_format="hidden"/>
+            <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="CASE WHEN isimportant=1 THEN '*' ELSE '' END" column_caption="star" display_format="ongrid"/>
+            <ITEM caption="Тема" db_field="subject" width="70%" row_type="common"/>
+            <ITEM caption="Сообщение" db_field="body" width="70%" row_type="common" display_format="hidden"/>
+            <ITEM caption="Компания" db_field="AccountID" width="30%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" row_type_alias="EAccount"/>
+            <ITEM caption="Контакт" db_field="ContactID" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="hidden" row_type_alias="EContact"/>
+            <ITEM caption="От" db_field="e_from" width="150px" row_type="common"/>
+            <ITEM caption="Кому" db_field="e_to" width="150px" row_type="common"/>
+            <ITEM caption="Дата" db_field="messagedate" width="110px" row_type="common" row_datatype="datetime"/>
+            <ITEM caption="" db_field="has_readed" width="30%" row_type="common" display_format="hidden"/>
+            <ITEM caption="Тип" db_field="emailtypeid" width="10%" row_type="fk_column" row_type_parent_table="iris_emailtype" row_type_parent_display_column="Code" row_type_alias="ET" display_format="hidden"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="EOwner" display_format="hidden"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Email" caption="Почта" parent_card_source="grid" parent_card_name="Email">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

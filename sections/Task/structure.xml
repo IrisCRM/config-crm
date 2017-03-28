@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Дела" table="iris_Task" order_pos="3" image_name="tasks.png">
+      <GRID lines_count="1" name="g_Task">
+         <COLUMNS>
+            <ITEM db_field="StartDate" caption="Начало" width="110" row_type="common" row_datatype="datetime"/>
+            <ITEM db_field="FinishDate" caption="Завершение" width="15%" row_type="common" row_datatype="datetime" display_format="none"/>
+            <ITEM db_field="Name" caption="Дело" width="30%" row_type="common"/>
+
+            <ITEM db_field="TaskResultID" caption="Результат" width="" row_type="fk_column" row_type_parent_table="iris_TaskResult" row_type_parent_display_column="Name" row_type_alias="TResult" display_format="none"/>
+            <ITEM db_field="Result" caption="Результат подробно" width="" row_type="common"/>
+
+            <ITEM db_field="AccountID" caption="Компания" width="10%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" row_type_alias="TAccount"/>
+            <ITEM db_field="ContactID" caption="Контакт" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="TContact" display_format="none"/>
+
+            <ITEM db_field="TaskTypeID" caption="Тип" width="8%" row_type="fk_column" row_type_parent_table="iris_TaskType" row_type_parent_display_column="Name" row_type_alias="TType"/>
+            <ITEM db_field="TaskStateID" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_TaskState" row_type_parent_display_column="Name" row_type_alias="TState"/>
+            <ITEM db_field="TaskImportanceID" caption="Важность" width="15%" row_type="fk_column" row_type_parent_table="iris_TaskImportance" row_type_parent_display_column="Name" row_type_alias="TImportance" display_format="none"/>
+
+            <ITEM db_field="OwnerID" caption="Ответственный" width="12%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="TOwner"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все дела" item_style="font-weight: bold;" where_clause="1=1" sort_column="1" sort_direction="desc" default_selected="yes"/>
+            <ITEM caption="Мои дела" item_style="font-weight: bold;" where_clause="T0.OwnerID=_iris_user_id[]" default_selected="yes" title="Дела, в которых я ответственный"/>
+            <ITEM caption="Актуальные" item_style="font-weight: bold;" where_clause="((TState.Code='Plan') or (TState.Code='Active') or (TState.Code='Future')) and ((T0.StartDate &lt;= _iris_current_date[]+7) or (T0.FinishDate &lt;= _iris_current_date[]+7))" default_selected="yes" title="Запланированные, активные и отложенные дела за последние 7 дней"></ITEM>
+            <ITEM caption="По дате" item_style="font-weight: bold;" where_clause="">
+               <ITEM caption="Недавние" item_style="" where_clause="((T0.StartDate between _iris_current_date[]-7 and _iris_current_date[]+7) or (T0.FinishDate between _iris_current_date[]-7 and _iris_current_date[]+7)) and (TState.Code not in ('Finish'))" title="Дела за последнюю неделю и на неделю вперед"/>
+               <ITEM caption="Просроченные" item_style="" where_clause="_iris_current_date[]&gt;T0.FinishDate and TState.Code not in ('Finish', 'Cancel')"/>
+               <ITEM caption="Дата с" where_clause="((T0.StartDate &gt;= _iris_string_to_datetime['#VALUE#']) or (T0.FinishDate &gt;= _iris_string_to_datetime['#VALUE#']))" field="StartDate"/>
+               <ITEM caption="Дата по" where_clause="((T0.StartDate &lt;= _iris_string_to_datetime['#VALUE#']) or (T0.FinishDate &lt;= _iris_string_to_datetime['#VALUE#']))" field="StartDate"/>
+            </ITEM>
+   			<ITEM caption="Состояние" item_style="font-weight: bold;" auto_table="iris_taskstate" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.taskstateid='#VALUE#'"/>
+   			<ITEM caption="Тип" item_style="font-weight: bold;" auto_table="iris_tasktype" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.tasktypeid='#VALUE#'"/>
+   			<ITEM caption="Важность" item_style="font-weight: bold;" auto_table="iris_taskimportance" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.taskimportanceid='#VALUE#'"/>
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" sort_column="3" sort_direction="desc" caption="Дела" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Дело" width="30%" row_type="common"/>
+            <ITEM db_field="AccountID" caption="Компания" width="30%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name"/>
+            <ITEM db_field="ContactID" caption="Контакт" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM elem_type="text" db_field="StartDate" caption="Начало" width="20%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="TaskTypeID" caption="Тип" width="8%" row_type="fk_column" row_type_parent_table="iris_TaskType" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="TaskStateID" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_TaskState" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="TaskImportanceID" caption="Важность" width="15%" row_type="fk_column" row_type_parent_table="iris_TaskImportance" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="TaskResultID" caption="Результат" width="" row_type="fk_column" row_type_parent_table="iris_TaskResult" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="Result" caption="Результат подробно" width="" row_type="common"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Task" caption="Дело" width="780" height="520" 
+         layout="2, 1, 2, 2, 2, 2, 1,  1, 2,  1, 2, 1,  1, 1, 2,    1, 2, 2, 2, 2, 2, 2, 2, 2, 2,  2" 
+         show_card_top_panel="yes">
+         <TABS>
+            <TAB caption="Основная информация" rows="15"/>
+            <TAB caption="Связи" rows="8"/>
+            <TAB caption="Дополнительно" rows="1"/>
+         </TABS>
+         <ELEMENTS>
+            <FIELD elem_type="lookup" caption="Автор" db_field="CreateID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="yes" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Цель" db_field="TaskTargetID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_TaskTarget" row_type_parent_display_column="Name" order_by="orderpos"/>
+            <FIELD elem_type="text" caption="Начало" db_field="StartDate" mandatory="yes" datatype="datetime" row_type="date"/>
+            <FIELD elem_type="text" caption="Завершение" db_field="FinishDate" mandatory="no" datatype="datetime" row_type="date"/>
+            <FIELD elem_type="lookup" caption="Компания" db_field="AccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Тип" db_field="TaskTypeID" db_field_ext="code" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_TaskType" row_type_parent_display_column="Name" order_by="orderpos"/>
+            <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Состояние" db_field="TaskStateID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_TaskState" row_type_parent_display_column="Name" order_by="orderpos" db_field_ext="code"/>
+            <FIELD elem_type="phone" caption="Телефон" db_field="Phone" mandatory="no" datatype="string" db_field_addl="PhoneAddl" mandatory_addl="no"/>
+            <FIELD elem_type="select" caption="Важность" db_field="TaskImportanceID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_TaskImportance" row_type_parent_display_column="Name" order_by="orderpos"/>
+            <FIELD elem_type="textarea" textarea_rows="5" caption="Дело" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+
+            <FIELD elem_type="splitter" caption="Напоминание ответственному"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Напомнить" db_field="IsRemind" mandatory="yes" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="text" caption="Время напоминания" db_field="RemindDate" mandatory="no" datatype="datetime" row_type="date"/>
+
+            <FIELD elem_type="splitter" caption="Результат"/>
+            <FIELD elem_type="select" caption="Результат" db_field="TaskResultID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_TaskResult" row_type_parent_display_column="Name" db_field_ext="TaskTypeID" order_by="orderpos"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="textarea" textarea_rows="3" caption="Результат подробно" db_field="Result" mandatory="no" datatype="string" row_type="common"/>
+
+            <FIELD elem_type="splitter" caption="Запланировать следующее дело" code="next_task_splitter"/>
+            <FIELD elem_type="select" caption="Цель дела" db_field="NextTaskTargetID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_TaskTarget" row_type_parent_display_column="Name" order_by="orderpos" title="Цель текущего дела отмечена стрелкой"/>
+            <FIELD elem_type="text" caption="Начало дела" db_field="NextStartDate" mandatory="no" datatype="datetime" row_type="date"/>
+            <FIELD elem_type="button" code="select_next_target" caption="Выбрать" align="right" width="80px" method="selectNextTarget"/>
+
+            <FIELD elem_type="splitter" caption="Связи"/>
+            <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Замечание" db_field="BugID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Bug" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Выпуск" db_field="IssueID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Issue" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Инцидент" db_field="IncidentID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Incident" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Объект" db_field="ObjectID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Object" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Мероприятие" db_field="MarketingID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Marketing" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Рекламная площадка" db_field="SpaceID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Space" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="КП" db_field="OfferID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Offer" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Договор" db_field="PactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Pact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Счет" db_field="InvoiceID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Invoice" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Платеж" db_field="PaymentID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Payment" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Накладная" db_field="FactInvoiceID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="FactInvoice" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Документ" db_field="DocumentID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Document" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Не отображать в календаре" db_field="hidefromcalendar" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="lookup" caption="Предыдущее дело" db_field="PrevRecordID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Task" row_type_parent_display_column="Name"/>
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Другие дела" name="d_Task_OtherTask" detail_fk_column="" detail_bound_clause="((((T0.AccountID=(select AccountID from iris_Task where ID=:parent_id)) and (T0.AccountID is not null)) or ((T0.ContactID=(select ContactID from iris_Task where ID=:parent_id)) and (T0.ContactID is not null))) and (T0.ID != :parent_id))" external="yes" detail_file="Sections/Task/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Другие контакты" name="d_Task_OtherContact" detail_fk_column="" detail_bound_clause="(((T0.AccountID=(select AccountID from iris_Task where ID=:parent_id) or (T0.AccountID=(select ccc.AccountID from iris_Task ttt inner join iris_Contact ccc on ttt.ContactID=ccc.ID where ttt.ID=:parent_id)) )) and (T0.AccountID is not null))" external="yes" detail_file="Sections/Contact/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Контакты" name="d_Task_Contact" detail_fk_column="TaskID" detail_table="iris_Task_Contact">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ContactID" caption="Контакт" width="40%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="TaskContactRoleID" caption="Роль" width="30%" row_type="fk_column" row_type_parent_table="iris_TaskContactRole" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Description" caption="Описание" width="30%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Task_Contact" caption="Контакт в задаче" width="500" height="180" layout="1, 2, 1" draw_extra_button="yes">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Дело" db_field="TaskID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Task" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="select" caption="Роль" db_field="TaskContactRoleID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_TaskContactRole" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Компании" name="d_Task_Account" detail_fk_column="TaskID" detail_table="iris_Task_Account">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="AccountID" caption="Компания" width="40%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="TaskAccountRoleID" caption="Роль" width="30%" row_type="fk_column" row_type_parent_table="iris_TaskAccountRole" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Description" caption="Описание" width="30%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Task_Account" caption="Компания в задаче"
+            	width="500" height="180" layout="1, 2, 1"
+            	draw_extra_button="yes">
+            	<ELEMENTS>
+            		<FIELD elem_type="lookup" caption="Дело"
+            			db_field="TaskID" mandatory="yes" datatype="id"
+            			row_type="fk_column" row_type_parent_source_type="grid"
+            			row_type_parent_source_name="Task"
+            			row_type_parent_display_column="Name" />
+            		<FIELD elem_type="lookup" caption="Компания"
+            			db_field="AccountID" mandatory="yes" datatype="id"
+            			row_type="fk_column" row_type_parent_source_type="grid"
+            			row_type_parent_source_name="Account"
+            			row_type_parent_display_column="Name" />
+            		<FIELD elem_type="select" caption="Роль"
+            			db_field="TaskAccountRoleID" mandatory="no" datatype="id"
+            			row_type="fk_column"
+            			row_type_parent_table="iris_TaskAccountRole"
+            			row_type_parent_display_column="Name" />
+            		<FIELD elem_type="textarea" textarea_rows="3"
+            			caption="Описание" db_field="Description" mandatory="no"
+            			datatype="string" row_type="common" />
+            	</ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Инциденты" name="d_Task_Incident" detail_fk_column="TaskID" external="yes" detail_file="Sections/Incident/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Продукты" name="d_Task_Product" detail_fk_column="TaskID" detail_table="iris_Task_Product">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ProductID" caption="Продукт" width="30%" row_type="fk_column" row_type_parent_table="iris_Product" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="UnitID" caption="Единица" width="20%" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Price" caption="Цена" width="20%" row_type="common"/>
+                  <ITEM db_field="Count" caption="Количество" width="10%" row_type="common"/>
+                  <ITEM db_field="Amount" caption="Сумма" width="20%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Task_Product" caption="Продукт в деле"
+            	width="500" height="230" layout="1, 1, 2, 2, 1"
+               draw_extra_button="yes">
+            	<ELEMENTS>
+            		<FIELD elem_type="lookup" caption="Дело"
+            			db_field="TaskID" mandatory="yes" datatype="id"
+            			row_type="fk_column" row_type_parent_source_type="grid"
+            			row_type_parent_source_name="Task"
+            			row_type_parent_display_column="Name" />
+            		<FIELD elem_type="lookup" caption="Продукт"
+            			db_field="ProductID" mandatory="yes" datatype="id"
+            			row_type="fk_column" row_type_parent_source_type="grid"
+            			row_type_parent_source_name="Product"
+            			row_type_parent_display_column="Name" />
+            		<FIELD elem_type="text" caption="Количество"
+            			db_field="Count" mandatory="no" datatype="decimal"
+            			row_type="common" />
+            		<FIELD elem_type="select"
+            			caption="Единица" db_field="UnitID"
+            			mandatory="no" datatype="id" row_type="fk_column"
+            			row_type_parent_table="iris_Unit"
+            			row_type_parent_display_column="Name" />
+            		<FIELD elem_type="text" caption="Цена"
+            			db_field="Price" mandatory="no" datatype="decimal"
+            			row_type="common" />
+            		<FIELD elem_type="text" caption="Сумма"
+            			db_field="Amount" mandatory="no" datatype="decimal"
+            			row_type="common" />
+            		<FIELD elem_type="textarea" textarea_rows="3"
+            			caption="Примечание" db_field="Description"
+            			mandatory="no" datatype="string" row_type="common" />
+            	</ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Файлы" name="d_Task_File"
+         	detail_fk_column="TaskID" external="yes" detail_file="Sections/File/detail.xml">
+         </DETAIL>
+         <DETAIL caption="История изменений" name="d_Task_Log" detail_fk_column="" detail_bound_clause="(T0.recordid=:parent_id)" external="yes" detail_file="Sections/Changelog/detail.xml">
+         </DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

@@ -1,0 +1,146 @@
+body {
+	font-size: 14px;
+	font-family: Arial;
+}
+
+h1, h2, h3 {
+  font-weight: normal;
+}
+
+table, tr, td, th {
+  border-color: #fff;
+}
+
+table.report {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 30px;
+	border-top: 1px solid #ccccff;
+}
+
+tr.odd {
+}
+
+
+tr.even {
+	background-color: #f0f0ff;
+}
+
+table.report th {
+	padding: 5px 5px 5px 5px;
+	background-color: #ccccff;
+	font-weight: bold;
+  vertical-align: middle;
+}
+
+table.report td {
+	padding: 5px 5px 5px 5px;
+	border-collapse: collapse;
+}
+table.filter td {
+	padding: 3px 10px 3px 0px;
+	border-collapse: collapse;
+  border-color: #fff;
+}
+
+table.total {
+	border-top: 1px solid #ccccff;
+}
+tr.total {
+	border-top: 3px solid #ccccff;
+	font-weight: bold;
+}
+table.report tr.grid:hover {
+	background-color: #ffdddd;
+}
+tr.selected {
+	background-color: #ddddff;
+}
+table.report th.grid {
+	border: 1px solid #ccccff;
+}
+table.report td.grid {
+	border-right: 1px solid #ccccff;
+	border-left: 1px solid #ccccff;
+	border-bottom: 1px solid #ccccff;
+}
+td.total {
+	border-right: none;
+	border-left: none;
+}
+td.int {
+	text-align: right;
+}
+td.float {
+	text-align: right;
+}
+td.bigfloat {
+	text-align: right;
+}
+td.date {
+	text-align: center;
+}
+span.errbtn {
+	display: block;
+	float: right;
+	width: 25px;
+	background-color: #AAE;
+	text-align: center;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+/* стили для транспонированной таблицы */
+table.grid-trans {
+}
+table.grid-trans th {
+	text-align		: left;
+	white-space		: nowrap;
+}
+table.grid-trans td.even {
+	background-color: #f5f5ff;
+}
+table.grid-trans tr.grid:hover {
+	background-color: #ffffff;
+}
+
+table.grid-trans td.grid:hover {
+	background-color: #ffdddd;
+}
+
+
+
+div.dialog {
+  position: relative;
+}
+
+
+.form_table td td div {
+  background-position: right;
+}
+table.form_table td.form_table {
+  padding: 0 5px 0 0;
+}
+
+#window_filter_report {
+  padding-top: 20px;
+  margin-bottom: 30px;
+  max-width: 800px;
+}
+
+table.form_table_buttons_panel {
+  background-color: #fff;
+  border-bottom: 1px #444 dashed;
+}
+
+th.grid {
+  height: 15px;
+}

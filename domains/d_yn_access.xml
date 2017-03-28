@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_yn_access">
+		<VALUES>
+			<ITEM db_value="0" caption="Отключен"/>
+			<ITEM db_value="1" caption="Включен"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

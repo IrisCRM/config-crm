@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_column_datatype">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Строка" xml="string"/>
+			<ITEM db_value="2" caption="Целое" xml="int"/>
+			<ITEM db_value="3" caption="Дробное" xml="decimal"/>
+			<ITEM db_value="4" caption="Дата" xml="date"/>
+			<ITEM db_value="5" caption="Дата-время" xml="datetime"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

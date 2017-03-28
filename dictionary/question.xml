@@ -1,0 +1,71 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_question">
+		<GRID_WND caption="Вопросы" width="600" height="275">
+			<COLUMNS>
+				<ITEM caption="Вопрос" db_field="name" width="20%" row_type="common"/>
+				<ITEM caption="Код" db_field="code" width="20%" row_type="common" display_format="none"/>
+				<ITEM caption="Опрос" db_field="pollid" width="10%" row_type="fk_column" row_type_parent_table="iris_poll" row_type_parent_display_column="name" display_format="ongrid"/>
+				<ITEM caption="Тип опроса" db_field="polltypeid" width="10%" row_type="fk_column" row_type_parent_table="iris_polltype" row_type_parent_display_column="name" display_format="ongrid"/>
+				<ITEM caption="Тип ответа" db_field="valuetypeid" width="10%" row_type="fk_column" row_type_parent_table="iris_responsevaluetype" row_type_parent_display_column="name" display_format="ongrid"/>
+			</COLUMNS>
+		</GRID_WND>
+		<EDITCARD name="rc_Question" caption="Вопрос" width="650" height="480" layout="1, 2, 1, 2, 1,  1, 1, 1">
+			<ELEMENTS>
+				<FIELD elem_type="text" caption="Вопрос" db_field="name" mandatory="yes" datatype="string" row_type="common"/>
+
+				<FIELD elem_type="select" caption="Тип ответа" db_field="valuetypeid" mandatory="yes" datatype="id" 
+					row_type="fk_column" row_type_parent_table="iris_responsevaluetype" row_type_parent_display_column="name"/>
+				<FIELD elem_type="text" caption="Код" db_field="code" mandatory="no" datatype="string" row_type="common"/>
+
+				<FIELD elem_type="spacer" />
+				<FIELD elem_type="select" caption="Тип опроса" db_field="polltypeid" mandatory="no" datatype="id" 
+					row_type="fk_column" row_type_parent_table="iris_polltype" row_type_parent_display_column="name"/>
+				<FIELD elem_type="lookup" caption="Опрос" db_field="pollid" mandatory="no" datatype="id" 
+					row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Poll" row_type_parent_display_column="name"/>
+				<FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="description" mandatory="no" datatype="string" row_type="common"/>
+
+				<FIELD elem_type="spacer"/>
+				<FIELD elem_type="splitter" caption="Ответы"/>
+				<FIELD elem_type="detail" code="d_Question_Response" height="150px"/>
+			</ELEMENTS>
+		</EDITCARD>
+
+		<DETAILS>
+			<DETAIL caption="Ответы" name="d_Question_Response" detail_table="iris_response" detail_fk_column="QuestionID" showoncard="no">
+				<GRID display_search="no">
+					<COLUMNS>
+						<ITEM caption="№" db_field="orderpos" width="10%" row_type="common" row_datatype="int"/>
+						<ITEM caption="Ответ" db_field="stringvalue" width="70%" row_type="common" />
+						<ITEM caption="Оценка" db_field="mark" width="20%" row_type="common" row_datatype="int"/>
+					</COLUMNS>
+				</GRID>
+				<EDITCARD name="dc_Question_Response" caption="Ответ" width="600" height="350" 
+          layout="1, 1, 2,    1, 2, 2, 2, 2,    1, 2, 1">
+					<ELEMENTS>
+						<FIELD elem_type="lookup" caption="Вопрос" db_field="QuestionID" mandatory="yes" datatype="id" 
+							row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="question" row_type_parent_display_column="name"/>
+						<FIELD elem_type="text" caption="Ответ" db_field="stringvalue" mandatory="no" datatype="string" row_type="common"/>
+						<FIELD elem_type="text" caption="Оценка" db_field="mark" mandatory="no" datatype="int" 
+							row_type="common" title="Оценка от 0 до 100. Для многовариантных ответов сумма оценок должна равняться 100."/>
+						<FIELD elem_type="text" caption="Порядок" db_field="orderpos" mandatory="no" datatype="int" row_type="common"/>
+						<FIELD elem_type="spacer"/>
+						<FIELD elem_type="text" caption="Значение (не более), целое" db_field="intvalue" mandatory="no" datatype="int" row_type="common"/>
+						<FIELD elem_type="spacer"/>
+						<FIELD elem_type="text" caption="Значение (не более), дробное" db_field="floatvalue" mandatory="no" datatype="decimal" row_type="common"/>
+						<FIELD elem_type="spacer"/>
+						<FIELD elem_type="text" caption="Значение (не более), дата" db_field="datevalue" mandatory="no" datatype="date" row_type="date"/>
+						<FIELD elem_type="spacer"/>
+						<FIELD elem_type="text" caption="Значение (не более), дата-время" db_field="datetimevalue" mandatory="no" datatype="datetime" row_type="date"/>
+						<FIELD elem_type="spacer"/>
+						<FIELD elem_type="spacer" />
+						<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Требуется комментарий" db_field="needcomment" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+						<FIELD elem_type="spacer"/>
+						<FIELD elem_type="textarea" textarea_rows="3" caption="Подсказка" db_field="description" mandatory="no" datatype="string" row_type="common"
+							title="Подсказка, которая отображается в ответе интервью около поля с комментарием, если требуется комментарий" />
+					</ELEMENTS>
+				</EDITCARD>
+			</DETAIL>	  
+		</DETAILS>
+   </DICTONARY>
+</DICT>

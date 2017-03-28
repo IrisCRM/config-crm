@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_grid_type">
+		<VALUES>
+			<ITEM db_value="1" caption="Основная"/>
+			<ITEM db_value="2" caption="Вспомогательная"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

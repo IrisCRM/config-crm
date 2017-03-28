@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Issue">
+            <GRID lines_count="1" display_search="no" sort_column="1" sort_direction="desc" name="g_Issue">
+               <COLUMNS>
+                  <ITEM db_field="Version" caption="Версия" width="20%" row_type="common" />
+                  <ITEM db_field="Name" caption="Выпуск" width="20%" row_type="common" />
+                  <ITEM db_field="IssueTypeID" caption="Тип" width="20%" row_type="fk_column" row_type_parent_table="iris_IssueType" row_type_parent_display_column="Name" />
+                  <ITEM db_field="StartDate" caption="Дата начала" width="20%" row_type="common" row_datatype="date" />
+                  <ITEM db_field="FinishDate" caption="Дата выпуска" width="20%" row_type="common" row_datatype="date" />
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Issue" caption="Выпуск" parent_card_source="grid" parent_card_name="Issue">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

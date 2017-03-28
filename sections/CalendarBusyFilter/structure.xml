@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Фильтры для календаря" table="iris_Task">
+      <GRID lines_count="1" name="g_CalendarFilter">
+         <FILTERS>
+            <ITEM caption="Все дела" item_style="font-weight: bold;" where_clause="1=1" sort_column="1" sort_direction="desc" default_selected="yes"/>
+            <ITEM caption="Мои дела" item_style="font-weight: bold;" where_clause="T0.OwnerID = _iris_user_id[]" title="Дела, в которых я ответственный"/>
+            <ITEM caption="Состояние" item_style="font-weight: bold;" auto_table="iris_taskstate" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.taskstateid = #VALUE#"/>
+            <ITEM caption="Тип" item_style="font-weight: bold;" auto_table="iris_tasktype" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.tasktypeid = #VALUE#"/>
+            <ITEM caption="Важность" item_style="font-weight: bold;" auto_table="iris_taskimportance" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.taskimportanceid = #VALUE#"/>
+            <ITEM caption="Ответственный" item_style="font-weight: bold;" auto_table="(select c.id, c.name from iris_contact c inner join iris_contacttype ct on ct.id = c.contacttypeid and ct.code = 'Your') cc" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.ownerid = #VALUE#"/>
+         </FILTERS>
+      </GRID>
+      <EDITCARD>
+         <ELEMENTS>
+         </ELEMENTS>
+      </EDITCARD>
+   </TAB>
+</MENU_TAB>

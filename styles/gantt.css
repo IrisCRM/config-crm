@@ -1,0 +1,79 @@
+div.gantt-area {
+	/*border		: 1px solid #d0d0d0;*/
+	/*width		: 500px;*/
+	height		: 100%;
+    padding     : 0px 2px;
+}
+
+
+div.gantt-left {
+	float		: left;
+	width		: 198px;
+    border-right: 2px solid #d0d0d0;
+	height		: 100%;
+	overflow-x	: scroll;
+	/*border		: 1px solid green;*/
+}
+
+div.gantt-right {
+	/*width		: 100%;*/
+	height		: 100%;
+	overflow-x	: scroll;
+	/*border		: 1px solid red;*/
+}
+
+div.gantt-left-header {
+	height		: 42px;
+	background-color: #e0e0e0;
+}
+
+div.gantt-left-data {
+}
+div.gantt-left-data div{
+    height		: 15px;
+    margin		: 5px 0px;
+    white-space: nowrap;
+}
+
+
+div.gantt-right-header {
+	height		: 41px;
+	background-color: #e0e0e0;
+}
+div.gantt-right-header-years div, div.gantt-right-header-months div, div.gantt-right-header-days div {
+	float		: left;
+	border-top: 1px solid #d0d0d0;
+	border-right: 1px solid #d0d0d0;
+	border-bottom: 1px solid #d0d0d0;
+    text-align  : center;
+}
+div.gantt-right-header-years div {
+    margin      : -1px -1px -1px 0px;
+}
+div.gantt-right-header-months div {
+    margin      : 0px -1px -1px 0px;
+}
+div.gantt-right-header-days div {
+    margin      : 0px -1px -1px 0px;
+}
+div.gantt-right-header-days div.free {
+    background-color: #d0d0d0;
+}
+
+
+div.gantt-right-data {
+}
+
+
+div.gantt-work-outer {
+    border-radius: 3px;
+}
+div.gantt-work-inner {
+    background-color: #484F9E;
+    height		: 15px;
+    margin		: 4px 0px;
+    text-align	: center;
+    color		: white;
+    border-radius: 3px;
+    padding-top: 2px;
+}

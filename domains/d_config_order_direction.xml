@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_order_direction">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="a-z" xml="asc"/>
+			<ITEM db_value="2" caption="z-a" xml="desc"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Contact">
+            <GRID lines_count="1" display_search="no" name="g_Contact">
+               <COLUMNS>
+                  <ITEM db_field="Name" caption="ФИО" width="20%" row_type="common" />
+                  <ITEM db_field="AccountID" caption="Компания" width="20%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" />
+                  <ITEM db_field="Phone1" caption="Телефон" width="10%" row_type="common" />
+                  <ITEM db_field="Phone2" caption="Мобильный" width="10%" row_type="common" />
+           	      <ITEM db_field="Email" caption="E-mail" width="15%" row_type="common" display_format="ongrid"/>
+                  <ITEM db_field="ContactTypeID" caption="Тип" width="10%" row_type="fk_column" row_type_parent_table="iris_ContactType" row_type_parent_display_column="Name" display_format="none" />
+                  <ITEM db_field="OwnerID" caption="Ответственный" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" />
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Contact" caption="Контакт" parent_card_source="grid" parent_card_name="Contact">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

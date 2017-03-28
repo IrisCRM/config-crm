@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_remind_logtype">
+		<VALUES>
+			<ITEM db_value="1" caption="Email"/>
+			<ITEM db_value="2" caption="SMS"/>
+			<ITEM db_value="3" caption="Google talk"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

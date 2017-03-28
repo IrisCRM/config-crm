@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_SpaceState">
+      <GRID_WND caption="Состояния рекламных площадок" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Порядок" db_field="OrderPos" width="80px" row_type="common"/>
+            <ITEM caption="Название" db_field="Name" width="50%" row_type="common"/>
+            <ITEM caption="Код" db_field="Code" width="20%" row_type="common"/>
+            <ITEM caption="Описание" db_field="Description" width="30%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_SpaceState" caption="Состояния рекламных площадок" width="450" height="225" layout="1, 2, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Код" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Порядок в списке" title="порядок данной записи в выпадающем списке карточки и в автофильтре" db_field="OrderPos" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

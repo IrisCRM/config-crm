@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Account">
+            <GRID lines_count="1" display_search="no" name="g_Account">
+               <COLUMNS>
+                  <ITEM db_field="Name" caption="Название" width="30%" row_type="common" />
+                  <ITEM db_field="AccountTypeID" caption="Тип" width="15%" row_type="fk_column" row_type_parent_table="iris_AccountType" row_type_parent_display_column="Name" />
+                  <ITEM db_field="Phone1" caption="Телефон" width="20%" row_type="common" />
+                  <ITEM db_field="CategoryID" caption="Категория" width="15%" row_type="fk_column" row_type_parent_table="iris_Category" row_type_parent_display_column="Name" />
+                  <ITEM db_field="IndustryID" caption="Отрасль" width="20%" row_type="fk_column" row_type_parent_table="iris_Industry" row_type_parent_display_column="Name" />
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Account" caption="Компания" parent_card_source="grid" parent_card_name="Account">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

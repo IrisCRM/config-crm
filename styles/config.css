@@ -1,0 +1,54 @@
+div.email_attachment_logo {
+	background-image	: url(images/clip.png);
+	background-repeat	: no-repeat;
+	width				: 16px;
+	height				: 16px;
+	margin				: 2px auto;	
+}
+
+div.email_star_logo {
+	background-image	: url(images/star-off.png);
+	background-repeat	: no-repeat;
+	width				: 16px;
+	height				: 16px;
+	margin				: 2px auto;
+	cursor				: pointer;
+}
+div.email_star_logo_on {
+	background-image	: url(images/star-on.png);
+}
+div.email_star_logo_loading {
+	/*cursor				: default;*/
+	background-image	: url(images/star-loading.png);
+}
+div.email_reply_logo {
+	background-image	: url(images/reply.png);
+	background-repeat	: no-repeat;
+	width				: 16px;
+	height				: 16px;
+	margin				: 2px auto;
+	cursor				: pointer;
+}
+
+
+div.skype_img {
+	background-color	: none;
+	background-image	: url(images/skype.png);
+	background-position	: center;
+	background-repeat	: no-repeat;	
+
+	border				: 0px none;
+	cursor				: pointer;
+	padding-left		: 1px;
+	width				: 20px;
+	height				: 17px;
+}
+
+select.menu-fastcreate-select {
+	margin				: 7px 7px 0;
+	float				: right;
+}
+
+.fc-sat, .fc-sun {
+	background-color: #fee;
+}

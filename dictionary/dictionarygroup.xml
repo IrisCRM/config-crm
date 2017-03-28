@@ -1,0 +1,22 @@
+﻿<?xml version="1.0"?>
+<!-- created with Iris CRM 3.4.10 on 22.11.2011 14:39:11 -->
+<DICT>
+   <DICTONARY table="iris_dictionarygroup">
+      <GRID_WND lines_count="1" caption="Группы справочников" width="600" height="275">
+         <COLUMNS>
+			<ITEM caption="Порядок" db_field="OrderPos" width="80px" row_type="common"/>
+            <ITEM caption="Название" db_field="Name" width="50%" row_type="common"/>
+            <ITEM caption="Код" db_field="Code" width="20%" row_type="common"/>
+            <ITEM caption="Описание" db_field="Description" width="30%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_iris_dictionarygroup" caption="Группы справочников" width="450" height="180" layout="1, 2, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Код" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+			<FIELD elem_type="text" caption="Порядок в списке" title="порядок данной записи в выпадающем списке карточки и в автофильтре" db_field="OrderPos" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_encryption">
+		<VALUES>
+			<ITEM db_value="no" caption="Не использовать"/>
+			<ITEM db_value="ssl" caption="SSL"/>
+			<ITEM db_value="tls" caption="TLS"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

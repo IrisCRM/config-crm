@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_column_total">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Количество" xml="count"/>
+			<ITEM db_value="2" caption="Сумма" xml="sum"/>
+			<ITEM db_value="3" caption="Среднее" xml="avg"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

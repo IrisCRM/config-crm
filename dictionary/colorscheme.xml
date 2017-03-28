@@ -1,0 +1,27 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_colorscheme">
+      <GRID_WND lines_count="1" caption="Цветовые схемы" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Название" db_field="name" width="50%" row_type="common"/>
+            <ITEM caption="Код" db_field="code" width="20%" row_type="common"/>
+            <ITEM caption="Описание" db_field="description" width="30%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_ColorScheme" caption="Цветовая схема" width="600" height="280" layout="1, 1,  1, 2,  1, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Код" db_field="code" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="textarea" textarea_rows="5" caption="Цветовая схема" db_field="scheme" mandatory="yes" 
+              datatype="string" row_type="common"
+              title="Цветовая схема, пример заполнения: #fff, #eee, #ddd, #ccc, #bbb, #aaa, #888"/>
+            <FIELD elem_type="textarea" textarea_rows="5" caption="Подсветка" db_field="highlight" mandatory="no" 
+              datatype="string" row_type="common"
+              title="Цветовая схема подсветки, пример заполнения: #fff, #eee, #ddd, #ccc, #bbb, #aaa, #888"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

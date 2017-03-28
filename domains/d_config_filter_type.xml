@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_filter_type">
+		<VALUES>
+			<ITEM db_value="1" caption="SQL"/>
+			<ITEM db_value="2" caption="Автофильтр"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

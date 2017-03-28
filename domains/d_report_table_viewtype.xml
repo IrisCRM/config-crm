@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_report_table_viewtype">
+		<VALUES>
+			<ITEM db_value="n" caption="Обычная"/>
+			<ITEM db_value="t" caption="Транспонированная"/>
+			<ITEM db_value="c" caption="Карточки"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

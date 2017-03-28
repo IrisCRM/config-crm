@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_TaskResult">
+      <GRID_WND lines_count="1" caption="Результаты дел" width="600" height="275">
+         <COLUMNS>
+			<ITEM caption="Порядок" db_field="OrderPos" width="80px" row_type="common"/>
+            <ITEM caption="Название" db_field="Name" width="30%" row_type="common"/>
+            <ITEM caption="Тип дела" db_field="TaskTypeID" width="20%" row_type="fk_column" row_type_parent_table="iris_TaskType" row_type_parent_display_column="Name"/>
+            <ITEM caption="Код" db_field="Code" width="20%" row_type="common"/>
+            <ITEM caption="Описание" db_field="Description" width="30%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_TaskResult" caption="Результат дела" width="450" height="200" layout="1, 2, 2, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="select" caption="Тип дела" db_field="TaskTypeID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_TaskType" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Код" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+			<FIELD elem_type="text" caption="Порядок в списке" title="порядок данной записи в выпадающем списке карточки и в автофильтре" db_field="OrderPos" mandatory="no" datatype="string" row_type="common"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

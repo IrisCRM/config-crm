@@ -1,0 +1,8 @@
+div.myprefs_div div {
+  width: 20em;
+  padding: 1em;
+  background-color: #d0d0ff;
+  margin: 1em;
+  border-radius: 0.5em;
+  cursor: pointer;
+}

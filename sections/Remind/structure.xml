@@ -1,0 +1,85 @@
+﻿<?xml version="1.0"?>
+<MENU_TAB>
+	<TAB section_type="common" caption="Напоминания" table="iris_Remind">
+		<GRID lines_count="1">
+			<COLUMNS>
+				<ITEM db_field="Number" caption="Номер" width="80px" row_type="common"/>
+				<ITEM db_field="Name" caption="Напоминание" width="25%" row_type="common"/>
+				<ITEM db_field="IsActive" caption="Активно" width="70px" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				<ITEM db_field="SectionID" caption="Раздел" width="25%" row_type="fk_column" row_type_parent_table="iris_Section" row_type_parent_display_column="Name"/>
+				<ITEM db_field="Description" caption="Описание" width="50%" row_type="common"/>
+			</COLUMNS>
+			<FILTERS>
+				<ITEM caption="Все напоминания" item_style="font-weight: bold;" where_clause="1=1" sort_column="1" sort_direction="asc" default_selected="yes"/>
+			</FILTERS>
+		</GRID>
+
+		<GRID_WND lines_count="1" caption="Напоминания" width="600" height="280">
+			<COLUMNS>
+				<ITEM db_field="Number" caption="Номер" width="" row_type="common"/>
+				<ITEM db_field="Name" caption="Напоминание" width="" row_type="common"/>
+				<ITEM db_field="Description" caption="Описание" width="" row_type="common"/>
+			</COLUMNS>
+		</GRID_WND>
+
+		<EDITCARD name="c_Remind" caption="Напоминание" width="750" height="390" 
+			layout="1, 2, 2, 1, 2, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1">
+			<TABS>
+				<TAB caption="Основная информация" rows="11"/>
+				<TAB caption="Текст email уведомления" rows="2"/>
+				<TAB caption="Тексты gtalk и sms уведомлений" rows="3"/>
+			</TABS>
+		 <ELEMENTS row_type="fk_column">
+				<FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+
+				<FIELD elem_type="text" caption="Порядок" db_field="Number" mandatory="yes" datatype="int" row_type="common" title="Порядок, в котором данное напоминание будет отображаться в панели напоминаний"/>
+				<FIELD elem_type="spacer"/>
+
+				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Активно" db_field="IsActive" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если напоминание не активно, то оно не показывается на панели напоминаний и по нему не высылаются уведомления"/>
+				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Напоминать" db_field="IsRemind" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то напоминание не показывается на панели напоминаний, но по нему будут высылаться уведомления, если установлены галочки Email, Google Talk или SMS"/>
+
+	            <FIELD elem_type="splitter" caption="Источник"/>
+				<FIELD elem_type="lookup" caption="Раздел" db_field="SectionID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="sectionroles" row_type_parent_display_column="Name" title="Раздел, к которому прикреплено напоминание. Основная таблица раздела должна совпадать с основной таблицей отчета, указанного в поле 'Условие запроса'"/>
+				<FIELD elem_type="lookup" caption="Условие запроса" db_field="ReportID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Report" row_type_parent_display_column="Name" title="Отчет, который будет выводить записи для данного напоминания. Он должен выводить только следющие колонки: recordid (ID записи таблицы раздела), userid (пользователь, которого необходимо уведомить), hash (поле, по которому будет определяться, что произошло изменение записи и будет выслано повторное уведомление; это используется, например, для уведомлений об изменениии стадий заказа; в остальных случаях можно выводить константу, например '1'), canemail (разрешена ли отправка уведомления по email), cangtalk (разрешена ли отправка уведомления по gtalk), cansms (разрешена ли отправка уведомления по sms), email, gtalk, sms"/>
+	            
+				<FIELD elem_type="splitter" caption="Высылать уведомления по"/>
+				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Email" db_field="IsEmail" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании по email. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по email', то уведомление не будет отправлено"/>
+				<FIELD elem_type="spacer"/>
+				<!--<FIELD elem_type="checkbox" row_type_checked_index="1" caption="ICQ" db_field="IsICQ" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании по icq. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по icq', то уведомление не будет отправлено"/>-->
+				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Google talk" db_field="IsGtalk" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании в Google talk. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по gtalk', то уведомление не будет отправлено"/>
+				<FIELD elem_type="spacer"/>
+				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="SMS" db_field="IsSMS" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании по sms. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по sms', то уведомление не будет отправлено"/>
+				<FIELD elem_type="spacer"/>
+				
+
+				<FIELD elem_type="splitter" caption="Описание"/>
+	            <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common" title="Краткое описание информации, выводящейся в напоминании. Если поле заполнено, то его содержимое будет выводиться во всплыващей подсказке при наведении на напоминание"/>
+				
+				<!-- вторая страница -->
+				<FIELD elem_type="text" caption="Тема письма" db_field="EmailSubject" mandatory="no" datatype="string" row_type="common" title="В теме письма также, как и в тексте письма, можно указывать шаблоны"/>
+				<FIELD elem_type="textarea" is_rich_control="yes" toolbar_type="Mini" textarea_rows="15" caption="Текст email &lt;br&gt; уведомления" db_field="EmailText" mandatory="no" datatype="string" row_type="common" title="Текст письма уведомления. Можно использовать шаблоны, как в печатных формах. Шаблон строится от карточки записи по которой формируется напоминание. Примеры полей: [#Название#], [#Ответственный#][#Компания#], [#Ответственный#][#Компания#][#Телефон#] и т.д"/>
+
+				<!-- вторая страница -->
+				<!--<FIELD elem_type="textarea" textarea_rows="6" caption="Текст icq &lt;br&gt; уведомления" db_field="ICQtext" mandatory="no" datatype="string" row_type="common" title="В тексте icq уведомления можно указывать шаблоны на основе печатных форм"/>-->
+				<FIELD elem_type="textarea" textarea_rows="6" caption="Текст gtalk &lt;br&gt; уведомления" db_field="Gtalktext" mandatory="no" datatype="string" row_type="common" title="В тексте google talk уведомления можно указывать шаблоны на основе печатных форм"/>
+				<FIELD elem_type="spacer"/>
+				<FIELD elem_type="textarea" textarea_rows="6" caption="Текст sms &lt;br&gt; уведомления" db_field="SMStext" mandatory="no" datatype="string" row_type="common" title="В тексте sms уведомления можно указывать шаблоны на основе печатных форм"/>
+			</ELEMENTS>
+		</EDITCARD>
+
+      <DETAILS>
+			<DETAIL caption="Уведомления" name="d_Remind_Log" detail_fk_column="RemindID" detail_table="iris_RemindLog">
+				<GRID lines_count="1" display_search="yes">
+					<COLUMNS>
+						<ITEM db_field="senddate" caption="Дата отправки" width="130px" row_datatype="datetime" row_type="common"/>
+						<ITEM db_field="message" caption="Сообщение" width="60%" row_type="common"/>
+						<ITEM db_field="subject" caption="Тема" width="20%" row_type="common"/>
+						<ITEM db_field="contactid" caption="Контакт" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+					</COLUMNS>
+				</GRID>
+				<EDITCARD name="dc_ReminfLog" caption="Уведомление" parent_card_source="grid" parent_card_name="RemindLog">
+				</EDITCARD>
+			</DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

@@ -1,0 +1,108 @@
+<?php
+//********************************************************************
+// Раздел E-mail. таблица записей
+//********************************************************************
+
+namespace Iris\Config\CRM\sections\Email;
+
+use Config;
+use Iris\Iris;
+use PDO;
+
+include_once Iris::$app->getCoreDir() . 'core/engine/emaillib.php';
+
+class g_Email extends Config
+{
+    function __construct()
+    {
+        parent::__construct(array(
+            'common/Lib/lib.php',
+            'common/Lib/access.php'
+        ));
+    }
+
+    function triggerStar($params) {
+        $recordId = $params['recordId'];
+        $currentValue = $params['currentValue'];
+        $newValue = !$currentValue;
+        $permissions = array();
+
+        // права RW
+        GetUserRecordPermissions('iris_email', $recordId, GetUserId(), $permissions);
+        if (($permissions['r'] == 0) or ($permissions['w'] == 0)) {
+            return array("success" => 0);
+        }
+
+        $val = (int)$newValue;
+        $con = $this->connection;
+        $cmd = $con->prepare("update iris_email set isimportant = :val where id=:id");
+        $cmd->execute(array(":id" => $recordId, ":val" => $val));
+        $success = ($cmd->errorCode() == '00000' ? 1 : 0);
+
+        return array("success" => $success, "currentValue" => $currentValue, "val" => $val);
+    }
+
+    function sendEmail($params) {
+        $id = $params['recordId'];
+        $mode = $params['sendMode'];
+
+        $con = $this->connection;
+
+        // получение письма по его id
+        $sql = <<<EOL
+select e_from as from, e_to as to, subject, body, emailaccountid, T1.code as code from 
+iris_email T0 left join iris_emailtype T1 on T0.emailtypeid=T1.id where T0.id=:emailid
+EOL;
+        $cmd = $con->prepare($sql);
+        $cmd->execute(array(":emailid" => $id));
+        $email = current($cmd->fetchAll(PDO::FETCH_ASSOC));
+
+        // проверка того, что письмо еще не отправлено
+        if ($email['code'] != $mode) {
+            return array("status" => "-", "message" => "Разрешено отправлять только исходящие письма");
+        }
+
+        // если не указана учетная запись, то вернем ошибку
+        if (!$email['emailaccountid']) {
+            return array("status" => "-", "message" => "Невозможно отправить письмо, так как у него не задан обратный адрес", "www"=> $email);
+        }
+
+        // формируем массив с вложениями с элементами вида (file_name => имя, file_path => путь)
+        $sql = <<<EOL
+select file_filename, file_file from iris_file 
+where emailid=:emailid or id in (select fileid from iris_email_file where emailid=:emailid)
+EOL;
+        $cmd = $con->prepare($sql);
+        $cmd->execute(array(":emailid" => $id));
+        $files = $cmd->fetchAll(PDO::FETCH_ASSOC);
+
+        $attachments = array();
+        foreach ($files as $file) {
+            array_push($attachments, array(
+                "file_name" => $file['file_filename'],
+                "file_path" => Iris::$app->getRootDir() . 'files/' . $file['file_file'],
+            ));
+        }
+
+        // отправка письма
+        $errm = email_send_message($email['to'], $email['subject'], $email['body'], $email['from'], $attachments);
+        if ($errm != '') {
+            return array("status" => "-", "message" => "Ошибка: ".trim(strip_tags($errm)));
+        }
+
+        // проставление статуса "Отправленое" (или "Рассылка - отправленное")
+        $sql = "update iris_email set emailtypeid = (select et.id from iris_emailtype et where et.code=:code) where id=:id";
+        $cmd = $con->prepare($sql);
+        $cmd->execute(array(
+            ":id" => $id,
+            ":code" => (($mode == 'Outbox') ? 'Sent' : 'Mailing_sent')
+        ));
+
+        return array("status" => "+", "message" => "Письмо отправлено");
+    }
+
+    function fetchEmail($params) {
+        $fetcher = new EmailFetcher();
+        return $fetcher->fetchEmail();
+    }
+}

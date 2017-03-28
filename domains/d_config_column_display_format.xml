@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_column_display_format">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Отображать" xml="ongrid"/>
+			<ITEM db_value="2" caption="Невидимая" xml="hidden"/>
+			<ITEM db_value="3" caption="Скрыть" xml="none"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

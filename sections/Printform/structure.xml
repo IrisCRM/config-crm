@@ -1,0 +1,67 @@
+﻿<?xml version="1.0"?>
+<MENU_TAB>
+	<TAB section_type="common" caption="Печатные формы" table="iris_printform" image_name="">
+		
+		<GRID lines_count="1">
+			<COLUMNS>
+				<ITEM db_field="Name" caption="Название" width="30%" row_type="common"/>
+				<ITEM db_field="SectionID" caption="Раздел" width="15%" row_type="fk_column" row_type_parent_table="iris_Section" row_type_parent_display_column="Name"/>
+				<ITEM caption="Описание" db_field="Description" width="25%" row_type="common"/>
+				<ITEM db_field="displayinsection" caption="Показывать" width="10%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				<ITEM db_field="IsTextUse" caption="Исп. текст" width="10%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				<ITEM caption="Дата" db_field="printformdate" width="10%" row_type="common" row_datatype="date"/>
+
+				<ITEM db_field="printform_filename" caption="Файл" width="200px" row_type="common" display_format="none"/>
+				<ITEM caption="" db_field="sectionid" width="100px" row_type="fk_column" row_type_parent_table="iris_section" row_type_parent_display_column="code" display_format="none"/>
+			</COLUMNS>
+			<FILTERS>
+				<ITEM caption="Все ПФ" item_style="font-weight: bold;" where_clause="1=1"/>
+				<ITEM caption="Раздел" item_style="font-weight: bold;" auto_table="iris_section" values_where_clause="id in (select distinct sectionid from iris_printform)" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="t0.id in (select id from iris_printform where sectionid='#VALUE#')"/>
+			</FILTERS>
+		</GRID>
+		
+		<GRID_WND lines_count="1" caption="Печатные формы" width="600" height="280">
+			<COLUMNS>
+				<ITEM db_field="Name" caption="Название" width="40%" row_type="common"/>
+				<ITEM caption="Описание" db_field="Description" width="50%" row_type="common"/>
+				<ITEM db_field="printform_filename" caption="Файл" width="200px" row_type="common" display_format="none"/>
+				<ITEM caption="" db_field="sectionid" width="100px" row_type="fk_column" row_type_parent_table="iris_section" row_type_parent_display_column="code" display_format="none"/>
+			</COLUMNS>
+		</GRID_WND>
+		
+		<EDITCARD name="c_Printform" caption="Печатная форма" width="860" height="500" layout="1, 1, 2, 2, 2, 1, 2, 1, 1, 1, 1">
+	         <TABS>
+	            <TAB caption="Основная информация" rows="8"/>
+	            <TAB caption="Текст" rows="1"/>
+	            <TAB caption="Файл" rows="2"/>
+	         </TABS>		
+			<ELEMENTS>
+				<FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+				
+				<FIELD elem_type="splitter" caption="Настройки"/>
+				<FIELD elem_type="lookup" caption="Раздел" db_field="SectionID" mandatory="yes" datatype="string" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="sectionroles" row_type_parent_display_column="name"/>
+                <FIELD elem_type="spacer"/>
+
+                <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Отображать в разделе" db_field="displayinsection" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_int" title="Отображать ли печатную форму в списке доступных для печати из раздела"/>
+                <FIELD elem_type="spacer"/>
+
+                <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Использовать текст" db_field="IsTextUse" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_int" title="Поле определяет, использовать ли для генерации печатной формы поле 'Текст' или брать ее из файла, указанного в поле 'Файл'"/>
+                <FIELD elem_type="spacer"/>
+
+				<FIELD elem_type="splitter" caption="Прочее"/>
+				<FIELD elem_type="text" caption="Код" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+				<FIELD elem_type="text" caption="Дата" db_field="PrintFormDate" mandatory="no" datatype="date" row_type="date"/>
+				<FIELD elem_type="textarea" textarea_rows="5" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+				
+				<FIELD elem_type="textarea" is_rich_control="yes" textarea_rows="24" caption="Текст" db_field="PrintFormText" mandatory="no" datatype="string" row_type="common" title="Текст используется для генерации печатной формы, если поле 'Использовать текст' имеет значение 'Да'"/>
+
+				<FIELD elem_type="text" caption="Файл" db_field="printform_file" mandatory="yes" datatype="file" row_type="file"/>			   
+                <FIELD elem_type="spacer"/>
+			</ELEMENTS>
+		</EDITCARD>
+		<DETAILS>
+			<DETAIL caption="История изменений" name="d_Account_Log" detail_fk_column="" detail_bound_clause="(T0.recordid=:parent_id)" external="yes" detail_file="Sections/Changelog/detail.xml">
+			</DETAIL>
+		</DETAILS>
+	</TAB>
+</MENU_TAB>

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_interviewresult">
+      <GRID_WND lines_count="1" caption="Результаты интервью" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Название" db_field="name" width="50%" row_type="common"/>
+            <ITEM caption="Код" db_field="code" width="20%" row_type="common"/>
+            <ITEM caption="Описание" db_field="description" width="30%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_InterviewResult" caption="Результат интервью" width="450" height="180" layout="1, 1, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Код" db_field="code" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

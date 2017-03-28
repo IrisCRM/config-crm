@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+  <TAB section_type="common" caption="Поля карточек конфигуратора" table="iris_Config_Card_Field" >
+    <GRID lines_count="1">
+      <COLUMNS>
+        <ITEM db_field="name" caption="Название" width="30%" 
+          row_type="common"/>
+      </COLUMNS>
+
+      <FILTERS>
+        <ITEM caption="Все поля" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes"/>
+      </FILTERS>
+    </GRID>
+
+    <GRID_WND lines_count="1" caption="Поля карточек конфигуратора" width="600" height="280">
+      <COLUMNS>
+        <ITEM db_field="name" caption="Название" width="30%" 
+          row_type="common"/>
+      </COLUMNS>
+    </GRID_WND>
+
+    <EDITCARD name="c_Config_Card_Field" caption="Поле карточки конфигуратора" width="600" height="400" 
+      layout="1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,   1,   1, 2,   1, 1, 1,  1, 1, 1, 1, 1, 1, 1,   2"
+      js_source_file="config/sections/Config_Card_Field/c_config_card_field.js" js_function="c_config_card_field.on_init" js_path="full">
+      <TABS>
+        <TAB caption="Общее" rows="17"/>
+        <TAB caption="Разделитель" rows="1"/>
+        <TAB caption="Текст" rows="2"/>
+        <TAB caption="Справочник" rows="10"/>
+        <TAB caption="Телефон" rows="1"/>
+      </TABS>   
+      <ELEMENTS>
+        <FIELD elem_type="lookup" caption="Карточка" db_field="ConfigCardID"
+          mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Config_Card" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="select" caption="Тип поля" db_field="controltype" 
+          mandatory="yes" datatype="int" row_type="domain" row_type_domain_name="d_config_controltype"/>
+        <FIELD elem_type="select" caption="Тип данных" db_field="datatype" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_config_datatype"/>
+        <FIELD elem_type="select" caption="Тип элемента" db_field="fieldtype" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_config_fieldtype"/>
+        <FIELD elem_type="text" caption="Название" db_field="name"
+          mandatory="no" datatype="string" row_type="common"
+          title="Название отображается в качестве названия поля в карточке."/>
+        <FIELD elem_type="radiobutton" caption="Обязательное" db_field="ismandatory" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"
+          title="Обязатльные для заполнения поля отображаются на карточке отдельным стилем. [Нет]"/>
+        <FIELD elem_type="lookup" caption="Колонка" db_field="ColumnID"
+          mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Table_Column" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="text" caption="Колонка, SQL" db_field="columnsql"
+          mandatory="no" datatype="string" row_type="common"
+          title="Если заполнено это поле, то при сохранении в xml предпочтение даётся этому полю, а не полю Колонка."/>
+        <FIELD elem_type="text" caption="Подсказка" db_field="title"
+          mandatory="no" datatype="string" row_type="common"
+          title="Подсказка, которая выводится при указании мышкой на название поля."/>
+        <FIELD elem_type="text" caption="Код" db_field="code"
+          mandatory="no" datatype="string" row_type="common"
+          title="Актуально и обязательно для полей с типом Кнопка, Таблица, Матрица."/>
+        <FIELD elem_type="text" caption="Высота" db_field="height"
+          mandatory="no" datatype="string" row_type="common"
+          title="Актуально для полей с типом Таблица. Пример: 150px"/>
+        <FIELD elem_type="text" caption="Ширина" db_field="width"
+          mandatory="no" datatype="string" row_type="common"
+          title="Актуально для полей с типом Кнопка. [100%]"/>
+
+        <FIELD elem_type="radiobutton" caption="Выравнивание" db_field="align" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_config_field_align"
+          title="Способ выравнивания кнопки, когда она занимает не всю ширину. [Влево]"/>
+        <FIELD elem_type="text" caption="Метод" db_field="method"
+          mandatory="no" datatype="string" row_type="common"
+          title="Метод, который необходимо вызвать при нажатии кнопки."/>
+        <FIELD elem_type="text" caption="Обработчик" db_field="onclick"
+          mandatory="no" datatype="string" row_type="common"
+          title="Обработчик, который необходимо вызвать при нажатии кнопки. Предпочтительно использовать поле Метод."/>
+
+        <FIELD elem_type="splitter" caption="Расположение на карточке"/>
+        <FIELD elem_type="text" caption="Строка" db_field="rownumber"
+          mandatory="yes" datatype="int" row_type="common"
+          title="Номер строки относительно первой закладки (1 - первая строка)"/>
+        <FIELD elem_type="text" caption="Столбец" db_field="colnumber"
+          mandatory="yes" datatype="int" row_type="common"
+          title="Номер столбца (1 - первый столбец)"/>
+
+        <FIELD elem_type="radiobutton" caption="В одну колонку" db_field="issmall" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"
+          title="Отображать разделитель не во всю строку, а в одну колонку. [Нет]"/>
+
+        <FIELD elem_type="text" caption="Количество строк" db_field="rowcount"
+          mandatory="no" datatype="int" row_type="common"
+          title="Сколько строк занимает текстовое поле"/>
+        <FIELD elem_type="radiobutton" caption="Визуальный редактор" db_field="iswysiwyg" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"
+          title="Отображать текстовое поле как визуальный редактор (с возможностью форматирования текста). [Нет]"/>
+        <FIELD elem_type="radiobutton" caption="Тип тулбара" db_field="toolbartype" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_config_field_toolbar_type"
+          title="В минимальном тулюаре содержится мниниамльное количество управляющих функций. [Стандартный]"/>
+
+        <FIELD elem_type="lookup" caption="Ссылка на таблицу" db_field="DictTableID"
+          mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Table" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="lookup" caption="Отображать колонку" db_field="DictColumnID"
+          mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Table_Column" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="textarea" textarea_rows="4" caption="Фильтр, SQL" db_field="dictfiltersql" 
+          mandatory="no" datatype="string" row_type="common"/>
+
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="splitter" caption="Список"/>
+        <FIELD elem_type="lookup" caption="Сортировать по" db_field="ListSortColumnID"
+          mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Table_Column" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="text" caption="Дополнительные поля" db_field="ListExtFields"
+          mandatory="no" datatype="string" row_type="common"
+          title="Дополнительные поля, которые нужно поместить в выпадающий список в качестве атрибутов, записываются через запятую."/>
+        <FIELD elem_type="textarea" textarea_rows="4" caption="Список, SQL" db_field="listsql" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="Код домена" db_field="domain"
+          mandatory="no" datatype="string" row_type="common"
+          title="Код домена. Домены определяются в файле config/domains/&lt;код домена&gt;.xml."/>
+        <FIELD elem_type="text" caption="Истина (индекс)" db_field="checkedindex"
+          mandatory="no" datatype="int" row_type="common"
+          title="Для checkbox определяет порядковый номер значения домена, соответствующего истине."/>
+
+        <FIELD elem_type="text" caption="Добавочный номер" db_field="fieldext"
+          mandatory="no" datatype="string" row_type="common"
+          title="Название поля в БД, в котором хранится добавочный номер."/>
+        <FIELD elem_type="radiobutton" caption="Добавочный номер обязателен" db_field="ismandatoryext" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"
+          title="Если добавочный номер обязателен для заполнения, укажите Да. [Нет]"/>
+      </ELEMENTS>
+    </EDITCARD>
+
+    <DETAILS>
+    </DETAILS>
+  </TAB>
+</MENU_TAB>

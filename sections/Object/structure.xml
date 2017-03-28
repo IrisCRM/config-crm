@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Объекты" table="iris_Object" order_pos="2" image_name="contacts.png">
+      <GRID lines_count="1">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Название" width="20%" row_type="common"/>
+            <ITEM db_field="AccountID" caption="Компания" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" row_type_alias="OAccount"/>
+            <ITEM db_field="ObjectTypeID" caption="Тип" width="15%" row_type="fk_column" row_type_parent_table="iris_ObjectType" row_type_parent_display_column="Name" row_type_alias="OType"/>
+            <ITEM db_field="ObjectStateID" caption="Состояние" width="15%" row_type="fk_column" row_type_parent_table="iris_ObjectState" row_type_parent_display_column="Name" row_type_alias="OState"/>
+            <ITEM db_field="ContactID" caption="Контакт" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none" row_type_alias="OContact"/>
+
+            <ITEM db_field="Phone1" caption="Телефон 1" width="15%" row_type="common"/>
+            <ITEM db_field="Phone2" caption="Телефон 2" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="Phone3" caption="Телефон 3" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="Fax" caption="Факс" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="Email" caption="E-mail" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="Web" caption="Сайт" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="CountryID" caption="Страна" width="15%" row_type="fk_column" row_type_parent_table="iris_Country" row_type_parent_display_column="Name" row_type_alias="OCountry" display_format="none"/>
+            <ITEM db_field="CityID" caption="Город" width="15%" row_type="fk_column" row_type_parent_table="iris_City" row_type_parent_display_column="Name" row_type_alias="OCity" display_format="none"/>
+            <ITEM db_field="ZIP" caption="Индекс" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="RegionID" caption="Регион" width="15%" row_type="fk_column" row_type_parent_table="iris_Region" row_type_parent_display_column="Name" row_type_alias="ORegion" display_format="none"/>
+            <ITEM db_field="Address" caption="Адрес" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="Scheme" caption="Схема проезда" width="20%" row_type="common" display_format="none"/>
+
+            <ITEM db_field="Description" caption="Описание" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="OOwner"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все объекты" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes">
+            </ITEM>
+            <ITEM caption="Мои объекты" item_style="font-weight: bold;" where_clause="T0.OwnerID=_iris_user_id[]" default_selected="no">
+            </ITEM>
+			<ITEM caption="Тип" item_style="font-weight: bold;" auto_table="iris_ObjectType" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.ObjectTypeID='#VALUE#'"/>
+			<ITEM caption="Состояние" item_style="font-weight: bold;" auto_table="iris_ObjectState" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.ObjectStateID='#VALUE#'"/>
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" caption="Объекты" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Объект" width="25%" row_type="common"/>
+            <ITEM db_field="AccountID" caption="Компания" width="25%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name"/>
+            <ITEM db_field="ObjectTypeID" caption="Тип" width="25%" row_type="fk_column" row_type_parent_table="iris_ObjectType" row_type_parent_display_column="Name"/>
+            <ITEM db_field="ObjectStateID" caption="Состояние" width="25%" row_type="fk_column" row_type_parent_table="iris_ObjectState" row_type_parent_display_column="Name"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Object" caption="Объект" width="800" height="405" 
+         layout="1, 2, 2, 2, 1, 2, 2, 2, 1,    1, 2, 2, 1, 1">
+         <TABS>
+            <TAB caption="Основная информация" rows="9"/>
+            <TAB caption="Адрес" rows="5"/>
+         </TABS>
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="lookup" caption="Компания" db_field="AccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Тип" db_field="ObjectTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ObjectType" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Состояние" db_field="ObjectStateID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ObjectState" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="splitter" caption="Коммуникации"/>
+            <FIELD elem_type="phone" caption="Телефон 1" db_field="Phone1" mandatory="no" datatype="string" row_type="common" db_field_addl="Phone1addl" mandatory_addl="no"/>
+            <FIELD elem_type="text" caption="Факс" db_field="Fax" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="phone" caption="Телефон 2" db_field="Phone2" mandatory="no" datatype="string" row_type="common" db_field_addl="Phone2addl" mandatory_addl="no"/>
+            <FIELD elem_type="email" caption="E-mail" db_field="Email" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="phone" caption="Телефон 3" db_field="Phone3" mandatory="no" datatype="string" row_type="common" db_field_addl="Phone3addl" mandatory_addl="no"/>
+            <FIELD elem_type="url" caption="Сайт" db_field="Web" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="8" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+            
+			<FIELD elem_type="splitter" caption="Адрес"/>
+            <FIELD elem_type="lookup" caption="Страна" db_field="CountryID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="country" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Индекс" db_field="ZIP" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="lookup" caption="Город" db_field="CityID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="city" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Регион" db_field="RegionID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="region" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Адрес" db_field="Address" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="url" caption="Схема проезда" db_field="Scheme" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Контакты" name="d_Object_Contact" detail_fk_column="ObjectID" external="yes" detail_file="Sections/Contact/detail.xml">
+         </DETAIL>
+
+<!-- 
+         <DETAIL caption="Компании" name="d_Object_Accont" detail_fk_column="ObjectID" external="yes" detail_file="Sections/Account/detail.xml">
+         </DETAIL>
+-->
+         <DETAIL caption="Почта" name="d_Object_Email" detail_fk_column="" detail_bound_clause="((T0.accountid in (select accountid from iris_object where id=:parent_id)) or (T0.contactid in (select contactid from iris_object where id=:parent_id)))" external="yes" detail_file="Sections/Email/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="Общение" name="d_Object_Message" detail_fk_column="" detail_bound_clause="((T0.autorid in (select id from iris_contact where objectid=:parent_id)) or (T0.recipientid in (select id from iris_contact where objectid=:parent_id)))" external="yes" detail_file="Sections/Message/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="Дела" name="d_Object_Task" detail_fk_column="ObjectID" external="yes" detail_file="Sections/Task/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Заказы" name="d_Object_Project" detail_fk_column="ObjectID" external="yes" detail_file="Sections/Project/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Инциденты" name="d_Object_Incident" detail_fk_column="ObjectID" external="yes" detail_file="Sections/Incident/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Файлы" name="d_Object_File" detail_fk_column="ObjectID" external="yes" detail_file="Sections/File/detail.xml">
+         </DETAIL>
+         <DETAIL caption="История изменений" name="d_Object_Log" detail_fk_column="" detail_bound_clause="(T0.recordid=:parent_id)" external="yes" detail_file="Sections/Changelog/detail.xml">
+         </DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

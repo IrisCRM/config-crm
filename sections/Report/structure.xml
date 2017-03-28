@@ -1,0 +1,304 @@
+﻿<?xml version="1.0"?>
+<MENU_TAB>
+  <TAB section_type="common" caption="Отчеты" table="iris_Report">
+    <GRID lines_count="1" disable_dblclick="yes" 
+      ondblclick="showParamsWindow({'reportid': this.getAttribute('rec_id')})"
+      name="g_Report">
+      <COLUMNS>
+        <ITEM db_field="Name" caption="Отчет" width="100px" row_type="common"/>
+        <ITEM db_field="Description" caption="Описание" width="100px" 
+          row_type="common"/>
+      </COLUMNS>
+      <FILTERS>
+        <ITEM caption="Все отчеты" item_style="font-weight: bold;" 
+          where_clause="1=1" sort_column="1" sort_direction="asc"/>
+      <ITEM caption="По типу" item_style="font-weight: bold;" where_clause="">
+          <ITEM caption="Аналитические" 
+            where_clause="T0.code not in ('mailing_contact') or (T0.id not in (select reportid from iris_remind))" 
+            sort_column="1" sort_direction="asc" default_selected="yes"/>
+          <ITEM caption="Системные" 
+            where_clause="T0.code='mailing_contact' or (T0.id in (select reportid from iris_remind))" 
+            sort_column="1" sort_direction="asc"/>
+      </ITEM>
+      </FILTERS>
+    </GRID>
+    <GRID_WND lines_count="1" caption="Отчеты" width="600" height="280">
+      <COLUMNS>
+        <ITEM db_field="Name" caption="Отчет" width="" row_type="common"/>
+        <ITEM db_field="Description" caption="Описание" width="" 
+          row_type="common"/>
+      </COLUMNS>
+    </GRID_WND>
+
+    <EDITCARD 
+      name="c_Report" 
+      caption="Отчет" 
+      width="800"
+      height="520"
+      layout="1,2,1,2,1,1,1,1,  1,2,2,2,2,2,2,  1,2,1,2,1,2,  1,1,2,1,1,2" 
+      show_card_top_panel="yes">
+      <TABS>
+         <TAB caption="Общее" rows="8"/>
+         <TAB caption="График" rows="7"/>
+         <TAB caption="Таблица" rows="6"/>
+       <TAB caption="Пользовательская логика" rows="6"/>
+      </TABS>
+      <ELEMENTS>
+        <FIELD caption="Название" db_field="Name" mandatory="yes"
+          elem_type="text" datatype="string" row_type="common" />
+        <FIELD caption="Код" db_field="Code" mandatory="no"
+          elem_type="text" datatype="string" row_type="common" />
+        <FIELD elem_type="spacer" />
+        <FIELD caption="Свойства отчета" elem_type="splitter"/>
+        <FIELD caption="Выводить записей" db_field="RecordCount" mandatory="no" 
+          elem_type="text" datatype="int" row_type="common"
+          title="Максимальное число строк в отчёте. 0 - без ограничений."/>
+        <FIELD elem_type="checkbox" row_type_checked_index="1" 
+          caption="Только уникальные строки" db_field="isdistinct" 
+          mandatory="no" datatype="int" row_type="domain" 
+          row_type_domain_name="d_yn_binary" 
+          title="Использование оператора DISTINCT"/>
+
+        <FIELD caption="SQL" elem_type="splitter"/>
+        <FIELD caption="SQL" db_field="sql" mandatory="no" 
+          elem_type="textarea" datatype="string" row_type="common" 
+          textarea_rows="12"
+          title="Используйте SQL поле только для описания сложных отчётов."/>
+
+        <FIELD caption="Описание" elem_type="splitter"/>
+        <FIELD caption="Описание" db_field="Description" mandatory="no" 
+          elem_type="textarea" datatype="string" row_type="common" 
+          textarea_rows="5"/>
+
+        <FIELD caption="График" elem_type="splitter"/>
+        <FIELD caption="Тип графика" db_field="GraphType" mandatory="no" 
+          elem_type="select" datatype="int" row_type="domain" 
+          row_type_domain_name="d_graph_type"/>
+        <FIELD caption="Колонка (алиас)" db_field="xAlias" mandatory="no"
+          elem_type="text" datatype="string" row_type="common"
+          title="Если отчёт задан SQL полем, то укажите алиас отображаемой колонки (ось X)."/>
+        <FIELD caption="Таблица" db_field="xReport_TableID" mandatory="no"
+          elem_type="lookup" datatype="id" row_type="fk_column" 
+          row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Report_Table" 
+          row_type_parent_display_column="Name"
+          title="Если поля отчёта указаны во вкладке, то выберите таблицу/колонку оси X в этих полях."/>
+        <FIELD caption="Колонка" db_field="xColumnID" mandatory="no"
+          elem_type="lookup" datatype="id" row_type="fk_column" 
+          row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Table_Column" 
+          row_type_parent_display_column="Name"/>
+        <FIELD elem_type="checkbox" row_type_checked_index="1" 
+          caption="Отображать нули" db_field="ShowZero" mandatory="no" 
+          datatype="int" row_type="domain" 
+          row_type_domain_name="d_yn_binary"
+          title="Чтобы на графике не отображать нулевые значения, установите этот признак. Удобно, например, при построение круговых диаграм."/>
+        <FIELD elem_type="checkbox" row_type_checked_index="1" 
+          caption="Отображать оси" db_field="ShowAxis" mandatory="no" 
+          datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+        <FIELD elem_type="spacer" />
+        <FIELD elem_type="checkbox" row_type_checked_index="1" 
+          caption="Отображать значения" db_field="Showlabels" 
+          mandatory="no" datatype="int" row_type="domain" 
+          row_type_domain_name="d_yn_binary"/>
+
+        <FIELD caption="Ширина, мм" db_field="graphwidth" mandatory="no" 
+          elem_type="text" datatype="int" row_type="common"
+          title="Ширина графика в миллиметрах."/>
+        <FIELD caption="Высота, мм" db_field="graphheight" mandatory="no" 
+          elem_type="text" datatype="int" row_type="common"
+          title="Высота графика в миллиметрах."/>
+        <FIELD caption="Цветовая схема" db_field="ColorSchemeID" mandatory="no" 
+          elem_type="select" datatype="id" row_type="fk_column" 
+          row_type_parent_table="iris_ColorScheme" 
+          row_type_parent_display_column="Name"/>
+        <FIELD elem_type="spacer" />
+
+        <FIELD caption="Таблица" elem_type="splitter"/>
+        <FIELD caption="Тип табличной части" db_field="TableType" mandatory="no" 
+          elem_type="select" datatype="string" row_type="domain" 
+          row_type_domain_name="d_report_table_viewtype"/>
+        <FIELD elem_type="spacer" />
+
+        <FIELD caption="Для табличной части в виде карточек" 
+          elem_type="splitter"/>
+        <FIELD caption="Количество строк" db_field="tablecardrows" 
+          mandatory="no" elem_type="text" datatype="int" row_type="common" 
+          title="Количество строк на странице. Используется при выводе отчета в виде карточек"/>
+        <FIELD caption="Количество столбцов" db_field="tablecardcols" 
+          mandatory="no" elem_type="text" datatype="int" row_type="common" 
+          title="Количество столбцов на странице. Используется при выводе отчета в виде карточек"/>
+
+        <FIELD caption="Формат страницы" elem_type="splitter"/>
+        <FIELD caption="Формат страницы (ширина)" db_field="width" mandatory="no"
+          elem_type="select" datatype="string" row_type="domain" 
+          row_type_domain_name="d_pagewidth"/>
+        <FIELD elem_type="spacer" />
+      
+        <FIELD caption="Перед рисованием отчета (на сервере) - для версии 3" 
+          elem_type="splitter"/>
+        <FIELD caption="Скрипт php" db_field="beforeshowscript" mandatory="no" 
+          elem_type="text" datatype="string" row_type="common" 
+          title="Путь к скрипту php относительно папки 'config/sections/Report/'"/>
+        <FIELD caption="Функция php" db_field="beforeshowfunction" mandatory="no"
+          elem_type="text" datatype="string" row_type="common" 
+          title="@unused Имя функции php, которая будет использована для прорисовки отчета вместо стандартной функции RenderDefaultReport"/>
+        <FIELD elem_type="spacer" />
+
+        <FIELD caption="После рисованием отчета (в браузере) - для версии 3" 
+          elem_type="splitter"/>
+        <FIELD caption="Скрипт js" db_field="aftershowscript" mandatory="no" 
+          elem_type="text" datatype="string" row_type="common" 
+          title="Путь к скрипту javascript относительно папки 'config/sections/Report/'. Можно указать несколько скриптов через запятую"/>
+        <FIELD caption="Функция js" db_field="aftershowfunction" mandatory="no" 
+          elem_type="text" datatype="string" row_type="common" 
+          title="Имя функции javascript, которая будет вызвана после отрисовки отчета. Пример: myfunction()"/>
+        <FIELD elem_type="spacer" />
+      </ELEMENTS>
+    </EDITCARD>
+
+    <DETAILS>
+      <DETAIL caption="Таблицы отчета" name="d_Report_Table" 
+        detail_fk_column="ReportID" detail_table="iris_Report_Table">
+        <GRID lines_count="1" display_search="no">
+          <COLUMNS>
+            <ITEM db_field="Name" caption="Название" width="" row_type="common"/>
+            <ITEM db_field="Code" caption="Псевдоним" width="20%" 
+              row_type="common"/>
+            <ITEM db_field="ParentTableID" caption="Связанная таблица" 
+              width="20%" row_type="fk_column" 
+              row_type_parent_table="iris_Report_Table" 
+              row_type_parent_display_column="Name" />
+          </COLUMNS>
+        </GRID>
+        <EDITCARD caption="Таблица" name="dc_Report_Table" 
+          parent_card_source="grid" parent_card_name="Report_Table"/>
+      </DETAIL>
+
+      <DETAIL caption="Поля отчета" name="d_Report_Column" 
+        detail_fk_column="ReportID" detail_table="iris_Report_Column">
+        <GRID lines_count="1" display_search="no">
+          <COLUMNS>
+            <ITEM db_field="Number" caption="№" width="30" 
+              row_type="common" row_datatype="int"/>
+            <ITEM db_field="Name" caption="Название" width="" row_type="common"/>
+            <ITEM db_field="Code" caption="Код" width="20%" row_type="common"/>
+            <ITEM db_field="Report_TableID" caption="Таблица" width="20%" 
+              row_type="fk_column" row_type_parent_table="iris_Report_Table" 
+              row_type_parent_display_column="Name" />
+          </COLUMNS>
+        </GRID>
+        <EDITCARD caption="Колонка отчета" name="dc_Report_Column" 
+          parent_card_source="grid" parent_card_name="Report_Column"/>
+      </DETAIL>
+
+      <DETAIL caption="Фильтры отчета" name="d_Report_Filter" 
+        detail_fk_column="ReportID" detail_table="iris_Report_Filter">
+        <GRID lines_count="1" display_search="no">
+          <COLUMNS>
+            <ITEM db_field="Number" caption="№" width="30" 
+              row_type="common" row_datatype="int"/>
+            <ITEM db_field="Name" caption="Название" width="" row_type="common"/>
+            <ITEM db_field="Report_TableID" caption="Таблица" width="20%" 
+              row_type="fk_column" row_type_parent_table="iris_Report_Table" 
+              row_type_parent_display_column="Name" />
+          </COLUMNS>
+        </GRID>
+        <EDITCARD caption="Фильтр отчета" name="dc_Report_Filter" 
+          parent_card_source="grid" parent_card_name="Report_Filter"/>
+      </DETAIL>
+
+      <DETAIL caption="Параметры отчета" name="d_Report_Parameter" 
+        detail_fk_column="ReportID" detail_table="iris_Report_Parameter">
+        <GRID lines_count="1" display_search="no">
+          <COLUMNS>
+            <ITEM db_field="Number" caption="№" width="30" row_type="common" 
+              row_datatype="int"/>
+            <ITEM db_field="Name" caption="Название" width="" row_type="common"/>
+            <ITEM db_field="Code" caption="Код" width="20%" row_type="common"/>
+          </COLUMNS>
+        </GRID>
+        <EDITCARD caption="Параметр отчета" name="dc_Report_Parameter" 
+          width="600" height="350" 
+          layout="1, 2, 2, 2,  1, 1,  1, 2,  1, 1,  1,1,1,1">
+        <TABS>
+          <TAB caption="Основная информация" rows="8"/>
+          <TAB caption="Выпадающий список" rows="4"/>
+        </TABS>        
+          <ELEMENTS>
+            <FIELD caption="Отчет" db_field="ReportID" mandatory="yes"
+              elem_type="lookup" datatype="id" row_type="fk_column" 
+              row_type_parent_source_type="grid" 
+              row_type_parent_source_name="Report" 
+              row_type_parent_display_column="Name"/>
+
+            <FIELD caption="Название" db_field="Name" mandatory="yes"
+              elem_type="text" datatype="string" row_type="common"
+              title="Название фильтра в окне формирования отчёта"/>
+            <FIELD caption="Код (алиас)" db_field="Code" mandatory="yes"
+              elem_type="text" datatype="string" row_type="common"
+              title="Код параметра, который указан в SQL поле карточки отчёта."/>
+            <FIELD caption="Тип" db_field="TypeID" mandatory="yes" 
+              elem_type="select" datatype="id" row_type="fk_column" 
+              row_type_parent_table="iris_ColumnType" 
+              row_type_parent_display_column="Name"
+              db_field_ext="SystemCode"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD caption="Таблица (для GUID)" db_field="TableID" mandatory="no"
+              elem_type="lookup" datatype="id" row_type="fk_column" 
+              row_type_parent_source_type="grid" 
+              row_type_parent_source_name="Table" 
+              row_type_parent_display_column="Name"
+              title="Указывается только для типа GUID"/>
+            <FIELD elem_type="spacer"/>
+
+            <FIELD caption="Формула" elem_type="splitter"/>
+            <FIELD caption="Формула" db_field="equation" mandatory="no" 
+              elem_type="textarea" datatype="string" row_type="common" 
+              textarea_rows="2"/>
+
+            <FIELD caption="Отображение" elem_type="splitter"/>
+            <FIELD caption="Номер" db_field="Number" mandatory="yes" 
+               elem_type="text" datatype="int" row_type="common"
+               title="Порядок фильтра в окне формирования отчёта"/>
+<!--
+            <FIELD caption="Показывать" db_field="IsVisible" mandatory="no" 
+              elem_type="select" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+-->
+            <FIELD elem_type="checkbox" row_type_checked_index="1" 
+              caption="Показывать" db_field="IsVisible" mandatory="no" 
+              datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"
+              title="Отображать ли фильтр в окне формирования отчёта. Если нет, то он будет автоматически применён."/>
+
+            <FIELD caption="Описание" elem_type="splitter"/>
+            <FIELD caption="Описание" db_field="Description" mandatory="no" 
+              elem_type="textarea" datatype="string" row_type="common" 
+              textarea_rows="5"/>
+
+            <FIELD caption="Для выпадающего списка" elem_type="splitter"/>
+            <FIELD caption="Запрос" db_field="DropLIstSQL" 
+              mandatory="no" elem_type="textarea" datatype="string" 
+              row_type="common" textarea_rows="7" 
+              title="Если поле заполнено, то для данного параметра будет нарисован выпадающий список, содержащий значения из данного запроса. Запрос должен возвращать две колонки: value и caption. Пример запроса: select id as value, name as caption from iris_accounttype order by name"/>
+
+            <FIELD caption="Идентификатор" db_field="GUIDValue"
+              elem_type="text" datatype="string" row_type="common"/>
+            <FIELD caption="Строка" db_field="StringValue"
+              elem_type="text" datatype="string" row_type="common"/>
+            <FIELD caption="Целое" db_field="IntValue"
+              elem_type="text" datatype="int" row_type="common"/>
+            <FIELD caption="Дрообное" db_field="FloatValue"
+              elem_type="text" datatype="decimal" row_type="common"/>
+            <FIELD caption="Дата-время" db_field="DateValue"
+              elem_type="text" datatype="datetime" row_type="date"/>
+          </ELEMENTS>
+        </EDITCARD>
+      </DETAIL>
+
+<!--
+      <DETAIL caption="Дела" name="d_Project_Task" detail_fk_column="ProjectID" external="yes" detail_file="Sections/Task/detail.xml">
+      </DETAIL>
+-->
+    </DETAILS>
+  </TAB>
+</MENU_TAB>

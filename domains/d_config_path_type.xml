@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_path_type">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Полный" xml="full"/>
+			<ITEM db_value="2" caption="Относительный"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

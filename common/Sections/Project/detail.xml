@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Project">
+            <GRID lines_count="1" display_search="no" sort_column="1" sort_direction="desc" name="g_Project">
+               <COLUMNS>
+                  <ITEM db_field="Name" caption="Заказ" width="30%" row_type="common" />
+                  <ITEM db_field="StartDate" caption="Дата начала" width="15%" row_type="common" row_datetype="date" />
+                  <ITEM db_field="FinishDate" caption="Дата завершения" width="15%" row_type="common" row_datetype="date" />
+                  <ITEM db_field="ProjectStateID" caption="Состояние" width="20%" row_type="fk_column" row_type_parent_table="iris_ProjectState" row_type_parent_display_column="Name" />
+                  <ITEM db_field="ProjectStageID" caption="Стадия" width="20%" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name" />
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Project" caption="Заказ" parent_card_source="grid" parent_card_name="Project">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Message">
+            <GRID name="g_Message" lines_count="1" sort_column="6" sort_direction="desc" display_search="no">
+               <COLUMNS>
+					<ITEM db_field="subject" caption="Тема" width="200px" row_type="common"/>
+					<ITEM db_field="message" caption="Сообщение" width="" row_type="common"/>
+					<ITEM db_field="autorID" caption="Автор" width="100px" row_type="fk_column" row_type_parent_table="iris_contact" row_type_parent_display_column="Name"/>
+					<ITEM db_field="importanceID" caption="Важность" width="60px" row_type="fk_column" row_type_parent_table="iris_messageimportance" row_type_parent_display_column="Name"/>
+					<ITEM db_field="statusID" caption="Статус" width="70px" row_type="fk_column" row_type_parent_table="iris_messagestatus" row_type_parent_display_column="Name"/>
+					<ITEM db_field="MessageDate" caption="Дата" width="110px" row_type="common" row_datatype="datetime"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Message" caption="Сообщение" parent_card_source="grid" parent_card_name="Mymessage">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_project_complexity">
+		<VALUES>
+			<ITEM db_value="0" caption="0 - низкая"/>
+			<ITEM db_value="1" caption="1"/>
+			<ITEM db_value="2" caption="2"/>
+			<ITEM db_value="3" caption="3"/>
+			<ITEM db_value="4" caption="4"/>
+			<ITEM db_value="5" caption="5 - высокая"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

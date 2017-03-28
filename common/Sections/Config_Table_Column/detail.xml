@@ -1,0 +1,25 @@
+﻿<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+  <DETAIL detail_table="iris_Config_Table_Column">
+    <GRID lines_count="1">
+      <COLUMNS>
+        <ITEM db_field="orderpos" caption="№" width="5%" 
+          row_type="common" row_datatype="int"/>
+        <ITEM db_field="name" caption="Название" width="20%" 
+          row_type="common"/>
+        <ITEM db_field="columnid" caption="Колонка" width="20%" 
+          row_type="fk_column" row_type_parent_table="iris_table_column" 
+          row_type_parent_display_column="Name"/>
+        <ITEM db_field="columntype" caption="Тип поля" width="15%" 
+          row_type="domain" datatype="int" row_type_domain_name="d_config_column_type"/>
+        <ITEM db_field="datatype" caption="Тип данных" width="15%" 
+          row_type="domain" datatype="int" row_type_domain_name="d_config_column_datatype"/>
+        <ITEM db_field="width" caption="Ширина" width="10%" 
+          row_type="common"/>
+      </COLUMNS>
+    </GRID>
+    <EDITCARD name="dс_Config_Table_Column" caption="Колонка таблицы конфигуратора" 
+      parent_card_source="grid" parent_card_name="Config_Table_Column">
+    </EDITCARD>
+  </DETAIL>
+</EXTERNAL_DETAIL>

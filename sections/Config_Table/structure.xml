@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+  <TAB section_type="common" caption="Таблицы конфигуратора" table="iris_Config_Table">
+    <GRID lines_count="1">
+      <COLUMNS>
+        <ITEM db_field="type" caption="Тип" width="20%" datatype="int" row_type="domain" row_type_domain_name="d_config_grid_type"/>
+        <ITEM db_field="rowcount" caption="Строк в таблице" width="10%" row_type="common" row_datatype="int"/>
+        <ITEM db_field="name" caption="Название" width="30%" row_type="common"/>
+        <ITEM db_field="description" caption="Описание" width="30%" row_type="common"/>
+      </COLUMNS>
+      
+      <FILTERS>
+        <ITEM caption="Все" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes"/>
+      </FILTERS>
+    </GRID>
+    
+    <GRID_WND lines_count="1" caption="Таблицы конфигуратора" width="600" height="280">
+      <COLUMNS>
+        <ITEM db_field="type" caption="Тип" width="20%" datatype="int" row_type="domain" row_type_domain_name="d_config_grid_type"/>
+        <ITEM db_field="rowcount" caption="Строк в таблице" width="10%" row_type="common" row_datatype="int"/>
+        <ITEM db_field="name" caption="Название" width="30%" row_type="common"/>
+        <ITEM db_field="description" caption="Описание" width="30%" row_type="common"/>
+      </COLUMNS>
+    </GRID_WND>
+    
+    <EDITCARD name="с_Config_Table" caption="Таблица конфигуратора" width="750" height="400" 
+      layout="1, 1, 2, 2, 2, 1, 1,   2, 2, 2, 2,   1, 1, 1, 1, 1, 1, 1,  1, 1, 1, 1, 1, 1,  1, 2, 2"
+      js_source_file="config/sections/Config_Table/c_config_table.js" js_function="c_config_table.on_init" js_path="full">
+      <TABS>
+        <TAB caption="Общее" rows="7"/>
+        <TAB caption="Основная" rows="4"/>
+        <TAB caption="Обработчики" rows="13"/>
+        <TAB caption="Вспомогательная" rows="3"/>
+      </TABS>		
+      <ELEMENTS>
+        <FIELD elem_type="lookup" caption="Конфигурация" db_field="ConfigID"
+          mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Config" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="radiobutton" caption="Тип" db_field="type" 
+          mandatory="yes" datatype="int" row_type="domain" row_type_domain_name="d_config_grid_type" 
+          title="Тип таблицы. Основная таблица отображается в качестве таблицы раздела. Вспомогательная используется для выбора значений из справочных полей."/>
+        <FIELD elem_type="radiobutton" caption="Статус" db_field="status" 
+          mandatory="yes" datatype="int" row_type="domain" row_type_domain_name="d_record_status" 
+          title="Статус записи. Активная запись сохраняется в XML, остальные в XML не отражаются."/>
+        <FIELD elem_type="text" caption="Строк в таблице" db_field="rowcount" 
+          mandatory="no" datatype="int" row_type="common"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="text" caption="Код" db_field="code" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="splitter" caption="Условие для фильтрации всей таблицы"/>
+        <FIELD elem_type="textarea" textarea_rows="4" caption="Фильтр SQL" 
+          db_field="overallsql" mandatory="no" datatype="string" row_type="common"
+          title="Условие фильтрации, которое перименяется всегда независимо от выбранных фильтров"/>
+        <!--
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="description" 
+          mandatory="no" datatype="string" row_type="common"/>
+          -->
+
+        <FIELD elem_type="lookup" caption="Сортировка по колонке" db_field="SortColumnID"
+          mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Config_Table_Column" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Отображать поиск" db_field="showsearch" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Направление сортировки" db_field="sortdirection" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_config_order_direction"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Редактируемая таблица" db_field="edittable" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"
+          title="При двойном щелчке по ячейкам редактируемой таблицы они становится доступными для редактирования. [Нет]"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Отображать кнопки" db_field="showbuttons" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"
+          title="Показать или скрыть кнопки Добавить, Изменить, Удалить. [Да]"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Разрешить dblClick" db_field="letdblclick" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"
+          title="Обрабатывать ли двойной щелчёк по строке таблицы. [Да]"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Отображать страницы" db_field="showpages" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int"
+          title="Если нет, то в таблицу будут загружаться сразу все записи без разбивки по страницам. [Да]"/>
+
+        <FIELD elem_type="splitter" caption="Обработчики javascript"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Путь к JS" db_field="jspathtype" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_config_path_type"
+          title="Полный путь указывается относительно корневого каталога системы (рекомендуется). [Относительный]"/>
+        <FIELD elem_type="text" caption="JS файл" db_field="jsfile" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="JS функция при открытии" db_field="jsoninit" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="JS функция после изменения" db_field="jsonaftermodify" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="JS функция после удаления" db_field="jsonafterdelete" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="JS двойной щелчок" db_field="jsondblclick" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="splitter" caption="Обработчики PHP"/>
+        <FIELD elem_type="text" caption="PHP файл" db_field="phpfile" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="PHP функция при открытии" db_field="phponinit" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="PHP таблица (файл)" db_field="phpfilereplace" 
+          mandatory="no" datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="PHP таблица (функция)" db_field="phponreplace"
+          mandatory="no" datatype="string" row_type="common"/>
+
+        <FIELD elem_type="text" caption="Название" db_field="name"
+          mandatory="no" datatype="string" row_type="common"
+          title="Название отображается в заголовке окна таблицы."/>
+        <FIELD elem_type="text" caption="Ширина, пикс" db_field="width" 
+          mandatory="no" datatype="int" row_type="common"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="text" caption="Высота, пикс" db_field="height" 
+          mandatory="no" datatype="int" row_type="common"/>
+        <FIELD elem_type="spacer"/>
+      </ELEMENTS>
+    </EDITCARD>
+
+    <DETAILS>
+
+      <DETAIL caption="Колонки" name="d_Config_Table_Column"
+        detail_fk_column="ConfigTableID" external="yes" detail_file="Sections/Config_Table_Column/detail.xml">
+      </DETAIL>
+
+      <DETAIL caption="История изменений" name="d_Config_Log" detail_fk_column=""
+        detail_bound_clause="(T0.recordid=:parent_id)" external="yes" detail_file="Sections/Changelog/detail.xml">
+      </DETAIL>
+
+    </DETAILS>
+  </TAB>
+</MENU_TAB>

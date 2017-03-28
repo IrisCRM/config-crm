@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_order_direction">
+		<VALUES>
+			<ITEM db_value="0" caption=""/>
+			<ITEM db_value="1" caption="По возрастанию"/>
+			<ITEM db_value="2" caption="По убыванию"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

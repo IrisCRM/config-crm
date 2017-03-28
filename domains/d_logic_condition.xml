@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_logic_condition">
+		<VALUES>
+			<ITEM db_value="0" caption=""/>
+			<ITEM db_value="1" caption="И"/>
+			<ITEM db_value="2" caption="ИЛИ"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

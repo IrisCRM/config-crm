@@ -1,0 +1,141 @@
+﻿<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Таблицы" table="iris_Table" order_pos="20" image_name="">
+      <GRID lines_count="1" name="g_Table">
+         <COLUMNS>
+            <ITEM caption="Название в БД" db_field="Code" width="25%" row_type="common"/>
+            <ITEM caption="Название" db_field="Name" width="25%" row_type="common"/>
+            <ITEM caption="Раздел" db_field="SectionID" width="15%" row_type="fk_column" row_type_parent_table="iris_Section" row_type_parent_display_column="Code"/>
+            <ITEM caption="Справочник (код)" db_field="Dictionary" width="15%" row_type="common"/>
+            <ITEM caption="Доступ по записям" db_field="is_access" width="100px" row_type="domain" row_type_domain_name="d_yn_binary"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все таблицы" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes"/>
+            <ITEM caption="Права доступа" item_style="font-weight: bold;" where_clause="">
+               <ITEM caption="Включены" item_style="" where_clause="T0.is_access='1'" default_selected="yes"/>
+               <ITEM caption="Отключены" item_style="" where_clause="T0.is_access='0'"/>
+           </ITEM>
+		   <ITEM caption="Группа таблиц" item_style="font-weight: bold;" auto_table="iris_tablegroup" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="t0.id in (select tableid from iris_table_tablegroup where tablegroupid='#VALUE#')"/>
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" caption="Таблицы" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Название" width="100%" row_type="common"/>
+            <ITEM db_field="Code" caption="Название в БД" width="100%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Table" caption="Таблица" width="750" height="400" layout="1, 1, 1, 1, 1, 2, 2, 2, 1, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название в БД" db_field="Code" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="no" datatype="string" row_type="common"/>
+<!--
+            <FIELD elem_type="select" caption="Доступ по записям" db_field="is_access" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_access"/>
+            <FIELD elem_type="select" caption="Лог изменений" db_field="islog" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_access"/>
+-->
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Доступ по записям" 
+               db_field="is_access" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Лог изменений" 
+               db_field="islog" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+
+			<FIELD elem_type="splitter" caption="Поле lookup"/>
+            <FIELD elem_type="lookup" caption="Раздел" db_field="SectionID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="sectionroles" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Отображать колонку" db_field="ShowColumnID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Table_Column" row_type_parent_display_column="Name" title="Поле, которое будет отображаться для этой таблицы. Используется для формирования отчетов. Поле можно заполнить после того, как для таблицы добавлены все ее колонки"/>
+            <FIELD elem_type="text" caption="Справочник (код)" db_field="Dictionary" mandatory="no" datatype="string" row_type="common" title="Открыть справочник"/>
+			<FIELD elem_type="lookup" caption="Группа справочников" db_field="DictionaryGroupID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="dictionarygroup" row_type_parent_display_column="Name" title="Заполняется, если заполнено поле 'Справочник (код)'"/>
+            <FIELD elem_type="text" caption="Вкладка (код)" db_field="Detail" mandatory="no" datatype="string" row_type="common"/>
+			<FIELD elem_type="spacer"/>
+			<FIELD elem_type="splitter" caption="Описание"/>
+            <FIELD elem_type="textarea" textarea_rows="7" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Колонки" name="d_Table_Column" detail_fk_column="TableID" detail_table="iris_Table_Column">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM caption="Название" db_field="Name" width="30%" row_type="common"/>
+                  <ITEM caption="Код (в БД)" db_field="Code" width="30%" row_type="common"/>
+                  <ITEM db_field="ColumnTypeID" caption="Тип" width="20%" row_type="fk_column" row_type_parent_table="iris_ColumnType" row_type_parent_display_column="Name"/>
+				  <ITEM caption="Обязательное" db_field="isnotnull" width="15%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                  <ITEM caption="Комментарий" db_field="Description" width="30%" row_type="common"/>
+                  <ITEM caption="Дубли" db_field="Description" width="45px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="CASE WHEN isduplicate=1 THEN 'Да' ELSE null END"/>
+<!-- 
+				  <ITEM caption="Каскадное удаление" db_field="R" width="10%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+ -->
+			  </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Table_Column" caption="Колонка" parent_card_source="grid" parent_card_name="Table_Column"/>
+<!-- 
+            <EDITCARD name="dc_Table_Column" caption="Колонка" width="700" height="300" layout="1, 2, 2, 2, 1, 1, 2, 2, 1, 2">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Таблица" db_field="TableID" mandatory="yes" datatype="string" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="tables" row_type_parent_display_column="code"/>
+                  <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+                  <FIELD elem_type="text" caption="Код (название в БД)" db_field="Code" mandatory="yes" datatype="string" row_type="common"/>
+				  <FIELD elem_type="select" caption="Тип" db_field="ColumnTypeID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_ColumnType" row_type_parent_display_column="Name"/>
+				  <FIELD elem_type="select" caption="Обязательное" db_field="isNotNull" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="text" caption="По умолчанию" db_field="DefaultValue" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="textarea" textarea_rows="4" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+				  <FIELD elem_type="splitter" caption="Внешний ключ"/>
+                  <FIELD elem_type="text" caption="Название ключа" db_field="fkName" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="lookup" caption="Таблица ключа" db_field="fkTableID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Table" row_type_parent_display_column="Code"/>
+				  <FIELD elem_type="select" caption="При удалении" db_field="OnDeleteID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ConstraintAction" row_type_parent_display_column="Name"/>
+				  <FIELD elem_type="select" caption="При обновлении" db_field="OnUpdateID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ConstraintAction" row_type_parent_display_column="Name"/>
+				  <FIELD elem_type="splitter" caption="Первичный ключ"/>
+				  <FIELD elem_type="select" caption="Первичный ключ" db_field="isPrimary" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <FIELD elem_type="spacer"/>
+               </ELEMENTS>
+            </EDITCARD>
+ -->
+         </DETAIL>
+         
+		 <DETAIL caption="Состоит в группах" name="d_tablegroups" detail_fk_column="TableID" detail_table="iris_Table_TableGroup">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="TableGroupID" caption="Группа таблиц" width="100%" row_type="fk_column" row_type_parent_table="iris_TableGroup" row_type_parent_display_column="name"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="card_tgtb" caption="Таблица в группе" width="350" height="130" layout="1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Таблица" db_field="TableID" mandatory="yes" datatype="string" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="tables" row_type_parent_display_column="code"/>
+                  <FIELD elem_type="lookup" caption="Группа таблиц" db_field="TableGroupID" mandatory="yes" datatype="string" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="tablegroups" row_type_parent_display_column="name"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+		 
+         <DETAIL caption="Права по умолчанию" name="d_defaultaccess" detail_fk_column="TableID" detail_table="iris_table_accessdefault">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="CreatorRoleID" caption="Роль создающего" width="20%" row_type="fk_column" row_type_parent_table="iris_AccessRole" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="AccessRoleID" caption="Получающая роль" width="20%" row_type="fk_column" row_type_parent_table="iris_AccessRole" row_type_parent_display_column="Name"/>
+				  <ITEM caption="Чтение" db_field="R" width="15%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <ITEM caption="Правка" db_field="W" width="15%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <ITEM caption="Удаление" db_field="D" width="15%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <ITEM caption="Изменение доступа" db_field="A" width="15%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+			  </COLUMNS>
+            </GRID>
+            <EDITCARD name="card_sr" caption="Права по умолчанию" width="600" height="260" layout="1, 1, 2, 1, 2, 2, 2, 2">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Таблица" db_field="TableID" mandatory="yes" datatype="string" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="tables" row_type_parent_display_column="code"/>
+				  <FIELD elem_type="splitter" caption="Роли"/>
+				  <FIELD elem_type="select" caption="Роль создающего" db_field="CreatorRoleID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_AccessRole" row_type_parent_display_column="Name"/>
+				  <FIELD elem_type="select" caption="Получающая роль" db_field="AccessRoleID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_AccessRole" row_type_parent_display_column="Name"/>
+
+				  <FIELD elem_type="splitter" caption="Права"/>
+                  <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Чтение" 
+                     db_field="R" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Правка" 
+                     db_field="W" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Удаление" 
+                     db_field="D" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Изменение прав" 
+                     db_field="A" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <FIELD elem_type="spacer"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

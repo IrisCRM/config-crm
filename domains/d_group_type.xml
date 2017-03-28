@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_group_type">
+		<VALUES>
+			<ITEM db_value="0" caption=""/>
+			<ITEM db_value="1" caption="Для агрегатных функций"/>
+			<ITEM db_value="2" caption="Группировка на странице"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

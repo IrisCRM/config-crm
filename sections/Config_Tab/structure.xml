@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+  <TAB section_type="common" caption="Вкладки конфигуратора" table="iris_Config" >
+    <GRID lines_count="1">
+      <COLUMNS>
+        <ITEM db_field="type" caption="Тип" width="20%"
+          datatype="int" row_type="domain" row_type_domain_name="d_config_file_type"/>
+        <ITEM db_field="Name" caption="Название" width="20%" 
+          row_type="common"/>
+        <ITEM db_field="description" caption="Описание" width="20%" 
+          row_type="common" display_format="none"/>
+      </COLUMNS>
+
+      <FILTERS>
+        <ITEM caption="Все вкладки" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes"/>
+      </FILTERS>
+    </GRID>
+
+    <GRID_WND lines_count="1" caption="Конфигуратор" width="600" height="280">
+      <COLUMNS>
+        <ITEM db_field="type" caption="Тип" width="20%" 
+          row_type="domain" datatype="int" row_type_domain_name="d_config_file_type"/>
+        <ITEM db_field="Name" caption="Название" width="20%" row_type="common"/>
+      </COLUMNS>
+    </GRID_WND>
+
+    <EDITCARD name="c_Config" caption="Конфигуратор" width="750" height="400" layout="2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1">
+      <ELEMENTS>
+        <FIELD elem_type="lookup" caption="Конфигурация" db_field="ConfigID"
+          mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Config" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="select" caption="Тип" db_field="type" 
+          mandatory="yes" datatype="int" row_type="domain" row_type_domain_name="d_config_file_type_tab" 
+          title="Тип XML файла описания конфигурации"/>
+        <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" 
+          datatype="string" row_type="common"/>
+        <FIELD elem_type="text" caption="Код" db_field="Code" mandatory="no" 
+          datatype="string" row_type="common"/>
+        <FIELD elem_type="radiobutton" caption="Видима в карточке" db_field="displayincard" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int" 
+          title="Отображать ли вкладку в списке вкладок карточки [Да]"/>
+        <FIELD elem_type="radiobutton" caption="Видима в разделе" db_field="displayinsection" 
+          mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int" 
+          title="Отображать ли вкладку в списке вкладок раздела (при отображении вклдадок непосредственно в разделе) [Да]"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="text" caption="Порядок" db_field="orderpos"
+          mandatory="yes" datatype="int" row_type="common"/>
+        <FIELD elem_type="lookup" caption="Колонка для связи" db_field="ParentID"
+          mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Table_Column" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="text" caption="Колонка для связи, SQL" db_field="parentcolumnsql" datatype="string" row_type="common"/>
+        <FIELD elem_type="textarea" textarea_rows="4" caption="Связь с родителем, SQL" 
+          db_field="parentsql" mandatory="no" datatype="string" row_type="common"
+          title="Условие для связи с родителем, SQL"/>
+        <FIELD elem_type="splitter" caption="Описание во внешнем файле"/>
+        <FIELD elem_type="text" caption="Файл с описанием" db_field="filename" mandatory="no" 
+          datatype="string" row_type="common"/>
+        <FIELD elem_type="lookup" caption="Таблица" db_field="TableID" mandatory="no" 
+          datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+          row_type_parent_source_name="Table" row_type_parent_display_column="Name"/>
+        <FIELD elem_type="textarea" textarea_rows="4" caption="Таблица, SQL" 
+          db_field="tablesql" mandatory="no" datatype="string" row_type="common"
+          title="Описание таблицы вкладки, SQL"/>
+      </ELEMENTS>
+    </EDITCARD>
+    <DETAILS>
+
+      <DETAIL caption="Таблицы" name="d_Config_Table" detail_fk_column="ConfigID" detail_table="iris_Config_Table">
+        <GRID lines_count="1" display_search="no">
+          <COLUMNS>
+            <ITEM db_field="type" caption="Тип" width="20%" datatype="int" row_type="domain" row_type_domain_name="d_config_grid_type"/>
+            <ITEM db_field="rowcount" caption="Строк в таблице" width="10%" row_type="common" row_datatype="int"/>
+            <ITEM db_field="name" caption="Название" width="30%" row_type="common"/>
+            <ITEM db_field="description" caption="Описание" width="30%" row_type="common"/>
+          </COLUMNS>
+        </GRID>
+        <EDITCARD name="dс_Config_Table" caption="Таблица конфигуратора" parent_card_source="grid" parent_card_name="Config_Table">
+        </EDITCARD>
+      </DETAIL>
+
+      <DETAIL caption="Карточки" name="d_Config_Card" detail_fk_column="ConfigID" detail_table="iris_config_card">
+        <GRID lines_count="1" display_search="no">
+          <COLUMNS>
+            <ITEM db_field="name" caption="Название" width="30%" row_type="common"/>
+            <ITEM db_field="code" caption="Код" width="20%" row_type="common"/>
+            <ITEM db_field="width" caption="Ширина" width="10%" row_type="common" row_datatype="int"/>
+            <ITEM db_field="height" caption="Высота" width="10%" row_type="common" row_datatype="int"/>
+            <ITEM db_field="description" caption="Описание" width="30%" row_type="common"/>
+          </COLUMNS>
+        </GRID>
+        <EDITCARD name="dс_Config_Card" caption="Карточка конфигуратора" 
+          parent_card_source="grid" parent_card_name="Config_Card">
+        </EDITCARD>
+      </DETAIL>
+
+      <DETAIL caption="История изменений" name="d_Config_Log" detail_fk_column="" 
+        detail_bound_clause="(T0.recordid=:parent_id)" external="yes" 
+        detail_file="Sections/Changelog/detail.xml">
+      </DETAIL>
+
+    </DETAILS>
+  </TAB>
+</MENU_TAB>

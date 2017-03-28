@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_pagewidth">
+		<VALUES>
+			<ITEM db_value="0" caption="0"/>
+			<ITEM db_value="160.5" caption="A4 (книжная)"/>
+			<ITEM db_value="250.5" caption="A4 (альбомная)"/>
+			<ITEM db_value="100" caption="A5 (книжная)"/>
+			<ITEM db_value="170" caption="A5 (альбомная)"/>
+			<ITEM db_value="170" caption="Letter (книжная)"/>
+			<ITEM db_value="230.5" caption="Lerrer (альбомная)"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

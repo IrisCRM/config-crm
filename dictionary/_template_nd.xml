@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<DICT>
+	<DICTONARY table="iris_AccountTypes">
+		<GRID_WND lines_count="1" caption="Типы контрагентов" width="600" height = "275">
+			<COLUMNS>
+				<ITEM caption="Название" db_field="name" width="50%" row_type="common"/>
+				<ITEM caption="Описание" db_field="description" width="50%" row_type="common"/>
+			</COLUMNS>
+		</GRID_WND>
+		<EDITCARD name="card_acct" caption="Тип контрагента" width="450" height="130" layout="1, 1">
+			<ELEMENTS>
+				<FIELD elem_type="text" caption="Название" db_field="name" mandatory="yes" datatype="string" row_type="common"/>
+				<FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="description" mandatory="no" datatype="string" row_type="common"/>
+			</ELEMENTS>
+		</EDITCARD>
+	</DICTONARY>
+</DICT>

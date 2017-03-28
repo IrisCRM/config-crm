@@ -1,0 +1,335 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Заказы" table="iris_Project">
+      <GRID name="g_Project" lines_count="1" sort_column="1" sort_direction="desc">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Заказ" width="20%" row_type="common"/>
+            <ITEM db_field="Number" caption="Номер" width="10%" row_type="common" display_format="none"/>
+            <ITEM db_field="AccountID" caption="Компания" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" display_format="none" row_type_alias="PAccount"/>
+            <ITEM db_field="ContactID" caption="Контакт" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none" row_type_alias="PContact"/>
+            <ITEM db_field="ObjectID" caption="" width="15%" row_type="fk_column" row_type_parent_table="iris_Object" row_type_parent_display_column="Name" display_format="none" row_type_alias="PObject"/>
+            <ITEM db_field="ProjectTypeID" caption="" width="15%" row_type="fk_column" row_type_parent_table="iris_ProjectType" row_type_parent_display_column="Name" display_format="none" row_type_alias="PType"/>
+            <ITEM db_field="PlanStartDate" caption="Планируемое начало" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+            <ITEM db_field="StartDate" caption="Начало" width="10%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="PlanFinishDate" caption="Планируемое завершение" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+            <ITEM db_field="FinishDate" caption="Завершение" width="10%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="ProjectStateID" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_ProjectState" row_type_parent_display_column="Name" row_type_alias="PState"/>
+            <ITEM db_field="ProjectStageID" caption="Стадия" width="15%" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name" row_type_alias="PStage"/>
+            <ITEM db_field="Probability" caption="Вероятность" width="10%" row_type="common" row_datatype="decimal" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="POwner"/>
+
+            <ITEM db_field="CurrencyID" caption="Валюта" width="10%" row_type="fk_column" row_type_parent_table="iris_Currency" row_type_parent_display_column="Name" display_format="none" row_type_alias="PCurrency"/>
+            <ITEM db_field="PlanIncome" caption="Планируемый доход" width="10%" row_type="common" row_datatype="decimal" display_format="none"/>
+            <ITEM db_field="Income" caption="Доход" width="10%" row_type="common" row_datatype="decimal" display_format="none"/>
+            <ITEM db_field="PlanExpense" caption="Планируемые расходы" width="10%" row_type="common" row_datatype="decimal" display_format="none"/>
+            <ITEM db_field="Expense" caption="Расходы" width="10%" row_type="common" row_datatype="decimal" display_format="none"/>
+            <ITEM db_field="PlanIncome" caption="План. доход" width="10%" row_type="common" row_datatype="decimal"/>
+            <ITEM db_field="Income" caption="Доход" width="10%" row_type="common" row_datatype="decimal"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все заказы" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes"/>
+            <ITEM caption="Мои заказы" item_style="font-weight: bold;" where_clause="((T0.OwnerID=_iris_user_id[]) or (_iris_user_id[] in (select IPC.ContactID from iris_project_contact IPC where IPC.projectid=T0.id)))"/>
+            <ITEM caption="Ждут ответа" item_style="font-weight: bold;" where_clause="exists (select 1 from iris_message PM, iris_messagestatus MS where MS.id=PM.statusid and ms.code='New' and PM.projectid=T0.id and PM.autorid &lt;&gt; _iris_user_id[])"/>
+<!--
+            <ITEM caption="Недавние" item_style="font-weight: bold;" where_clause="(T0.StartDate between _iris_current_date[]-60 and _iris_current_date[]+60) or (T0.FinishDate between _iris_current_date[]-60 and _iris_current_date[]+60) or (T0.PlanStartDate between _iris_current_date[]-60 and _iris_current_date[]+60) or (T0.PlanFinishDate between _iris_current_date[]-60 and _iris_current_date[]+60)"/>
+-->
+			<ITEM caption="Во времени" item_style="font-weight: bold;" where_clause=""> 
+				  <ITEM caption="Просроченные" item_style="" where_clause="(T0.FinishDate &lt; _iris_current_date[] or T0.PlanFinishDate &lt; _iris_current_date[]) and PState.Code not in ('Finished', 'Cancel')" />
+				  <ITEM caption="Завершаются сегодня" item_style="" where_clause="T0.FinishDate = _iris_current_date[] or T0.PlanFinishDate = _iris_current_date[]" />
+				  <ITEM caption="Завершаются завтра" item_style="" where_clause="T0.FinishDate = _iris_current_date[]+1 or T0.PlanFinishDate = _iris_current_date[]+1" />
+            </ITEM>
+			<ITEM caption="Состояние" item_style="font-weight: bold;" auto_table="iris_ProjectState" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.ProjectStateID='#VALUE#'"/>
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" sort_column="1" sort_direction="desc" caption="Заказы" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Название" width="50%" row_type="common"/>
+            <ITEM elem_type="text" db_field="StartDate" caption="Начало" width="20%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="AccountID" caption="Компания" width="15%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="ProjectStateID" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_ProjectState" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="ProjectStageID" caption="Стадия" width="15%" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="30%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+         </COLUMNS>
+      </GRID_WND>
+
+      <EDITCARD name="c_Project" 
+        caption="Заказ" 
+        width="800" height="530"
+        layout="2, 1, 2, 2, 2, 2, 1, 2, 2, 1, 2, 1, 2, 2, 2, 2, 1, 1">
+      	
+      	<ELEMENTS>
+      		<FIELD elem_type="text" caption="Номер" db_field="Number"
+      			mandatory="no" datatype="string" row_type="common" />
+      		<FIELD elem_type="spacer" />
+      		<FIELD elem_type="text" caption="Название" db_field="Name"
+      			mandatory="yes" datatype="string" row_type="common" />
+      		<FIELD elem_type="select" caption="Тип"
+      			db_field="ProjectTypeID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_table="iris_ProjectType"
+      			row_type_parent_display_column="Name" />
+      		<FIELD elem_type="lookup" caption="Ответственный"
+      			db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id"
+      			row_type="fk_column" row_type_parent_source_type="grid"
+      			row_type_parent_source_name="Contact"
+      			row_type_parent_display_column="Name" />
+
+      		<FIELD elem_type="lookup" caption="Компания"
+      			db_field="AccountID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_source_type="grid"
+      			row_type_parent_source_name="Account"
+      			row_type_parent_display_column="Name" />
+      		<FIELD elem_type="lookup" caption="Контакт"
+      			db_field="ContactID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_source_type="grid"
+      			row_type_parent_source_name="Contact"
+      			row_type_parent_display_column="Name" />
+
+      		<FIELD elem_type="select" caption="Состояние"
+      			db_field="ProjectStateID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_table="iris_ProjectState"
+      			row_type_parent_display_column="Name" db_field_ext="code" order_by="orderpos"
+				title="Активность заказа на данный момент"/>
+      		<FIELD elem_type="lookup" caption="Объект"
+      			db_field="ObjectID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_source_type="grid"
+      			row_type_parent_source_name="Object"
+      			row_type_parent_display_column="Name" />
+      		<FIELD elem_type="select" caption="Стадия"
+      			db_field="ProjectStageID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_table="iris_ProjectStage"
+      			row_type_parent_display_column="Name" db_field_ext="ProjectTypeID, code, number" order_by="number"
+				title="Насколько далеко заказ продвинулся к успешному завершению. Заказы на одной и той же стадии могут быть в разных состояниях (в активном состоянии, приостановлены, отменены)"/>
+      		<FIELD elem_type="text" caption="Вероятность"
+      			db_field="Probability" mandatory="no" datatype="int"
+      			row_type="common" />
+      			
+      		<FIELD elem_type="splitter" caption="Даты" />
+      		<FIELD elem_type="text" caption="Планируемое начало"
+      			db_field="PlanStartDate" mandatory="no" datatype="date"
+      			row_type="date" />
+      		<FIELD elem_type="text" caption="Планируемое завершение"
+      			db_field="PlanFinishDate" mandatory="no" datatype="date"
+      			row_type="date" />
+      		<FIELD elem_type="text" caption="Начало"
+      			db_field="StartDate" mandatory="no" datatype="date"
+      			row_type="date" />
+      		<FIELD elem_type="text" caption="Завершение"
+      			db_field="FinishDate" mandatory="no" datatype="date"
+      			row_type="date" />
+
+      		<FIELD elem_type="splitter"
+      			caption="Напоминание ответственному" />
+<!--
+      		<FIELD elem_type="select" caption="Напомнить"
+      			db_field="IsRemind" mandatory="yes" datatype="int"
+      			row_type="domain" row_type_domain_name="d_yn_binary" />
+-->
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Напомнить" db_field="IsRemind" mandatory="yes" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+
+      		<FIELD elem_type="text" caption="Время напоминания"
+      			db_field="RemindDate" mandatory="no" datatype="datetime"
+      			row_type="date" />
+
+      		<FIELD elem_type="splitter" caption="Бюджет" />
+      		<FIELD elem_type="select" caption="Валюта"
+      			db_field="CurrencyID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_table="iris_Currency"
+      			row_type_parent_display_column="Name" />
+      		<FIELD elem_type="spacer"/>
+
+      		<FIELD elem_type="text" caption="Планируемый доход"
+      			db_field="PlanIncome" mandatory="no" datatype="decimal"
+      			row_type="common" />
+      		<FIELD elem_type="text" caption="Доход" 
+      		    db_field="Income" mandatory="yes" datatype="decimal" 
+      		    row_type="common" />
+			<FIELD elem_type="text" caption="Планируемые расходы"
+      			db_field="PlanExpense" mandatory="no" datatype="decimal"
+      			row_type="common" />
+      		<FIELD elem_type="text" caption="Расходы"
+      			db_field="Expense" mandatory="yes" datatype="decimal"
+      			row_type="common" />
+      		<FIELD elem_type="text" caption="Планируемая прибыль"
+      			db_field="PlanProfit" mandatory="no" datatype="decimal"
+      			row_type="common" />
+      		<FIELD elem_type="text" caption="Прибыль"
+      			db_field="Profit" mandatory="yes" datatype="decimal"
+      			row_type="common" />
+            <FIELD elem_type="splitter" caption="Описание"/>
+            <FIELD elem_type="textarea" textarea_rows="5" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+      	</ELEMENTS>
+      </EDITCARD>
+
+      <DETAILS>
+         <DETAIL caption="Продукты" name="d_Project_Product" detail_fk_column="ProjectID" detail_table="iris_Project_Product">
+            <GRID name="dg_Project_Product" lines_count="1" display_search="no" is_editable="yes" is_have_pages="no">
+               <COLUMNS>
+                  <ITEM db_field="Number" caption="№" width="5%" row_type="common" row_datatype="int" total="count"/>
+                  <ITEM db_field="ProductID" caption="Продукт" width="20%" row_type="fk_column" row_type_parent_table="iris_Product" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="UnitID" caption="Единица" width="10%" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Count" caption="Количество" width="10%" row_type="common" row_datatype="decimal" total="sum"/>
+                  <ITEM db_field="Price" caption="Цена" width="15%" row_type="common" row_datatype="decimal"/>
+                  <ITEM db_field="PriceAmount" caption="Сумма без скидки" width="15%" row_type="common" row_datatype="decimal" total="sum"/>
+                  <ITEM db_field="Discount" caption="Скидка, %" width="10%" row_type="common" row_datatype="decimal"/>
+                  <ITEM db_field="Amount" caption="Сумма со скидкой" width="15%" row_type="common" row_datatype="decimal" total="sum"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Project_Product" caption="Продукт в заказе" width="550" height="340" 
+                  layout="2, 1, 1, 2, 2, 2, 2, 1, 1,   1, 2, 2" 
+                  draw_extra_button="yes">
+				<TABS>
+					<TAB caption="Продукт" rows="9"/>
+					<TAB caption="Период" rows="3"/>
+				</TABS>
+               <ELEMENTS>
+                  <FIELD elem_type="text" caption="Номер" db_field="Number" mandatory="yes" row_type="common" datatype="int"/>
+                  <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="splitter" caption="Цена"/>
+                  <FIELD elem_type="text" caption="Количество" db_field="Count" mandatory="yes" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="select" caption="Единица" db_field="UnitID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Себестомиость" db_field="Cost" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Сумма себестоимости" db_field="CostAmount" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Цена" db_field="Price" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Сумма без скидки" db_field="PriceAmount" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Скидка, %" db_field="Discount" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Сумма со скидкой" db_field="Amount" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="splitter" caption="Описание"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+				  
+				  <FIELD elem_type="splitter" caption="Период"/>
+				  <FIELD elem_type="text" caption="Дата с" db_field="StartDate" mandatory="no" datatype="date" row_type="date"/>
+				  <FIELD elem_type="text" caption="Дата по" db_field="FinishDate" mandatory="no" datatype="date" row_type="date"/>
+                  <FIELD elem_type="text" caption="Продолжительность" db_field="Duration" mandatory="no" datatype="int" row_type="common" title="Значение этого поля влияет на цены продукта (Цена = Цена продукта * Продолжительность)"/>
+				  <FIELD elem_type="select" caption="Единица времени" db_field="TimeUnit" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_product_timeunit"/>
+				  
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+
+         <DETAIL caption="Работы" name="d_Project_Work" detail_fk_column="ProjectID" external="yes" detail_file="Sections/Work/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="Общение" name="d_Project_Message" detail_fk_column="ProjectID" external="yes" detail_file="Sections/Message/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="КП" name="d_Project_Offer" 
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/Offer/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Договоры" name="d_Project_Pact" 
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/Pact/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Счета" name="d_Project_Invoice" 
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/Invoice/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Платежи" name="d_Project_Payment"
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/Payment/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Накладные" name="d_Project_FactInvoice"
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/FactInvoice/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Документы" name="d_Project_Document"
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/Document/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Замечания" name="d_Project_Bug"
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/Bug/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="Команда" name="d_Project_Contact" detail_fk_column="ProjectID" detail_table="iris_Project_Contact">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ContactID" caption="Контакт" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="ProjectContactRoleID" caption="Роль" width="20%" row_type="fk_column" row_type_parent_table="iris_ProjectContactRole" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="StartDate" caption="Дата начала участия" width="20%" row_type="common" row_datatype="date"/>
+                  <ITEM db_field="FinishDate" caption="Дата завершения участия" width="20%" row_type="common" row_datatype="date"/>
+                  <ITEM db_field="Description" caption="Описание" width="20%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Project_Contact" caption="Член команды" width="600" height="210" layout="1, 2, 2, 2, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="select" caption="Роль" db_field="ProjectContactRoleID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ProjectContactRole" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="select" caption="Стадия" db_field="ProjectStageID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="text" caption="Дата начала участия" db_field="StartDate" mandatory="no" datatype="date" row_type="date"/>
+                  <FIELD elem_type="text" caption="Дата завершения участия" db_field="FinishDate" mandatory="no" datatype="date" row_type="date"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Дела" name="d_Project_Task" detail_fk_column="ProjectID" external="yes" detail_file="Sections/Task/detail.xml">
+         </DETAIL>
+<!--
+         <DETAIL caption="Замечания" name="d_Project_Bug" detail_fk_column="ProjectID" external="yes" detail_file="Sections/Bug/detail.xml">
+         </DETAIL>
+-->
+         <DETAIL caption="Инциденты" name="d_Project_Incident" detail_fk_column="ProjectID" external="yes" detail_file="Sections/Incident/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Стадии" name="d_Project_Stage" detail_fk_column="ProjectID" detail_table="iris_Project_Stage">
+            <GRID lines_count="1" display_search="no" sort_column="2" sort_direction="asc">
+               <COLUMNS>
+                  <ITEM db_field="ProjectStageID" caption="Стадия" width="50%" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="StartDate" caption="Дата начала" width="50%" row_type="common" row_datatype="datetime"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Project_Stage" caption="Стадия заказа" width="450" height="190" layout="1, 2">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="select" caption="Стадия" db_field="ProjectStageID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Дата начала" db_field="StartDate" mandatory="no" datatype="datetime" row_type="date"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Преимущества клиента" name="d_Project_Advantage" detail_fk_column="ProjectID" detail_table="iris_Project_Advantage">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="AdvantageDate" caption="Дата" width="20%" row_type="common" row_datatype="date"/>
+                  <ITEM db_field="Name" caption="Преимущество" width="20%" row_type="common"/>
+                  <ITEM db_field="AdvantageUnitID" caption="Единица" width="20%" row_type="fk_column" row_type_parent_table="iris_AdvantageUnit" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Value" caption="Величина" width="20%" row_type="common"/>
+                  <ITEM db_field="Count" caption="Количество" width="20%" row_type="common" row_datatype="decimal"/>
+                  <ITEM db_field="Amount" caption="Сумма" width="20%" row_type="common" row_datatype="decimal"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Project_Advantage" caption="Преимущество клиента" width="500" height="230" layout="2, 1, 1, 2, 2">
+               <ELEMENTS>
+                  <FIELD elem_type="text" caption="Дата" db_field="AdvantageDate" mandatory="yes" datatype="date" row_type="date"/>
+                  <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Преимущество" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="text" caption="Величина" db_field="Value" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="select" caption="Единица" db_field="AdvantageUnitID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_AdvantageUnit" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Количество" db_field="Count" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Сумма" db_field="Amount" mandatory="no" datatype="decimal" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+
+         <DETAIL caption="Конкуренты" name="d_Project_Concurrent" detail_fk_column="ProjectID" detail_table="iris_Project_Concurrent">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ConcurrentID" caption="Конкурент" width="40%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="InfluenceAmountID" caption="Значимость влияния" width="20%" row_type="fk_column" row_type_parent_table="iris_InfluenceAmount" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Offer" caption="Предложение" width="40%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Project_Concurrent" caption="Конкурент в заказе" width="500" height="335" layout="1, 1, 1, 1, 1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Конкурент" db_field="ConcurrentID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Предложение" db_field="Offer" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Сильные стороны" db_field="Strong" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Слабые стороны" db_field="Vice" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="select" caption="Значимость влияния" db_field="InfluenceAmountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_InfluenceAmount" row_type_parent_display_column="Name"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+
+         <DETAIL caption="Файлы" name="d_Project_File" detail_fk_column="ProjectID" external="yes" detail_file="Sections/File/detail.xml">
+         </DETAIL>
+         <DETAIL caption="История изменений" name="d_Project_Log" detail_fk_column="" detail_bound_clause="(T0.recordid=:parent_id)" external="yes" detail_file="Sections/Changelog/detail.xml">
+         </DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

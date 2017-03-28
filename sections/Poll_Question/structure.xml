@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+  <TAB section_type="common" caption="Вопросы опроса" table="iris_poll_question">
+        <GRID_WND lines_count="1" display_search="no" caption="Вопросы опроса" width="600" height="280">
+          <COLUMNS>
+<!--
+          <ITEM db_field="name" caption="Текст вопроса" width="10%" 
+              row_type="common" row_datatype="string" display_format="ongrid"/>
+-->
+            <ITEM db_field="orderpos" caption="Порядок" width="10%" 
+              row_type="common" row_datatype="int" display_format="ongrid"/>
+            <ITEM db_field="questionid" caption="Вопрос" width="30%" row_type="fk_column" 
+              row_type_parent_table="iris_question" row_type_parent_display_column="name"/>
+            <ITEM db_field="weight" caption="Вес вопроса" width="10%" 
+              row_type="common" row_datatype="int" display_format="ongrid"/>
+            <ITEM db_field="Description" caption="Описание" width="15%" 
+              row_type="common" row_datatype="common"/>
+          </COLUMNS>
+        </GRID_WND>
+        <EDITCARD name="dc_Poll_Question" caption="Вопрос опроса" width="600" height="300" 
+          layout="1, 1, 1, 1, 2, 1" draw_extra_button="yes">
+          <ELEMENTS>
+            <FIELD elem_type="lookup" caption="Опрос" db_field="PollID" mandatory="yes" 
+              datatype="id" row_type="fk_column" row_type_parent_source_type="grid" 
+              row_type_parent_source_name="Poll" row_type_parent_display_column="name"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="lookup" caption="Вопрос" db_field="QuestionID" mandatory="yes" 
+              datatype="id" row_type="fk_column" row_type_parent_source_type="dict" 
+              row_type_parent_source_name="question" row_type_parent_display_column="name"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="text" caption="Вес вопроса" db_field="weight" mandatory="no" 
+              datatype="int" row_type="common"/>
+            <FIELD elem_type="text" caption="Порядок" db_field="orderpos" mandatory="no" 
+              datatype="int" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="4" caption="Описание" db_field="Description" 
+              mandatory="no" datatype="string" row_type="common"/>
+          </ELEMENTS>
+        </EDITCARD>
+  </TAB>
+</MENU_TAB>

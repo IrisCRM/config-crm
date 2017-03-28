@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_controltype">
+		<VALUES>
+			<ITEM db_value="1" caption="Пусто" xml="spacer"/>
+			<ITEM db_value="2" caption="Разделитель" xml="splitter"/>
+			<ITEM db_value="3" caption="Email" xml="email"/>
+			<ITEM db_value="4" caption="Url" xml="url"/>
+			<ITEM db_value="5" caption="Общее" xml="text"/>
+			<ITEM db_value="6" caption="Текст" xml="textarea"/>
+			<ITEM db_value="7" caption="Справочник" xml="lookup"/>
+			<ITEM db_value="8" caption="Список" xml="select"/>
+			<ITEM db_value="9" caption="Чекбокс" xml="checkbox"/>
+			<ITEM db_value="10" caption="Телефон" xml="phone"/>
+			<ITEM db_value="11" caption="Пароль" xml="password"/>
+			<ITEM db_value="12" caption="Радиокнопка" xml="radiobutton"/>
+			<ITEM db_value="13" caption="Кнопка" xml="button"/>
+			<ITEM db_value="14" caption="Таблица" xml="detail"/>
+			<ITEM db_value="15" caption="Матрица" xml="matrix"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

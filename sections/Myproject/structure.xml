@@ -1,0 +1,141 @@
+﻿<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Заказы" table="iris_Project" image_name="projects.png">
+      <GRID lines_count="1" display_search="no" sort_column="1" sort_direction="desc">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Заказ" width="20%" row_type="common"/>
+            <ITEM db_field="Number" caption="Номер" width="10%" row_type="common" display_format="none"/>
+<!-- 
+            <ITEM db_field="ProjectTypeID" caption="Тип" width="15%" row_type="fk_column" row_type_parent_table="iris_ProjectType" row_type_parent_display_column="Name" display_format="none" row_type_alias="PType"/>
+ -->
+            <ITEM db_field="StartDate" caption="Начало" width="10%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="FinishDate" caption="Завершение" width="10%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="ProjectStateID" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_ProjectState" row_type_parent_display_column="Name" row_type_alias="PState"/>
+            <ITEM db_field="ProjectStageID" caption="Стадия" width="15%" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name" row_type_alias="PStage"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="POwner"/>
+            <ITEM db_field="PlanIncome" caption="Сумма" width="10%" row_type="common" row_datatype="decimal"/>
+            <ITEM db_field="CurrencyID" caption="Валюта" width="15%" row_type="fk_column" row_type_parent_table="iris_Currency" row_type_parent_display_column="Name" row_type_alias="PCurrency" display_format="none"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все заказы" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes"></ITEM>
+			<ITEM caption="Недавние" item_style="font-weight: bold;" where_clause="(T0.StartDate between _iris_current_date[]-60 and _iris_current_date[]+60) or (T0.FinishDate between _iris_current_date[]-60 and _iris_current_date[]+60) or (T0.PlanStartDate between _iris_current_date[]-60 and _iris_current_date[]+60) or (T0.PlanFinishDate between _iris_current_date[]-60 and _iris_current_date[]+60)"/>
+			<ITEM caption="По состоянию" item_style="font-weight: bold;" where_clause="">
+                  <ITEM caption="Актуальные" item_style="font-weight: bold;" where_clause="((PState.Code='Execute') or (PState.Code='Plan') or (PState.Code='Future')) and ((T0.StartDate &lt;= _iris_current_date[]+60) or (T0.FinishDate &lt;= _iris_current_date[]+60) or (T0.PlanStartDate &lt;= _iris_current_date[]+60) or (T0.PlanFinishDate &lt;= _iris_current_date[]+60))"></ITEM>
+				  <ITEM caption="В планах" item_style="" where_clause="PState.Code='Plan'" />
+                  <ITEM caption="Выполняется" item_style="" where_clause="PState.Code='Execute'" />
+                  <ITEM caption="Завершен" item_style="" where_clause="PState.Code='Finished'" />
+                  <ITEM caption="Отложен" item_style="" where_clause="PState.Code='Future'" />
+                  <ITEM caption="Отменен" item_style="" where_clause="PState.Code='Cancel'" />
+               </ITEM>
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" caption="Проекты" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="Название" width="50%" row_type="common"/>
+            <ITEM elem_type="text" db_field="StartDate" caption="Начало" width="20%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="30%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+         </COLUMNS>
+      </GRID_WND>
+
+      <EDITCARD name="c_Project" caption="Заказ" width="700" height="360"
+      	layout="2, 1, 1, 2, 2, 2, 1, 2, 1, 2">
+      	<ELEMENTS>
+      		<FIELD elem_type="text" caption="Номер" db_field="Number"
+      			mandatory="no" datatype="string" row_type="common" />
+      		<FIELD elem_type="spacer" />
+      		<FIELD elem_type="text" caption="Название" db_field="Name"
+      			mandatory="yes" datatype="string" row_type="common" />
+            <FIELD elem_type="textarea" textarea_rows="5" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+      		<FIELD elem_type="select" caption="Тип"
+      			db_field="ProjectTypeID" mandatory="no" datatype="id" row_type="fk_column" 
+      			row_type_sql="select id, name, code from iris_projecttype where showforclient='1'" />
+<!--      		<FIELD elem_type="select" caption="Тип"
+      			db_field="ProjectTypeID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_table="iris_ProjectType"
+      			row_type_parent_display_column="Name" />
+-->
+      		<FIELD elem_type="lookup" caption="Ответственный"
+      			db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id"
+      			row_type="fk_column" row_type_parent_source_type="grid"
+      			row_type_parent_source_name="Mycontact"
+      			row_type_parent_display_column="Name" />
+      		<FIELD elem_type="lookup" caption="Клиент"
+      			db_field="ContactID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_source_type="grid"
+      			row_type_parent_source_name="Mycontact"
+      			row_type_parent_display_column="Name" />
+      		<FIELD elem_type="lookup" caption="Компания"
+      			db_field="AccountID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_source_type="grid"
+      			row_type_parent_source_name="Account"
+      			row_type_parent_display_column="Name" />
+      		<FIELD elem_type="select" caption="Состояние"
+      			db_field="ProjectStateID" db_field_ext="code" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_table="iris_ProjectState"
+      			row_type_parent_display_column="Name" />
+<!-- 
+      		<FIELD elem_type="lookup" caption="Объект"
+      			db_field="ObjectID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_source_type="grid"
+      			row_type_parent_source_name="Object"
+      			row_type_parent_display_column="Name" />
+      		<FIELD elem_type="spacer" />
+ -->
+      		<FIELD elem_type="select" caption="Стадия"
+      			db_field="ProjectStageID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_table="iris_ProjectStage"
+      			row_type_parent_display_column="Name" db_field_ext="ProjectTypeID, code"/>
+
+			<FIELD elem_type="splitter" caption="Даты" />
+      		<FIELD elem_type="text" caption="Начало"
+      			db_field="StartDate" mandatory="no" datatype="date"
+      			row_type="date" />
+      		<FIELD elem_type="text" caption="Завершение"
+      			db_field="FinishDate" mandatory="no" datatype="date"
+      			row_type="date" />
+
+      		<FIELD elem_type="splitter" caption="Сумма" />
+      		<FIELD elem_type="text" caption="Сумма" db_field="PlanIncome"
+      			mandatory="no" datatype="decimal" row_type="common" />
+      		<FIELD elem_type="select" caption="Валюта"
+      			db_field="CurrencyID" mandatory="no" datatype="id"
+      			row_type="fk_column" row_type_parent_table="iris_Currency"
+      			row_type_parent_display_column="Name" />
+      	</ELEMENTS>
+      </EDITCARD>
+
+      <DETAILS hide_access_detail="yes">
+         <DETAIL caption="Мои сообщения" name="d_Project_Message" detail_fk_column="ProjectID" external="yes" detail_file="Sections/Mymessage/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Файлы" name="d_Project_File" detail_fk_column="ProjectID" external="yes" detail_file="Sections/Myfile/detail.xml">
+         </DETAIL>
+
+<!-- 		 
+         <DETAIL caption="Стадии" name="d_Project_Stage" detail_fk_column="ProjectID" detail_table="iris_Project_Stage">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ProjectStageID" caption="Стадия" width="50%" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="StartDate" caption="Дата начала" width="50%" row_type="common" row_datatype="datetime"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Project_Stage" caption="Стадия проекта" width="450" height="90" layout="1, 2">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Проект" db_field="ProjectID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="select" caption="Стадия" db_field="ProjectStageID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_ProjectStage" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Дата начала" db_field="StartDate" mandatory="no" datatype="datetime" row_type="date"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+ -->
+ 
+         <DETAIL caption="Счета" name="d_Project_Myinvoice" 
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/Myinvoice/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="Платежи" name="d_Project_Mypayment"
+         	detail_fk_column="ProjectID" external="yes" detail_file="Sections/Mypayment/detail.xml">
+         </DETAIL>
+		 
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

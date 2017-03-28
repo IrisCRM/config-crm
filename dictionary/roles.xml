@@ -1,0 +1,22 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_AccessRole">
+      <GRID_WND lines_count="1" caption="Роли доступа" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Название" db_field="name" width="40%" row_type="common"/>
+            <ITEM caption="Код" db_field="code" width="20%" row_type="common"/>
+            <ITEM caption="Добавлять в доступ" db_field="isaddaccess" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <ITEM caption="Описание" db_field="description" width="15%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="card_accroles" caption="Роль" width="450" height="225" layout="2, 2, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Код" db_field="code" mandatory="тщ" datatype="string" row_type="common"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" db_field="isaddaccess" caption="Добавлять в доступ" title="Если галочка установлена, то, в во вкладках Доступ, контактам с данной ролью можно будет задавать права доступа на записи" mandatory="yes" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

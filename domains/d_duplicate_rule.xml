@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_duplicate_rule">
+		<VALUES>
+			<ITEM db_value="0" caption="Не импортировать"/>
+			<ITEM db_value="1" caption="Обновить только пустые значения"/>
+			<ITEM db_value="2" caption="Перезаписывать"/>
+			<ITEM db_value="3" caption="Добавлять дубликат"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

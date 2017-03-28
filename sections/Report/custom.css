@@ -1,0 +1,15 @@
+
+table.report th.sectionstart {
+  border-left: 1px solid #666;
+}
+
+table.report td.total {
+  background-color: #ccf;
+}
+
+table.report td.now {
+  background-color: #fcc;
+}
+
+table.report th.section {
+}

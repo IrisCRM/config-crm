@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Решения" table="iris_Answer" order_pos="9" image_name="tasks.png">
+      <GRID lines_count="1">
+         <COLUMNS>
+            <ITEM db_field="Number" caption="Номер" width="10%" row_type="common"/>
+            <ITEM db_field="Name" caption="Проблема кратко" width="25%" row_type="common"/>
+            <ITEM db_field="Keywords" caption="Ключевые слова" width="25%" row_type="common" display_format="none"/>
+            <ITEM db_field="Description" caption="Описание" width="25%" row_type="common" display_format="none"/>
+            <ITEM db_field="IncidentID" caption="Инцидент" width="20%" row_type="fk_column" row_type_parent_table="iris_Incident" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="Answer" caption="Решение" width="30%" row_type="common"/>
+            <ITEM db_field="AuthorID" caption="Автор решения" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="AAuthor"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none" row_type_alias="AOwner"/>
+            <ITEM db_field="Date" caption="Дата" width="15%" row_type="common" row_datatype="date"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все решения" item_style="font-weight: bold;" where_clause="1=1" sort_column="1" sort_direction="desc" default_selected="yes"/>
+            <ITEM caption="Мои решения" item_style="font-weight: bold;" where_clause="T0.OwnerID=_iris_user_id[]"/>
+<!-- 
+			<ITEM caption="Недавние" item_style="font-weight: bold;" where_clause="(T0.Date between _iris_current_date[]-15 and _iris_current_date[]+15)"/>
+-->
+          </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" sort_column="1" sort_direction="desc" caption="Решения" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Number" caption="Номер" width="15%" row_type="common"/>
+            <ITEM db_field="Name" caption="Проблема кратко" width="30%" row_type="common"/>
+            <ITEM db_field="Keywords" caption="Ключевые слова" width="25%" row_type="common" display_format="none"/>
+            <ITEM db_field="Answer" caption="Решение" width="35%" row_type="common"/>
+            <ITEM db_field="Date" caption="Дата" width="20%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="Description" caption="Описание" width="25%" row_type="common" display_format="none"/>
+            <ITEM db_field="AuthorID" caption="Автор" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Answer" caption="Решение" width="700" height="410" 
+         layout="2, 2, 1, 1, 1, 1, 1, 1, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Номер" db_field="Number" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Дата" db_field="Date" mandatory="no" datatype="date" row_type="date"/>
+            <FIELD elem_type="lookup" caption="Автор решения" db_field="AuthorID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="splitter" caption="Проблема"/>
+            <FIELD elem_type="text" caption="Краткое описание" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Ключевые слова" db_field="Keywords" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="5" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="lookup" caption="Инцидент" db_field="IncidentID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Incident" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="splitter" caption="Решение"/>
+            <FIELD elem_type="textarea" textarea_rows="5" caption="Решение" db_field="Answer" mandatory="yes" datatype="string" row_type="common"/>
+<!--            <FIELD elem_type="splitter" caption="Связи"/>
+            <FIELD elem_type="lookup" caption="Инцидент" db_field="IncidentID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Incident" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Выпуск" db_field="IssueID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Issue" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Проект" db_field="ProjectID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Мероприятие" db_field="MarketingID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Marketing" row_type_parent_display_column="Name"/>
+-->        
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Инциденты" name="d_Answer_Incident" detail_fk_column="AnswerID" external="yes" detail_file="Sections/Incident/detail.xml">
+         </DETAIL><DETAIL caption="Связанные решения" name="d_Answer_Answer" detail_fk_column="AnswerID" detail_table="iris_Answer_Answer">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="LinkedAnswerID" caption="Связанное решение" width="50%" row_type="fk_column" row_type_parent_table="iris_Answer" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Description" caption="Описание" width="50%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Answer_Answer" caption="Связанное решение" width="500" height="190" layout="1, 1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Решение" db_field="AnswerID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Answer" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Связанное решение" db_field="LinkedAnswerID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Answer" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Общение" name="d_Answer_Message" detail_fk_column="AnswerID" external="yes" detail_file="Sections/Message/detail.xml">
+         </DETAIL>
+<!-- 
+         <DETAIL caption="Комментарии" name="d_Answer_Comment" detail_fk_column="AnswerID" detail_table="iris_Answer_Comment">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ContactID" caption="Кому" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Comment" caption="Комментарий" width="60%" row_type="common"/>
+                  <ITEM db_field="CreateDate" caption="Дата" width="20%" row_type="common" row_datatype="date"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Answer_Comment" caption="Комментарий" width="500" height="200" layout="1, 1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Решение" db_field="AnswerID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Answer" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Кому" db_field="ContactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="7" caption="Комментарий" db_field="Comment" mandatory="yes" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+-->
+         
+         <DETAIL caption="Файлы" name="d_Answer_File" detail_fk_column="AnswerID" external="yes" detail_file="Sections/File/detail.xml">
+         </DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

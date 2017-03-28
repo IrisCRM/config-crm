@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Offer">
+            <GRID lines_count="1" display_search="no" sort_column="1" sort_direction="desc" name="g_Offer">
+               <COLUMNS>
+                  <ITEM db_field="Name" caption="КП" width="10%" row_type="common" />
+                  <ITEM db_field="Date" caption="Дата презентации" width="15%" row_type="common" row_datatype="date" />
+                  <ITEM db_field="OfferStateID" caption="Состояние" width="15%" row_type="fk_column" row_type_parent_table="iris_PactState" row_type_parent_display_column="Name" />
+                  <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" />
+                  <ITEM db_field="Amount" caption="Сумма" width="15%" row_type="common" row_datatype="decimal" />
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Offer" caption="КП" parent_card_source="grid" parent_card_name="Offer">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

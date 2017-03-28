@@ -1,0 +1,26 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_SystemVariable">
+      <GRID_WND caption="Системные переменные" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Название" db_field="Name" width="50%" row_type="common"/>
+            <ITEM caption="Код" db_field="Code" width="20%" row_type="common"/>
+            <ITEM caption="Описание" db_field="Description" width="30%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_SystemVariable" caption="Значение переменной" width="550" height="285" layout="1, 2, 1, 1, 2, 2, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Код" db_field="Code" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="select" caption="Тип" db_field="VariableTypeID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_VariableType" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="splitter" caption="Значение"/>
+            <FIELD elem_type="text" caption="Строка" db_field="StringValue" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Целое число" db_field="IntValue" mandatory="no" datatype="int" row_type="common"/>
+            <FIELD elem_type="text" caption="Дробное число" db_field="FloatValue" mandatory="no" datatype="decimal" row_type="common"/>
+            <FIELD elem_type="text" caption="Дата" db_field="DateValue" mandatory="no" datatype="date" row_type="date"/>
+            <FIELD elem_type="text" caption="Справочник" db_field="GUIDValue" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="4" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

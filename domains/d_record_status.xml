@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_record_status">
+		<VALUES>
+			<ITEM db_value="1" caption="Активна"/>
+			<ITEM db_value="2" caption="Не активна"/>
+			<ITEM db_value="3" caption="Удалена"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_Table">
+      <GRID_WND lines_count="1" caption="Таблицы" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Таблица" db_field="Code" width="30%" row_type="common"/>
+            <ITEM caption="Название" db_field="Name" width="30%" row_type="common"/>
+            <ITEM caption="Доступ по записям" db_field="is_access" width="100px" row_type="domain" row_type_domain_name="d_yn_binary"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="card_tables" caption="Таблица" width="450" height="225" layout="1, 1, 1, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Таблица" db_field="code" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="no" datatype="string" row_type="common"/>
+
+            <FIELD elem_type="select" caption="Проверка доступа по записям" db_field="is_access" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_access"/>
+
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

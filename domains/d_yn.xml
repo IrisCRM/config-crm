@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_yn">
+		<VALUES>
+			<ITEM db_value="Y" caption="Да"/>
+			<ITEM db_value="N" caption="Нет"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Bug">
+            <GRID lines_count="1" display_search="no" name="g_Bug">
+               <COLUMNS>
+                  <ITEM db_field="Number" caption="Номер" width="10%" row_type="common" />
+                  <ITEM db_field="Name" caption="Замечание" width="25%" row_type="common" />
+                  <ITEM db_field="BugTypeID" caption="Тип" width="15%" row_type="fk_column" row_type_parent_table="iris_BugType" row_type_parent_display_column="Name" />
+                  <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" />
+                  <ITEM db_field="BugStateID" caption="Состояние" width="15%" row_type="fk_column" row_type_parent_table="iris_BugState" row_type_parent_display_column="Name" />
+                  <ITEM db_field="FindDate" caption="Дата" width="20%" row_type="common" row_datatype="date" />
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Bug" caption="Замечание" parent_card_source="grid" parent_card_name="Bug">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

@@ -1,0 +1,121 @@
+﻿<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Фильтры отчета" table="iris_Report_Filter">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="Number" caption="№" width="30" row_type="common" row_datatype="int"/>
+                  <ITEM db_field="Name" caption="Название" width="" row_type="common"/>
+                  <ITEM db_field="Report_TableID" caption="Таблица" width="20%" row_type="fk_column" row_type_parent_table="iris_Report_Table" row_type_parent_display_column="Name" />
+               </COLUMNS>
+            </GRID>
+      <GRID_WND lines_count="1" caption="Фильтры отчета" width="600" height="280">
+               <COLUMNS>
+                  <ITEM db_field="Number" caption="№" width="30" row_type="common" row_datatype="int"/>
+                  <ITEM db_field="Name" caption="Название" width="" row_type="common"/>
+                  <ITEM db_field="Report_TableID" caption="Таблица" width="20%" row_type="fk_column" row_type_parent_table="iris_Report_Table" row_type_parent_display_column="Name" />
+               </COLUMNS>
+      </GRID_WND>
+
+            <EDITCARD caption="Фильтр отчета" name="c_Report_Filter" width="600" height="510" 
+               layout="1, 1, 2, 1, 2,  1, 1,  1, 2, 2, 1, 2, 1, 1, 1, 1,  1,1" show_card_top_panel="no">
+				<TABS>
+					<TAB caption="Основная информация" rows="16"/>
+					<TAB caption="Выпадающий список" rows="2"/>
+				</TABS>				   
+               <ELEMENTS>
+                  <FIELD caption="Отчет" db_field="ReportID" mandatory="yes"
+                     elem_type="lookup" datatype="id" row_type="fk_column" 
+                     row_type_parent_source_type="grid" row_type_parent_source_name="Report" row_type_parent_display_column="Name"/>
+
+                  <FIELD caption="Таблица" elem_type="splitter"/>
+                  <FIELD caption="Таблица" db_field="Report_TableID" mandatory="no"
+                     elem_type="lookup" datatype="id" row_type="fk_column" 
+                     row_type_parent_source_type="grid" row_type_parent_source_name="Report_Table" row_type_parent_display_column="Name"/>
+                  <FIELD caption="Колонка" db_field="ColumnID" mandatory="no"
+                     elem_type="lookup" datatype="id" row_type="fk_column" 
+                     row_type_parent_source_type="grid" row_type_parent_source_name="Table_Column" row_type_parent_display_column="Name"/>
+
+                  <FIELD caption="Сравнение" elem_type="splitter"/>
+                  <FIELD caption="Условие по умолчанию" db_field="condition" mandatory="no" 
+                     elem_type="select" datatype="int" row_type="domain" row_type_domain_name="d_compare_condition"
+                     title="При формировании отчёта отображается окно с фильтрами, в нём будут проставлены указанные условия и значения по умолчанию. При использовании условия 'одно из' необходимо задать запрос для выпадающего списка"/>
+                  <FIELD elem_type="spacer"/>
+<!--                  
+                  <FIELD caption="Целое значение" db_field="IntValue" mandatory="no" 
+      	             elem_type="text" datatype="int" row_type="common" />
+                  <FIELD caption="Дробное значение" db_field="FloatValue" mandatory="no" 
+      	             elem_type="text" datatype="decimal" row_type="common" />
+                  <FIELD caption="Строковое значение" db_field="StringValue" mandatory="no" 
+      	             elem_type="text" datatype="string" row_type="common" />
+                  <FIELD caption="Значение даты" db_field="DateValue" mandatory="no" 
+                     elem_type="text" datatype="datetime" row_type="date"/>
+                  <FIELD caption="Значеине справочника" db_field="GUIDValue" mandatory="no"
+                     elem_type="lookup" datatype="id" row_type="fk_column" 
+                     row_type_parent_source_type="grid" row_type_parent_source_name="Table" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="spacer"/>
+-->
+
+                  <FIELD caption="Формула" elem_type="splitter"/>
+                  <FIELD caption="Формула" db_field="equation" mandatory="no" 
+                    elem_type="textarea" datatype="string" row_type="common" textarea_rows="2"/>
+
+                  <FIELD caption="Отображение" elem_type="splitter"/>
+      	          <FIELD caption="Название" db_field="Name" mandatory="yes"
+      		         elem_type="text" datatype="string" row_type="common"
+      		         title="Название фильтра в окне формирования отчёта"/>
+      	          <FIELD caption="Код (алиас)" db_field="Code" mandatory="no"
+      	             elem_type="text" datatype="string" row_type="common"
+      	             title="Если поле заполнено, то фильтр будет называться значением из данного поля. Если поле пусто, то фильтру автоматически будет присвоено название вида p_param_x"/>
+<!--
+                  <FIELD caption="Отображать" db_field="isvisible" mandatory="no" 
+                     elem_type="select" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+-->
+                  <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Отображать"
+                     db_field="isvisible" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"
+                     title="Отображать ли фильтр в окне формирования отчёта. Если нет, то он будет автоматически применён."/>
+
+                  <FIELD caption="Порядок" db_field="Number" mandatory="yes" 
+      	             elem_type="text" datatype="int" row_type="common"
+      	             title="Порядок фильтра в окне формирования отчёта"/>
+
+                  <FIELD caption="Группа" elem_type="splitter"/>
+                  <FIELD caption="Родительский фильтр" db_field="ParentFilterID" mandatory="no"
+                     elem_type="lookup" datatype="id" row_type="fk_column" 
+                     row_type_parent_source_type="grid" row_type_parent_source_name="Report_Filter" row_type_parent_display_column="Name"
+                     title="По умолчанию фильтры связаны условием И. С помощью этих полей можно изменить условие связки.  Родительский фильтр может не содержать условий сравнения и использоваться только для группировки условий."/>
+                  <FIELD caption="Условие связки" db_field="logiccondition" mandatory="no" 
+                     elem_type="select" datatype="int" row_type="domain" row_type_domain_name="d_logic_condition"
+                     title="Указывается в родительском фильтре."/>
+
+                  <FIELD caption="SQL" elem_type="splitter"/>
+                  <FIELD caption="SQL" db_field="sql" mandatory="no" 
+                     elem_type="textarea" datatype="string" row_type="common" textarea_rows="6"
+                     title="Используйте SQL описание в случае сложных фильтров (с поздапросами, арифметическими операциями и т.п.)."/>
+
+                  <FIELD caption="Описание" elem_type="splitter"/>
+                  <FIELD caption="Описание" db_field="Description" mandatory="no" 
+                     elem_type="textarea" datatype="string" row_type="common" textarea_rows="4"/>
+
+                  <FIELD caption="Для выпадающего списка" elem_type="splitter"/>
+                  <FIELD caption="Запрос" db_field="DropLIstSQL" mandatory="no" elem_type="textarea" datatype="string" row_type="common" textarea_rows="7" title="Если поле заполнено, то для данного фильтра будет нарисован выпадающий список, содержащий значения из данного запроса. Запрос должен возвращать две колонки: value и caption. Пример запроса: select id as value, name as caption from iris_accounttype order by name"/>
+
+<!-- Невидимые поля -->
+                  <FIELD caption="Целое значение" db_field="IntValue" mandatory="no" 
+                      elem_type="text" datatype="int" row_type="common" />
+                  <FIELD caption="Дробное значение" db_field="FloatValue" mandatory="no" 
+                      elem_type="text" datatype="decimal" row_type="common" />
+                  <FIELD caption="Строковое значение" db_field="StringValue" mandatory="no" 
+                      elem_type="text" datatype="string" row_type="common" />
+                  <FIELD caption="Значение даты" db_field="DateValue" mandatory="no" 
+                     elem_type="text" datatype="datetime" row_type="date"/>
+                  <FIELD caption="Значеине справочника" db_field="GUIDValue" mandatory="no"
+                     elem_type="lookup" datatype="id" row_type="fk_column" 
+                     row_type_parent_source_type="grid" row_type_parent_source_name="Table" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="spacer"/>
+               </ELEMENTS>
+            </EDITCARD>
+
+      <DETAILS>
+       </DETAILS>
+   </TAB>
+</MENU_TAB>

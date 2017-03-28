@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_ProjectType">
+      <GRID_WND caption="Типы заказов" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Название" db_field="Name" width="30%" row_type="common"/>
+            <ITEM caption="Код" db_field="Code" width="20%" row_type="common"/>
+			<ITEM caption="Отображать клиенту" db_field="showforclient" width="10%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+			<ITEM caption="По умолчанию" db_field="isdefault" width="10%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <ITEM caption="Описание" db_field="Description" width="20%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_ProjectType" caption="Тип заказа" width="650" height="450" layout="1, 1, 2, 1,  1, 1, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Код" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+			<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Отображать клиенту" db_field="showforclient" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+			<FIELD elem_type="checkbox" row_type_checked_index="1" caption="По умолчанию" db_field="isdefault" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+			<FIELD elem_type="spacer"/>
+			<FIELD elem_type="splitter" caption="Стадии"/>
+			<FIELD elem_type="detail" code="d_projecttype_stages" height="150px"/>
+         </ELEMENTS>
+      </EDITCARD>
+	  
+	  <DETAILS>
+		<DETAIL caption="Стадии" name="d_projecttype_stages" detail_table="iris_ProjectStage" detail_fk_column="ProjectTypeID" showoncard="no">
+			<GRID display_search="no">
+				<COLUMNS>
+					<ITEM caption="Номер" db_field="Number" width="50px" row_type="common"/>
+					<ITEM caption="Название" db_field="Name" width="20%" row_type="common"/>
+					<ITEM caption="Тип заказа" db_field="ProjectTypeID" width="20%" row_type="fk_column" row_type_parent_table="iris_ProjectType" row_type_parent_display_column="Name"/>
+					<ITEM caption="Вероятность" db_field="Probability" width="70px" row_type="common" row_datatype="int"/>
+					<ITEM caption="Изменить состояние на" db_field="ProjectStateID" width="20%" row_type="fk_column" row_type_parent_table="iris_ProjectState" row_type_parent_display_column="Name"/>
+				</COLUMNS>
+			</GRID>
+		  <EDITCARD name="dc_ProjectStage" caption="Стадия заказа" width="500" height="250" layout="2, 2, 2, 2, 1">
+			 <ELEMENTS>
+				<FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+				<FIELD elem_type="lookup" caption="Тип заказа" db_field="ProjectTypeID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="projecttype" row_type_parent_display_column="Name"/>
+				
+				<FIELD elem_type="text" caption="Номер" db_field="Number" mandatory="no" datatype="int" row_type="common"/>
+				<FIELD elem_type="text" caption="Код" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+				<FIELD elem_type="text" caption="Вероятность" db_field="Probability" mandatory="no" datatype="int" row_type="common"/>
+				<FIELD elem_type="spacer"/>
+				<FIELD elem_type="select" caption="Изменить состояние на" db_field="ProjectStateID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ProjectState" row_type_parent_display_column="Name" order_by="orderpos" title="В карточке заказа, при выборе данной стадии состояние будет меняться на указанное значение"/>
+				<FIELD elem_type="spacer"/>
+				<FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+			 </ELEMENTS>
+		  </EDITCARD>
+		</DETAIL>	  
+	  </DETAILS>
+	  
+   </DICTONARY>
+</DICT>

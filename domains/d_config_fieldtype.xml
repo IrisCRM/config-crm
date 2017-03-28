@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_fieldtype">
+		<VALUES>
+			<ITEM db_value="null" caption=""/>
+			<ITEM db_value="1" caption="Обычное" xml="common"/>
+			<ITEM db_value="2" caption="Дата" xml="date"/>
+			<ITEM db_value="3" caption="Файл" xml="file"/>
+			<ITEM db_value="4" caption="Ссылка" xml="fk_column"/>
+			<ITEM db_value="5" caption="Домен" xml="domain"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

@@ -1,0 +1,279 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Контакты" table="iris_Contact" order_pos="2" image_name="contacts.png">
+	  <GRID name="g_Contact" lines_count="1">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="ФИО" width="20%" row_type="common"/>
+            <ITEM db_field="SpeakName" caption="Обращение" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="ContactTypeID" caption="Тип" width="10%" row_type="fk_column" row_type_parent_table="iris_ContactType" row_type_parent_display_column="Name" row_type_alias="CType"/>
+            <ITEM db_field="GenderID" caption="Пол" width="10%" row_type="fk_column" row_type_parent_table="iris_Gender" row_type_parent_display_column="Name" display_format="none" row_type_alias="CGender"/>
+            <ITEM db_field="MaritalStatusID" caption="Семейное положение" width="20%" row_type="fk_column" row_type_parent_table="iris_maritalstatus" row_type_parent_display_column="Name" row_type_alias="MS" display_format="none"/>
+
+            <ITEM db_field="AccountID" caption="Компания" width="20%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" row_type_alias="CAccount"/>
+            <ITEM db_field="ObjectID" caption="Объект" width="20%" row_type="fk_column" row_type_parent_table="iris_Object" row_type_parent_display_column="Name" display_format="none" row_type_alias="CObject"/>
+            <ITEM db_field="DepartmentID" caption="Отдел" width="10%" row_type="fk_column" row_type_parent_table="iris_Department" row_type_parent_display_column="Name" display_format="none" row_type_alias="CDepartment"/>
+            <ITEM db_field="PostID" caption="Должность" width="10%" row_type="fk_column" row_type_parent_table="iris_Post" row_type_parent_display_column="Name" display_format="none" row_type_alias="CPost"/>
+            <ITEM db_field="Post" caption="Описание должности" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="ContactRoleID" caption="Роль" width="20%" row_type="fk_column" row_type_parent_table="iris_ContactRole" row_type_parent_display_column="Name" display_format="none" row_type_alias="CRole"/>
+
+            <ITEM db_field="Phone1" caption="Телефон" width="10%" row_type="common"/>
+            <ITEM db_field="Phone2" caption="Мобильный" width="10%" row_type="common"/>
+            <ITEM db_field="Email" caption="E-mail" width="10%" row_type="common" display_format="ongrid"/>
+            <ITEM db_field="ICQ" caption="ICQ" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="Skype" caption="Skype" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="Google" caption="Google account" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="CountryID" caption="Страна" width="15%" row_type="fk_column" row_type_parent_table="iris_Country" row_type_parent_display_column="Name" row_type_alias="ACountry" display_format="none"/>
+            <ITEM db_field="CityID" caption="Город" width="15%" row_type="fk_column" row_type_parent_table="iris_City" row_type_parent_display_column="Name" row_type_alias="ACity" display_format="none"/>
+            <ITEM db_field="ZIP" caption="Индекс" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="RegionID" caption="Регион" width="15%" row_type="fk_column" row_type_parent_table="iris_Region" row_type_parent_display_column="Name" row_type_alias="ARegion" display_format="none"/>
+            <ITEM db_field="Address" caption="Адрес" width="20%" row_type="common" display_format="none"/>
+
+            <ITEM db_field="Description" caption="Описание" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="COwner"/>
+
+			<!-- Поле тип компаниию нужно для выбора ответсвенного (у них тип будет Your)-->
+            <ITEM caption="" width="20%" row_type="fk_column_extended" row_type_joins="left join iris_AccountType AT on CAccount.AccountTypeID=AT.id" row_type_display_column_with_alias="AT.Code" display_format="none"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все контакты" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes">
+            </ITEM>
+            <ITEM caption="Мои контакты" item_style="font-weight: bold;" where_clause="T0.OwnerID=_iris_user_id[]">
+            </ITEM>
+			<ITEM caption="Тип" item_style="font-weight: bold;" auto_table="iris_contacttype" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.contacttypeid='#VALUE#'"/>
+			<ITEM caption="Должность" item_style="font-weight: bold;" auto_table="iris_Post" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.postid='#VALUE#'"/>
+			<ITEM caption="Роль" item_style="font-weight: bold;" auto_table="iris_ContactRole" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.ContactRoleID='#VALUE#'"/>
+			<ITEM caption="Пол" item_style="font-weight: bold;" auto_table="iris_gender" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.GenderID='#VALUE#'"/>
+			<ITEM caption="Семейное положение" item_style="font-weight: bold;" auto_table="iris_MaritalStatus" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.MaritalStatusID='#VALUE#'"/>
+		   <ITEM caption="Важные даты" item_style="font-weight: bold;" where_clause="">
+				<ITEM caption="Сегодня" item_style="" where_clause="exists (select id from iris_Contact_Date where contactid=T0.id and (iris_compare_dates(Date, _iris_current_date[], 0) = true))" />
+				<ITEM caption="Завтра" item_style="" where_clause="exists (select id from iris_Contact_Date where contactid=T0.id and (iris_compare_dates(Date, _iris_current_date[]+1, 0) = true))" />
+				<ITEM caption="1 неделя" item_style="" where_clause="exists (select id from iris_Contact_Date where contactid=T0.id and (iris_compare_dates(Date, _iris_current_date[], 7) = true))" />
+				<ITEM caption="1 месяц" item_style="" where_clause="exists (select id from iris_Contact_Date where contactid=T0.id and ((iris_compare_dates(Date, _iris_current_date[], 30) = true)))" />
+		   </ITEM>
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" caption="Контакты" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Name" caption="ФИО" width="50%" row_type="common"/>
+            <ITEM db_field="AccountID" caption="Компания" width="30%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" row_type_alias="CAccount"/>
+            <ITEM db_field="ContactTypeID" caption="Тип" width="20%" row_type="fk_column" row_type_parent_table="iris_ContactType" row_type_parent_display_column="Name"/>
+			<!-- поле тип компаниию нужно для выбора ответсвенного (у них тип будет Your)-->
+            <ITEM caption="" width="20%" row_type="fk_column_extended" row_type_joins="left join iris_accounttype AT on CAccount.accounttypeid=AT.id" row_type_display_column_with_alias="AT.Code" display_format="none"/>
+
+            <ITEM db_field="Phone1" caption="Телефон" width="10%" row_type="common" display_format="none"/>
+            <ITEM db_field="Phone2" caption="Мобильный" width="10%" row_type="common" display_format="none"/>
+            <ITEM db_field="Email" caption="E-mail" width="10%" row_type="common" display_format="none"/>
+            <ITEM db_field="ICQ" caption="ICQ" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="Skype" caption="Skype" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="Google" caption="Google account" width="15%" row_type="common" display_format="none"/>
+            <ITEM db_field="ZIP" caption="Индекс" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="CityID" caption="Город" width="15%" row_type="fk_column" row_type_parent_table="iris_City" row_type_parent_display_column="Name" row_type_alias="ACity" display_format="none"/>
+            <ITEM db_field="Address" caption="Адрес" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="COwner" display_format="none"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Contact" caption="Контакт" width="870" height="480" 
+        layout="1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1,   1, 1, 1, 1, 1, 1, 1, 1,   2, 2, 2, 2">
+         <TABS>
+            <TAB caption="Основная информация" rows="15"/>
+            <TAB caption="Адрес" rows="6"/>
+            <TAB caption="Маркетинг" rows="8"/>
+            <TAB caption="Уведомления" rows="4"/>
+         </TABS>
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="ФИО" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="select" caption="Тип" db_field="ContactTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ContactType" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Обращение" db_field="SpeakName" mandatory="no" datatype="string" row_type="common" title="Для использования в шаблонах писем, в рассылке, при отправке уведомлений"/>
+            <FIELD elem_type="select" caption="Пол" db_field="GenderID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Gender" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Семейное положение" db_field="MaritalStatusID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_maritalstatus" row_type_parent_display_column="Name"/>
+      		<FIELD elem_type="text" caption="Баланс" db_field="balance" mandatory="yes" datatype="decimal" row_type="common"/>
+			
+            <FIELD elem_type="splitter" caption="Компания"/>
+            <FIELD elem_type="lookup" caption="Компания" db_field="AccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Объект" db_field="ObjectID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Object" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Отдел" db_field="DepartmentID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="department" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Роль" db_field="ContactRoleID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ContactRole" row_type_parent_display_column="Name" title="Лицо, принимающее решение, влияющее на принятие решения, гарантирующее принятие решения"/>
+            <FIELD elem_type="select" caption="Должность" db_field="PostID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Post" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Описание должности" db_field="Post" mandatory="no" datatype="string" row_type="common"/>
+
+            <FIELD elem_type="splitter" caption="Коммуникации"/>
+            <FIELD elem_type="phone" caption="Телефон" db_field="Phone1" mandatory="no" datatype="string" db_field_addl="Phone1addl" mandatory_addl="no"/>
+            <FIELD elem_type="phone" caption="Мобильный" db_field="Phone2" mandatory="no" datatype="string" title="Номер должен быть в международном формате 7 926 123-45-67, чтобы на него система могла отправлять СМС уведомления. При отправке СМС, все символы, кроме цифр, вырезаются"/>
+            <FIELD elem_type="email" caption="E-mail" db_field="Email" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="ICQ" db_field="ICQ" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Skype" db_field="Skype" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Google account" db_field="Google" mandatory="no" datatype="string" row_type="common" title="Формат: login@gmail.com. Используется для Google Talk уведомлений"/>
+            <FIELD elem_type="text" caption="Дополнительные E-mail" db_field="ExtraEmails" mandatory="no" datatype="string" row_type="common" title="Укажите через запятую дополнительные E-mail адреса контакта. Они будут использоваться для идентификации отправителя при получении почты."/>
+
+            <FIELD elem_type="splitter" caption="Дополнительно"/>
+            <FIELD elem_type="textarea" textarea_rows="4" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+			
+			<!-- Адрес -->
+            <FIELD elem_type="splitter" caption="Адрес"/>
+            <FIELD elem_type="text" caption="Индекс" db_field="ZIP" mandatory="no" datatype="string" row_type="common"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="lookup" caption="Страна" db_field="CountryID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="country" row_type_parent_display_column="Name"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="lookup" caption="Регион" db_field="RegionID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="region" row_type_parent_display_column="Name"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="lookup" caption="Город" db_field="CityID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="city" row_type_parent_display_column="Name"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="textarea" textarea_rows="3" caption="Адрес" db_field="Address" mandatory="no" datatype="string" row_type="common"/>
+
+			<!-- Маркетинг -->
+            <FIELD elem_type="lookup" caption="Интересует" db_field="ProductID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name" title="Какой продукт или услуга вызвал интерес"/>
+            <FIELD elem_type="splitter" caption="Источник информации"/>
+            <FIELD elem_type="lookup" caption="Рекомендатель" db_field="RecommendID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name" title="Кто порекомендовал сотрудничать с Вами"/>
+            <FIELD elem_type="lookup" caption="Мероприятие" db_field="MarketingID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Marketing" row_type_parent_display_column="Name" title="Маркетинговое мероприятие, благодаря которому человек узнал о Вас (выставки, акции и т.п.)"/>
+            <FIELD elem_type="lookup" caption="Рекламная площадка" db_field="SpaceID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Space" row_type_parent_display_column="Name" title="Носитель, на котором человек увидел информацию о Вас (рекламный щит, указатель, баннер и т.п.)"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="splitter" caption="Важные даты"/>
+            <FIELD elem_type="matrix" code="d_Contact_Date_Matrix"/>
+
+			<!-- Уведомления -->
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Разрешить использовать информацию" db_field="ispersonalinfoagree" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Разрешить использовать указанную информацию только внутри компании"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по email" db_field="isnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления для не будут отправляться на email, указанный в карточке"/>
+			<FIELD elem_type="spacer"/>
+            <!--
+			<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по icq" db_field="isicqnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+			<FIELD elem_type="spacer"/>
+			-->
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по GTalk" db_field="isgtalknotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться по Jabber на указанный в карточке Google account"/>
+			<FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по SMS" db_field="issmsnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться на мобильный телефон, указанный в карточке"/>
+			<FIELD elem_type="spacer"/>
+			
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Почта" name="d_Contact_Email" detail_fk_column="ContactID" external="yes" detail_file="Sections/Email/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="Общение" name="d_Contact_Message" detail_fk_column="" detail_bound_clause="(T0.autorid=:parent_id or T0.recipientid=:parent_id)" external="yes" detail_file="Sections/Message/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="Дела" name="d_Contact_Task" detail_fk_column="ContactID" detail_bound_clause="T0.contactid=:parent_id or T0.ID in (select TC.taskid from iris_Task_Contact TC where TC.contactid = :parent_id)" external="yes" detail_file="Sections/Task/detail.xml">
+         </DETAIL>
+
+         <DETAIL caption="Заказы" name="d_Contact_Project" detail_fk_column="ContactID" external="yes" detail_file="Sections/Project/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Счета" name="d_Contact_Invoice" detail_fk_column="ContactID" external="yes" detail_file="Sections/Invoice/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Платежи" name="d_Contact_Payment" detail_fk_column="ContactID" external="yes" detail_file="Sections/Payment/detail.xml">
+         </DETAIL>
+
+		 <DETAIL caption="КП" name="d_Contact_Offer" detail_fk_column="ContactID" external="yes" detail_file="Sections/Offer/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Договоры" name="d_Contact_Pact" detail_fk_column="ContactID" external="yes" detail_file="Sections/Pact/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Накладные" name="d_Contact_FactInvoice" detail_fk_column="ContactID" external="yes" detail_file="Sections/FactInvoice/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Документы" name="d_Contactt_Document" detail_fk_column="ContactID" external="yes" detail_file="Sections/Document/detail.xml">
+         </DETAIL>
+		 
+         <DETAIL caption="Инциденты" name="d_Contact_Incident" detail_fk_column="ContactID" external="yes" detail_file="Sections/Incident/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Связи" name="d_Contact_Link" detail_fk_column="ContactID" detail_table="iris_Contact_Link">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ContactLinkID" caption="Контакт" width="50%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="ContactLinkRoleID" caption="Кем является" width="30%" row_type="fk_column" row_type_parent_table="iris_ContactLinkRole" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Description" caption="Описание" width="20%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Contact_Link" caption="Связь контактов" width="400" height="200" layout="1, 1, 2, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="С кем связан" db_field="ContactLinkID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="select" caption="Роль" db_field="ContactLinkRoleID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ContactLinkRole" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Важные даты" name="d_Contact_Date" detail_fk_column="ContactID" detail_table="iris_Contact_Date">
+            <GRID lines_count="1" display_search="no" sort_column="4" sort_direction="asc">
+               <COLUMNS>
+                  <ITEM db_field="ContactDateTypeID" caption="Тип" width="20%" row_type="fk_column" row_type_parent_table="iris_ContactDateType" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Name" caption="Название" width="30%" row_type="common"/>
+                  <ITEM db_field="Description" caption="Описание" width="30%" row_type="common"/>
+                  <ITEM db_field="Date" caption="Дата" width="20%" row_type="common" row_datatype="date"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Contact_Date" caption="Важная дата" width="500" height="220" layout="1, 1, 2, 2, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="text" caption="Дата" db_field="Date" mandatory="yes" datatype="date" row_type="date"/>
+                  <FIELD elem_type="select" caption="Тип" db_field="ContactDateTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ContactDateType" row_type_parent_display_column="Name"/>
+		          <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Не напоминать" db_field="isnotnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Важные даты" name="d_Contact_Date_Matrix" showoncard="no" detail_fk_column="ContactID" detail_table="iris_Contact_Date">
+            <EDITCARD name="dc_Contact_Date_Matrix" caption="Важная дата" width="500" height="220" layout="2">
+               <ELEMENTS>
+                  <FIELD elem_type="text" caption="Дата" db_field="Date" mandatory="yes" datatype="date" row_type="date"/>
+                  <FIELD elem_type="select" caption="Тип" db_field="ContactDateTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ContactDateType" row_type_parent_display_column="Name"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Бонусы" name="d_Contact_Bonus" detail_fk_column="ContactID" detail_table="iris_Contact_Bonus">
+            <GRID lines_count="1" display_search="no" sort_column="4" sort_direction="desc">
+               <COLUMNS>
+                  <ITEM db_field="Name" caption="Название" width="20%" row_type="common"/>
+                  <ITEM db_field="ProjectID" caption="Заказ" width="20%" row_type="fk_column" row_type_parent_table="iris_Project" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="TaskID" caption="Дело" width="20%" row_type="fk_column" row_type_parent_table="iris_Task" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Date" caption="Дата" width="20%" row_type="common" row_datatype="date"/>
+                  <ITEM db_field="Value" caption="Величина" width="20%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Contact_Bonus" caption="Бонус" width="550" height="235" layout="1, 1, 2, 2, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="no" datatype="string" row_type="common"/>
+                  <FIELD elem_type="text" caption="Величина" db_field="Value" mandatory="yes" datatype="int" row_type="common"/>
+                  <FIELD elem_type="text" caption="Дата" db_field="Date" mandatory="yes" datatype="date" row_type="common"/>
+                  <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Дело" db_field="TaskID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Task" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>		 
+
+         <DETAIL caption="Баланс" name="d_Contact_Balance" detail_fk_column="ContactID" detail_table="iris_Contact_Balance">
+            <GRID lines_count="1" display_search="no" hide_buttons="yes" sort_column="1" sort_direction="desc">
+               <COLUMNS>
+                  <ITEM db_field="CreateDate" caption="Дата" width="20%" row_type="common" row_datatype="datetime"/>
+                  <ITEM db_field="Balance" caption="Баланс" width="20%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+         </DETAIL>
+
+         <DETAIL caption="Профессии" name="d_Contact_Profession" detail_fk_column="ContactID" detail_table="iris_Contact_Profession">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+				  <ITEM caption="Профессия" db_field="ProfessionID" width="40%" row_type="fk_column" row_type_parent_table="iris_Profession" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Description" caption="Описание" width="60%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Contact_Profession" caption="Профессия" width="550" height="195" layout="1, 1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Профессия" db_field="ProfessionID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="profession" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+		 
+         <DETAIL caption="Файлы" name="d_Contact_File" detail_fk_column="ContactID" external="yes" detail_file="Sections/File/detail.xml">
+         </DETAIL>
+         <DETAIL caption="История изменений" name="d_Contact_Log" detail_fk_column="" detail_bound_clause="(T0.recordid=:parent_id)" external="yes" detail_file="Sections/Changelog/detail.xml">
+         </DETAIL>		 
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

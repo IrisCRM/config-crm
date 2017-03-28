@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_config_column_type">
+		<VALUES>
+			<ITEM db_value="1" caption="Общий" xml="common"/>
+			<ITEM db_value="2" caption="Домен" xml="domain"/>
+			<ITEM db_value="3" caption="Ссылка" xml="fk_column"/>
+			<ITEM db_value="4" caption="Ссылка (расширенное)" xml="fk_column_extended"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

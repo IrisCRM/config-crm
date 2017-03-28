@@ -1,0 +1,23 @@
+﻿<?xml version="1.0"?>
+<!-- created with Iris CRM 3.6.02 on 14.06.2012 19:20:09 -->
+<DICT>
+   <DICTONARY table="iris_systemlinks">
+      <GRID_WND lines_count="1" caption="Системные ссылки" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Название" db_field="Name" width="50%" row_type="common"/>
+            <ITEM caption="Код" db_field="Code" width="20%" row_type="common"/>
+            <ITEM caption="Описание" db_field="Description" width="30%" row_type="common"/>
+            <ITEM caption="Параметры" db_field="parameters" width="30%" row_type="common" display_format="none"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_iris_systemlinks" caption="Системные ссылки" width="600" height="300" layout="1, 1, 1, 1, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Код" db_field="Code" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="6" caption="Параметры" db_field="parameters" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="spacer" />
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

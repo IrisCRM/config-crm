@@ -1,0 +1,198 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Счета" table="iris_Invoice">
+      <GRID lines_count="1" name="g_Invoice">
+      	<COLUMNS>
+      		<ITEM db_field="Name" caption="Счет" width="25%"
+      			row_type="common" />
+      		<ITEM db_field="Number" caption="Номер"
+      			display_format="none" width="10%" row_type="common" />
+      		<ITEM db_field="Description" caption="Описание"
+      			width="20%" row_type="common" display_format="none" />
+      		<ITEM db_field="AccountID" caption="Компания"
+      			display_format="none" width="15%" row_type="fk_column"
+      			row_type_parent_table="iris_Account"
+      			row_type_parent_display_column="Name" row_type_alias="IA" />
+      		<ITEM db_field="ContactID" caption="Контакт" width="15%"
+      			row_type="fk_column" row_type_parent_table="iris_Contact"
+      			row_type_parent_display_column="Name" row_type_alias="IC"
+      			display_format="none" />
+      		<ITEM db_field="ProjectID" caption="Заказ" width="15%"
+      			row_type="fk_column" row_type_parent_table="iris_Project"
+      			row_type_parent_display_column="Name" row_type_alias="IP" />
+      		<ITEM db_field="PactID" caption="Договор" width="15%"
+      			row_type="fk_column" row_type_parent_table="iris_Pact"
+      			row_type_parent_display_column="Name" row_type_alias="IPact"
+      			display_format="none" />
+      		<ITEM db_field="Date" caption="Дата выславления"
+      			width="10%" row_type="common" row_datatype="date"
+      			display_format="none" />
+      		<ITEM db_field="PlanPaymentDate"
+      			caption="План. дата оплаты" width="10%" row_type="common"
+      			row_datatype="date" />
+      		<ITEM db_field="PaymentDate" caption="Дата оплаты"
+      			width="10%" row_type="common" row_datatype="date" />
+      		<ITEM db_field="InvoiceTypeID" caption="Тип" width="10%"
+      			row_type="fk_column" row_type_parent_table="iris_InvoiceType"
+      			row_type_parent_display_column="Name" row_type_alias="IT" />
+      		<ITEM db_field="InvoiceStateID" caption="Состояние"
+      			width="10%" row_type="fk_column"
+      			row_type_parent_table="iris_InvoiceState"
+      			row_type_parent_display_column="Name" row_type_alias="IST" />
+      		<ITEM db_field="CurrencyID" caption="Валюта" width="15%"
+      			row_type="fk_column" row_type_parent_table="iris_Currency"
+      			row_type_parent_display_column="Name"
+      			row_type_alias="OCurrency" display_format="none" />
+      		<ITEM db_field="Amount" caption="Сумма счета" width="10%"
+      			row_type="common" row_datatype="decimal" />
+      		<ITEM db_field="PaymentAmount" caption="Сумма оплаты"
+      			width="10%" row_type="common" row_datatype="decimal" />
+      		<ITEM db_field="OwnerID" caption="Ответственный"
+      			display_format="none" width="15%" row_type="fk_column"
+      			row_type_parent_table="iris_Contact"
+      			row_type_parent_display_column="Name" row_type_alias="IO" />
+      	</COLUMNS>
+      	<FILTERS>
+      		<ITEM caption="Все счета" item_style="font-weight: bold;"
+      			where_clause="1=1" sort_column="1" sort_direction="desc" default_selected="yes"/>
+      		<ITEM caption="Мои счета" item_style="font-weight: bold;" where_clause="T0.OwnerID=_iris_user_id[]"/>
+<!-- 
+			<ITEM caption="Недавние" item_style="font-weight: bold;" where_clause="T0.Date between _iris_current_date[]-30 and _iris_current_date[]+30"/>
+ -->
+			<ITEM caption="Состояние" item_style="font-weight: bold;" auto_table="iris_InvoiceState" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.InvoiceStateID='#VALUE#'" />
+			<ITEM caption="Тип" item_style="font-weight: bold;" auto_table="iris_InvoiceType" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.InvoiceTypeID='#VALUE#'" />
+      	</FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" sort_column="1" sort_direction="desc" caption="Счета" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Number" caption="Номер" width="15%" row_type="common"/>
+      		<ITEM db_field="Name" caption="Краткое описание" width="20%" row_type="common" display_format="none"/>
+      		<ITEM db_field="Description" caption="Описание" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="AccountID" caption="Компания" width="40%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name"/>
+      		<ITEM db_field="ContactID" caption="Контакт" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+      		<ITEM db_field="InvoiceTypeID" caption="Тип" width="10%" row_type="fk_column" row_type_parent_table="iris_InvoiceType" row_type_parent_display_column="Name" display_format="none"/>
+      		<ITEM db_field="InvoiceStateID" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_InvoiceState" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="Date" caption="Дата выставления" width="20%" row_type="common" row_datatype="date"/>
+      		<ITEM db_field="PlanPaymentDate" caption="План. дата оплаты" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+      		<ITEM db_field="PaymentDate" caption="Дата оплаты" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+            <ITEM db_field="Amount" caption="Сумма счета (с НДС)" width="25%" row_type="common" row_datatype="decimal"/>
+      		<ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none" />
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Invoice" caption="Счет" width="780" height="525" 
+         layout="2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 1,   2, 2, 2, 2, 2, 2">
+         <TABS>
+            <TAB caption="Основная информация" rows="18"/>
+            <TAB caption="Маршрут" rows="6"/>
+         </TABS>
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Номер" db_field="Number" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Номер альт." db_field="AltNumber" mandatory="no" datatype="string" row_type="common" title="Если номер счета необходимо определить вручную или указать внешний номер счета, то используйте это поле"/>
+            <FIELD elem_type="text" caption="Краткое описание" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="lookup" caption="Компания" db_field="AccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="spacer" />
+            <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name" />
+            <FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name" />
+            <FIELD elem_type="lookup" caption="Реквизиты клиента" db_field="Account_PropertyID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account_Property" row_type_parent_display_column="Name" />
+            <FIELD elem_type="lookup" caption="Наши реквизиты" db_field="Your_PropertyID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account_Property" row_type_parent_display_column="Name" />
+            <FIELD elem_type="select" caption="Тип" db_field="InvoiceTypeID" db_field_ext="Code" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_InvoiceType" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="spacer" />
+            <FIELD elem_type="select" caption="Состояние" db_field="InvoiceStateID" db_field_ext="code" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_InvoiceState" row_type_parent_display_column="Name" order_by="orderpos"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="splitter" caption="Даты"/>
+            <FIELD elem_type="text" caption="Дата выставления" db_field="Date" mandatory="yes" datatype="date" row_type="date"/>
+            <FIELD elem_type="text" caption="Планируемая дата оплаты" db_field="PlanPaymentDate" mandatory="no" datatype="date" row_type="date"/>
+            <FIELD elem_type="text" caption="Дата оплаты" db_field="PaymentDate" mandatory="no" datatype="date" row_type="date"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="splitter" caption="Цены"/>
+            <FIELD elem_type="select" caption="Валюта" db_field="CurrencyID" db_field_ext="code" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Currency" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="НДС, %" db_field="Tax" mandatory="no" datatype="decimal" row_type="common"/>
+            <FIELD elem_type="text" caption="Сумма счета (с НДС)" db_field="Amount" mandatory="no" datatype="decimal" row_type="common"/>
+            <FIELD elem_type="text" caption="Сумма оплаты" db_field="PaymentAmount" mandatory="no" datatype="decimal" row_type="common"/>
+            <FIELD elem_type="splitter" caption="Связи"/>
+            <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="КП" db_field="OfferID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Offer" row_type_parent_display_column="Name" /><FIELD elem_type="lookup" caption="Договор" db_field="PactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Pact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="spacer"/><FIELD elem_type="splitter" caption="Описание"/>
+            <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+
+            <!-- маршрут -->
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Распечатан" db_field="isPrinted" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Подписан нами" db_field="isOurSigned" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Отправлен скан клиенту" db_field="isClientScanSended" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получен скан клиентом" db_field="isClientScanRecieved" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Отправлен клиенту" db_field="isClientSended" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получен клиентом" db_field="isClientRecieved" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="spacer"/>
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Продукты" name="d_Invoice_Product" detail_fk_column="InvoiceID" detail_table="iris_Invoice_Product">
+            <GRID lines_count="1" display_search="no" is_editable="yes" is_have_pages="no" name="dg_Invoice_Product">
+               <COLUMNS>
+                  <ITEM db_field="Number" caption="№" width="10%" row_type="common" row_datatype="int" total="count"/>
+                  <ITEM db_field="ProductID" caption="Продукт" width="30%" row_type="fk_column" row_type_parent_table="iris_Product" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="UnitID" caption="Единица" width="15%" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Count" caption="Количество" width="15%" row_type="common" row_datatype="decimal" total="sum"/>
+                  <ITEM db_field="Price" caption="Цена" width="15%" row_type="common" row_datatype="decimal"/>
+                  <ITEM db_field="Amount" caption="Сумма" width="15%" row_type="common" row_datatype="decimal" total="sum"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Invoice_Product" caption="Продукт в счете" width="500" height="280" 
+               layout="2, 1, 1, 2, 2, 1, 1" 
+               draw_extra_button="yes">
+               <ELEMENTS>
+                  <FIELD elem_type="text" caption="Номер" db_field="Number" mandatory="yes" row_type="common" datatype="int"/>
+                  <FIELD elem_type="lookup" caption="Счет" db_field="InvoiceID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Invoice" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Продукт" db_field="ProductID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Product" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="splitter" caption="Цена"/>
+                  <FIELD elem_type="text" caption="Количество" db_field="Count" mandatory="yes" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="select" caption="Единица" db_field="UnitID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Цена" db_field="Price" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="text" caption="Сумма" db_field="Amount" mandatory="no" datatype="decimal" row_type="common"/>
+                  <FIELD elem_type="splitter" caption="Описание"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Дела" name="d_Invoice_Task" detail_fk_column="InvoiceID" external="yes" detail_file="Sections/Task/detail.xml">
+         </DETAIL>
+         
+        <DETAIL caption="Платежи" name="d_Invoice_Payment" detail_fk_column="InvoiceID" external="yes" detail_file="Sections/Payment/detail.xml">
+         </DETAIL>         
+         
+         <DETAIL caption="Накладные" name="d_Invoice_FactInvoice" 
+         	detail_fk_column="InvoiceID" external="yes" detail_file="Sections/FactInvoice/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Инциденты" name="d_Invoice_Incident" 
+         	detail_fk_column="InvoiceID" external="yes" detail_file="Sections/Incident/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Связанные счета" name="d_Invoice_Invoice" detail_fk_column="InvoiceID" detail_table="iris_Invoice_Invoice">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="InvoiceID" caption="Счет" width="50%" row_type="fk_column" row_type_parent_table="iris_Invoice" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="DocumentLinkRoleID" caption="Роль" width="25%" row_type="fk_column" row_type_parent_table="iris_DocumentLinkRole" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Description" caption="Описание" width="25%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Invoice_Invoice" caption="Связанный счет" width="500" height="210" layout="1, 1, 2, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Счет" db_field="InvoiceID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Invoice" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Связанный счет" db_field="LinkedInvoiceID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Invoice" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="select" caption="Роль" db_field="DocumentLinkRoleID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_DocumentLinkRole" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+         <DETAIL caption="Файлы" name="d_Invoice_File" detail_fk_column="InvoiceID" external="yes" detail_file="Sections/File/detail.xml">
+         </DETAIL>
+         <DETAIL caption="История изменений" name="d_Invoice_Log" detail_fk_column="" detail_bound_clause="(T0.recordid=:parent_id)" external="yes" detail_file="Sections/Changelog/detail.xml">
+         </DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

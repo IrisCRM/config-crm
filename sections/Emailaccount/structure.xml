@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Почтовые аккаунты" table="iris_emailaccount" order_pos="1">
+      <GRID lines_count="1">
+         <COLUMNS>
+            <ITEM caption="Email адрес" db_field="email" width="30%" row_type="common"/>
+            <ITEM caption="Описание" db_field="description" width="30%" row_type="common"/>
+            <ITEM caption="Активен?" db_field="IsActive" width="10%" row_type="domain" row_type_domain_name="d_yn"/>
+         </COLUMNS>
+      </GRID>
+      <GRID_WND lines_count="1" caption="Почтовые аккаунты" width="600" height="280">
+         <COLUMNS>
+            <ITEM caption="Email адрес" db_field="email" width="30%" row_type="common"/>
+            <ITEM caption="Описание" db_field="description" width="30%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="750" height="320" layout="2, 1, 1, 2, 2, 2, 1, 2, 2, 2">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Email адрес" db_field="email" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="0" caption="Активен?" 
+               db_field="IsActive" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="description" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="splitter" caption="Получение почты (POP)"/>
+            <FIELD elem_type="text" caption="POP сервер" db_field="address" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="POP порт (110)" db_field="port" mandatory="yes" datatype="int" row_type="common"/>
+            <FIELD elem_type="text" caption="POP логин" db_field="login" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="select" caption="Шифрование" db_field="Encryption" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_encryption"/>
+            <FIELD elem_type="password" caption="POP пароль" db_field="password" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="space"/>
+
+            <FIELD elem_type="splitter" caption="Отправка почты (SMTP)"/>
+            <FIELD elem_type="text" caption="SMTP сервер" db_field="smtp_address" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="SMTP порт (25)" db_field="smtp_port" mandatory="yes" datatype="int" row_type="common"/>
+            <FIELD elem_type="text" caption="SMTP логин" db_field="smtp_login" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="select" caption="Шифрование" db_field="smtp_Encryption" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_encryption"/>
+            <FIELD elem_type="password" caption="SMTP пароль" db_field="smtp_password" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="select" caption="Авторизация" db_field="smtp_authtype" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_smtp_authtype"/>
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Права для входящих писем" name="d_EmailAccount_defaccess" detail_table="iris_emailaccount_defaultaccess" detail_fk_column="EmailAccountID">
+			<GRID display_search="no">
+				<COLUMNS>
+					<ITEM caption="Пользователь" db_field="ContactID" width="150px" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+					<ITEM caption="Чтение" db_field="R" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+					<ITEM caption="Правка" db_field="W" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+					<ITEM caption="Удаление" db_field="D" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+					<ITEM caption="Изменение доступа" db_field="A" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				</COLUMNS>
+			</GRID>
+			<EDITCARD name="dc_EmailAccount_defaccess" caption="Права на входящие письма" width="600" height="180" layout="1, 1, 2, 2">
+				<ELEMENTS>
+					<FIELD elem_type="lookup" caption="Аккаунт" db_field="EmailAccountID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Emailaccount" row_type_parent_display_column="description"/>
+                    <FIELD elem_type="lookup" caption="Пользователь" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Чтение" 
+                       db_field="R" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Удаление" 
+                       db_field="D" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Правка" 
+                       db_field="W" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Изменение прав" 
+                       db_field="A" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				</ELEMENTS>
+			</EDITCARD>
+         </DETAIL>
+		 
+         <DETAIL caption="Права для исходящих писем" name="d_EmailAccount_outaccess" detail_table="iris_emailaccount_outboxaccess" detail_fk_column="EmailAccountID">
+			<GRID display_search="no">
+				<COLUMNS>
+					<ITEM caption="Пользователь" db_field="ContactID" width="150px" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+					<ITEM caption="Чтение" db_field="R" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+					<ITEM caption="Правка" db_field="W" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+					<ITEM caption="Удаление" db_field="D" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+					<ITEM caption="Изменение доступа" db_field="A" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+					<ITEM caption="Отправка" db_field="is_send" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+					<ITEM caption="Основной" db_field="is_primary" width="25%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				</COLUMNS>
+			</GRID>
+			<EDITCARD name="dc_EmailAccount_outaccess" caption="Права на исходящие письма" width="600" height="230" layout="1, 1, 2, 2, 1, 2">
+				<ELEMENTS>
+					<FIELD elem_type="lookup" caption="Аккаунт" db_field="EmailAccountID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Emailaccount" row_type_parent_display_column="description"/>
+                    <FIELD elem_type="lookup" caption="Пользователь" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Чтение" 
+                       db_field="R" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Удаление" 
+                       db_field="D" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Правка" 
+                       db_field="W" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Изменение прав" 
+                       db_field="A" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+
+					<FIELD elem_type="splitter" caption="Отправка писем"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Возможность отправлять письма" 
+                       db_field="is_send" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                    <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Основной адрес отправки" 
+                       db_field="is_primary" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				</ELEMENTS>
+			</EDITCARD>
+         </DETAIL>
+		 
+		 
+      </DETAILS>	  
+   </TAB>
+</MENU_TAB>

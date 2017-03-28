@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<MENU type="mini">
+
+   <GROUP name="CRM">
+      <ITEM name="Account" quicknew="1"/>
+      <ITEM name="Contact" quicknew="1"/>
+      <ITEM name="Object" quicknew="1"/>
+      <ITEM name="Task" quicknew="1"/>
+      <ITEM name="Calendar"/>
+      <ITEM name="CalendarBusy"/>
+      <ITEM name="Email" quicknew="1"/>
+      <ITEM name="Message" quicknew="1"/>
+   </GROUP>
+
+   <GROUP name="Продажи">
+      <ITEM name="Project" quicknew="1"/>
+      <ITEM name="Payment" quicknew="1"/>
+      <ITEM name="Product"/>
+      <ITEM name="Issue"/>
+   </GROUP>
+
+   <GROUP name="Документооборот">
+      <ITEM name="Offer" quicknew="1"/>
+      <ITEM name="Pact" quicknew="1"/>
+      <ITEM name="Invoice" quicknew="1"/>
+      <ITEM name="FactInvoice"/>
+      <ITEM name="Document"/>
+      <ITEM name="File"/>
+   </GROUP>
+
+   <GROUP name="Маркетинг">
+      <ITEM name="Marketing"/>
+      <ITEM name="Space"/>
+      <ITEM name="Mailing"/>
+      <ITEM name="Poll"/>
+      <ITEM name="Interview" quicknew="1"/>
+   </GROUP>
+
+   <GROUP name="Сервис">
+      <ITEM name="Incident" quicknew="1"/>
+      <ITEM name="Answer"/>
+      <ITEM name="Bug" quicknew="1"/>
+   </GROUP>
+
+   <GROUP name="Аналитика">
+      <ITEM name="Report"/>
+   </GROUP>
+   
+   <GROUP name="Для клиентов">
+      <ITEM name="Myproject"/>
+      <ITEM name="Myinvoice"/>
+      <ITEM name="Mymessage"/>
+      <ITEM name="Myfile"/>
+      <ITEM name="Mycash"/>
+      <ITEM name="Mypref"/>
+   </GROUP>
+
+   <GROUP name="Администрирование">
+      <ITEM name="users"/>
+      <ITEM name="dictionaryes"/>
+      <ITEM name="Emailaccount"/>
+      <ITEM name="Printform"/>
+      <ITEM name="Remind"/>
+      <ITEM name="RemindLog"/>
+      <ITEM name="Import"/>
+      <ITEM name="Config"/>
+      <ITEM name="sectionroles"/>
+      <ITEM name="tablegroups"/>
+      <ITEM name="Table"/>
+      <ITEM name="sql"/>
+   </GROUP>
+
+</MENU>

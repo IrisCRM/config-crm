@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Замечания" table="iris_Bug" order_pos="7" image_name="products.png">
+      <GRID lines_count="1">
+         <COLUMNS>
+            <ITEM db_field="Number" caption="Номер" width="7%" row_type="common"/>
+            <ITEM db_field="Name" caption="Краткое описание" width="25%" row_type="common"/>
+            <ITEM db_field="Description" caption="Описание" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="IssueID" caption="Выпуск" width="7%" row_type="fk_column" row_type_parent_table="iris_Issue" row_type_parent_display_column="Name"/>
+            <ITEM db_field="BugStateID" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_BugState" row_type_alias="BS" row_type_parent_display_column="Name"/>
+            <ITEM db_field="BugImportanceID" caption="Важность" width="10%" row_type="fk_column" row_type_parent_table="iris_BugImportance" row_type_alias="BI" row_type_parent_display_column="Name"/>
+
+            <ITEM db_field="BugTypeID" caption="Тип" width="10%" row_type="fk_column" row_type_parent_table="iris_BugType" row_type_alias="BT" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="BugAreaID" caption="Область" width="10%" row_type="fk_column" row_type_parent_table="iris_BugArea" row_type_alias="BA" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="SpecificationChapter" caption="Раздел в документе" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="TestChapter" caption="Тест-требование" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="ProjectID" caption="Заказ" width="15%" row_type="fk_column" row_type_parent_table="iris_Project" row_type_parent_display_column="Name" display_format="none"/>
+
+            <ITEM db_field="FindID" caption="Обнаружил" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="FindDate" caption="Дата обнаружения" width="10%" row_type="common" row_datatype="date"/>
+            <ITEM db_field="EditID" caption="Исправил" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="EditDate" caption="Дата исправления" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+            <ITEM db_field="VerifyID" caption="Проверил" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="VerifyDate" caption="Дата проверки" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все замечания" item_style="font-weight: bold;" where_clause="1=1" sort_column="1" sort_direction="desc" default_selected="yes"/>
+            <ITEM caption="Пользователи" item_style="font-weight: bold;" where_clause="">
+	            <ITEM caption="Мои замечания" item_style="" where_clause="T0.OwnerID=_iris_user_id[]" default_selected="yes"/><ITEM caption="Мною найденные" item_style="" where_clause="T0.FindID=_iris_user_id[]" />
+    	        <ITEM caption="Мною исправленные" item_style="" where_clause="T0.EditID=_iris_user_id[]"/>
+        	    <ITEM caption="Мною проверенные" item_style="" where_clause="T0.VerifyID=_iris_user_id[]"></ITEM>
+        	</ITEM>
+            <ITEM caption="По дате" item_style="font-weight: bold;" where_clause="">
+               <ITEM caption="Сегодня" item_style="" where_clause="T0.FindDate = _iris_current_date[]"/>
+<!-- 
+               <ITEM caption="Недавние" item_style="" where_clause="T0.FindDate between _iris_current_date[]-7 and _iris_current_date[]+7"/>
+-->
+            </ITEM>
+			<ITEM caption="Состояние" item_style="font-weight: bold;" auto_table="iris_BugState" auto_filter_column="code" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="BS.Code='#VALUE#'" auto_value_selected="Found"/>
+			<ITEM caption="Важность" item_style="font-weight: bold;" auto_table="iris_BugImportance" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.BugImportanceID='#VALUE#'" />
+            <ITEM caption="Источник" item_style="font-weight: bold;" where_clause="">
+               <ITEM caption="В выпусках" item_style="" where_clause="IssueID is not null"/>
+               <ITEM caption="В заказах" item_style="" where_clause="ProjectID is not null"/>
+            </ITEM>			
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" sort_column="1" sort_direction="desc" caption="Замечания" width="600" height="280">
+         <COLUMNS>
+            <ITEM db_field="Number" caption="Номер" width="10%" row_type="common"/>
+            <ITEM db_field="FindDate" caption="Дата обнаружения" width="10%" row_type="common" row_datatype="date" display_format="none"/>
+            <ITEM db_field="Name" caption="Кратко" width="40%" row_type="common"/>
+            <ITEM db_field="Description" caption="Описание" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="IssueID" caption="Выпуск" width="30%" row_type="fk_column" row_type_parent_table="iris_Issue" row_type_parent_display_column="Name"/>
+            <ITEM db_field="BugTypeID" caption="Тип" width="10%" row_type="fk_column" row_type_parent_table="iris_BugType" row_type_alias="BT" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="BugStateID" caption="Состояние" width="20%" row_type="fk_column" row_type_parent_table="iris_BugState" row_type_parent_display_column="Name"/>
+            <ITEM db_field="BugImportanceID" caption="Важность" width="10%" row_type="fk_column" row_type_parent_table="iris_BugImportance" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="FindID" caption="Обнаружил" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="SpecificationChapter" caption="Раздел в документе" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="TestChapter" caption="Тест-требование" width="20%" row_type="common" display_format="none"/>
+            <ITEM db_field="ProjectID" caption="Заказ" width="15%" row_type="fk_column" row_type_parent_table="iris_Project" row_type_parent_display_column="Name" display_format="none"/>
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Bug" caption="Замечание" width="750" height="475" 
+         layout="2, 1, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Номер" db_field="Number" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="text" caption="Краткое описание" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="7" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="select" caption="Тип" db_field="BugTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_BugType" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Состояние" db_field="BugStateID" db_field_ext="code" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_BugState" row_type_parent_display_column="Name" order_by="orderpos"/>
+			<FIELD elem_type="select" caption="Область" db_field="BugAreaID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_BugArea" row_type_parent_display_column="Name"/>
+            
+            <FIELD elem_type="select" caption="Важность" db_field="BugImportanceID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_BugImportance" row_type_parent_display_column="Name" order_by="orderpos"/>
+			<FIELD elem_type="text" caption="Раздел в документе" db_field="SpecificationChapter" mandatory="no" datatype="string" row_type="common"/>
+			<FIELD elem_type="lookup" caption="Выпуск" db_field="IssueID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Issue" row_type_parent_display_column="Name" />
+            
+            <FIELD elem_type="text" caption="Тест-требование" db_field="TestChapter" mandatory="no" datatype="string" row_type="common"/>
+            
+            <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="spacer"/>
+
+            <FIELD elem_type="splitter" caption="Напоминание ответственному"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Напомнить" db_field="IsRemind" mandatory="yes" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+            <FIELD elem_type="text" caption="Время напоминания" db_field="RemindDate" mandatory="no" datatype="datetime" row_type="date"/>
+
+            <FIELD elem_type="splitter" caption="Процесс исправления"/>
+            <FIELD elem_type="lookup" caption="Обнаружил" db_field="FindID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Дата обнаружения" db_field="FindDate" mandatory="yes" datatype="date" row_type="date"/>
+            <FIELD elem_type="lookup" caption="Исправил" db_field="EditID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Дата исправления" db_field="EditDate" mandatory="no" datatype="date" row_type="date"/>
+            <FIELD elem_type="lookup" caption="Проверил" db_field="VerifyID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Дата проверки" db_field="VerifyDate" mandatory="no" datatype="date" row_type="date"/>
+         </ELEMENTS>
+      </EDITCARD>
+      <DETAILS>
+         <DETAIL caption="Дела" name="d_Bug_Task" detail_fk_column="BugID" external="yes" detail_file="Sections/Task/detail.xml">
+         </DETAIL>
+         <DETAIL caption="Связанные замечания" name="d_Bug_Bug" detail_fk_column="BugID" detail_table="iris_Bug_Bug">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="LinkedBugID" caption="Связанное замечание" width="50%" row_type="fk_column" row_type_parent_table="iris_Bug" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Description" caption="Описание" width="50%" row_type="common"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_Bug_Bug" caption="Связанное замечание" width="500" height="190" layout="1, 1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Замечание" db_field="BugID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Bug" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Связанное замечание" db_field="LinkedBugID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Bug" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="3" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+
+         <DETAIL caption="Общение" name="d_Bug_Message" detail_fk_column="BugID" external="yes" detail_file="Sections/Message/detail.xml">
+         </DETAIL>
+<!-- 
+         <DETAIL caption="Комментарии" name="d_Bug_Comment" detail_fk_column="BugID" detail_table="iris_Bug_Comment">
+            <GRID lines_count="1" display_search="no">
+               <COLUMNS>
+                  <ITEM db_field="ContactID" caption="Кому" width="20%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+                  <ITEM db_field="Comment" caption="Комментарий" width="60%" row_type="common"/>
+                  <ITEM db_field="CreateDate" caption="Дата" width="20%" row_type="common" row_datatype="date"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Bug_Comm" caption="Комментарий" width="500" height="210" layout="1, 1, 1">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Замечание" db_field="BugID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Bug" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="lookup" caption="Кому" db_field="ContactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="textarea" textarea_rows="7" caption="Комментарий" db_field="Comment" mandatory="yes" datatype="string" row_type="common"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+-->
+
+         <DETAIL caption="Файлы" name="d_Bug_File" detail_fk_column="BugID" external="yes" detail_file="Sections/File/detail.xml">
+         </DETAIL>
+      </DETAILS>
+   </TAB>
+</MENU_TAB>

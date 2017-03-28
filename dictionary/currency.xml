@@ -1,0 +1,52 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_Currency">
+		<GRID_WND caption="Валюты" width="600" height="275">
+			<COLUMNS>
+				<ITEM caption="Название" db_field="Name" width="20%" row_type="common"/>
+				<!--<ITEM caption="Курс" db_field="Course" width="20%" row_type="common"/>-->
+				<!--<ITEM caption="Дата обновления курса" db_field="CourseDate" width="20%" row_type="common" row_datetype="date"/>-->
+				<ITEM caption="Код" db_field="Code" width="20%" row_type="common"/>
+				<!--<ITEM caption="Описание" db_field="Description" width="20%" row_type="common"/>-->
+				<ITEM caption="По умолчанию" db_field="IsDefault" width="20%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				<ITEM caption="Дата курса" width="100px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="(select to_char(max(coursedate), 'DD.MM.YYYY') from iris_currency_course where currencyid = T0.id) as cd" column_caption="cd" />				
+				<ITEM caption="Курс" width="100px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="(select coursevalue from iris_currency_course where currencyid = T0.id and coursedate = (select max(coursedate) from iris_currency_course where currencyid = T0.id)) as cv" column_caption="cv" />				
+			</COLUMNS>
+		</GRID_WND>
+		<EDITCARD name="dc_currency" caption="Валюта" width="650" height="450" layout="1, 2, 1,   1, 1, 1">
+			<ELEMENTS>
+				<FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+				<!--
+				<FIELD elem_type="text" caption="Курс" db_field="Course" mandatory="no" datatype="decimal" row_type="common"/>
+				<FIELD elem_type="text" caption="Дата обновления курса" db_field="CourseDate" mandatory="no" datatype="date" row_type="date"/>
+				-->
+				<FIELD elem_type="text" caption="Код" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+				<FIELD elem_type="select" caption="По умолчанию" db_field="IsDefault" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+				<FIELD elem_type="textarea" textarea_rows="6" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+				<FIELD elem_type="spacer"/>
+				<FIELD elem_type="splitter" caption="Курсы"/>
+				<FIELD elem_type="detail" code="d_currency_course" height="100px"/>
+			</ELEMENTS>
+		</EDITCARD>
+
+		<DETAILS>
+			<DETAIL caption="Курсы" name="d_currency_course" detail_table="iris_currency_course" detail_fk_column="CurrencyID" showoncard="no">
+				<GRID display_search="no">
+					<COLUMNS>
+						<ITEM caption="Дата курса" db_field="CourseDate" width="30%" row_type="common" row_datatype="date" />
+						<ITEM caption="Курс к основной валюте" db_field="CourseValue" width="70%" row_type="common" row_datatype="decimal"/>
+					</COLUMNS>
+				</GRID>
+				<EDITCARD name="dc_CurrencyCourse" caption="Курс валюты" width="400" height="150" layout="1, 2, 2">
+					<ELEMENTS>
+						<FIELD elem_type="lookup" caption="Валюта" db_field="CurrencyID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="dict" row_type_parent_source_name="currency" row_type_parent_display_column="Name"/>
+						<FIELD elem_type="text" caption="Дата курса" db_field="CourseDate" mandatory="yes" datatype="date" row_type="date"/>
+						<FIELD elem_type="spacer" />
+						<FIELD elem_type="text" caption="Единиц" db_field="Count" mandatory="yes" datatype="int" row_type="common" title="Сколько едениц валюты отпускается по курсу"/>
+						<FIELD elem_type="text" caption="Курс" db_field="CourseValue" mandatory="yes" datatype="decimal" row_type="common" title="Курс к основной валюте"/>
+					</ELEMENTS>
+				</EDITCARD>
+			</DETAIL>	  
+		</DETAILS>
+   </DICTONARY>
+</DICT>

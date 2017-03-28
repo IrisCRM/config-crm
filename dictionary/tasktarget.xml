@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<DICT>
+  <DICTONARY table="iris_tasktarget">
+    <GRID_WND lines_count="1" caption="Цели дел" width="600" height="275">
+      <COLUMNS>
+        <ITEM db_field="OrderPos" caption="Порядок" width="70px" row_type="common"/>
+        <ITEM db_field="ProjectStageID" caption="Стадия заказа" width="20%" row_type="fk_column" row_type_parent_table="iris_projectstage" row_type_parent_display_column="name" row_type_alias="TPStage"/>
+        <ITEM db_field="Name" caption="Название" width="50%" row_type="common"/>
+        <ITEM db_field="Code" caption="Код" width="20%" row_type="common" display_format="none"/>
+        <ITEM db_field="isactive" caption="Активно" width="10%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+        <ITEM db_field="Description" caption="Описание" width="30%" row_type="common" display_format="none"/>
+      </COLUMNS>
+    </GRID_WND>
+    <EDITCARD name="dc_iris_tasktarget" caption="Цели дел" width="650" height="340" layout="1, 1, 2, 2,  2, 2, 2, 2,  1, 1,  1, 2">
+       <TABS>
+          <TAB caption="Основное" rows="10"/>
+          <TAB caption="Дополнительно" rows="2"/>
+       </TABS>
+      <ELEMENTS>
+        <FIELD elem_type="select" caption="Стадия заказа" db_field="ProjectStageID" datatype="id" row_type="fk_column" mandatory="yes" row_type_parent_table="iris_projectstage" row_type_parent_display_column="name" order_by="number"/>
+        <FIELD elem_type="text" caption="Название" db_field="Name" datatype="string" row_type="common" mandatory="yes"/>
+        <FIELD elem_type="text" caption="Порядок в списке" db_field="OrderPos" datatype="string" row_type="common" mandatory="no" title="порядок данной записи в выпадающем списке карточки и в автофильтре"/>
+        <FIELD elem_type="text" caption="Код" db_field="Code" datatype="string" row_type="common" mandatory="no"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Активно" db_field="isactive" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_int" title="Только активные цели отображаются в карточке дела"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="splitter" caption="По умолчанию начинать через" small="yes"/>
+        <FIELD elem_type="splitter" caption="Длительность дела по умолчанию" small="yes"/>
+        <FIELD elem_type="text" caption="Дней" db_field="days" mandatory="no" row_type="common" datatype="int"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="text" caption="Часов" db_field="hours" mandatory="no" row_type="common" datatype="int"/>
+        <FIELD elem_type="text" caption="Срок, часов" db_field="termhours" mandatory="no" row_type="common" datatype="int"/>
+        <FIELD elem_type="text" caption="Минут" db_field="minutes" mandatory="no" row_type="common" datatype="int"/>
+        <FIELD elem_type="text" caption="Срок, минут" db_field="termminutes" mandatory="no" row_type="common" datatype="int"/>
+        <FIELD elem_type="spacer"/>
+        <FIELD elem_type="textarea" caption="Описание" db_field="Description" datatype="string" row_type="common" mandatory="no" textarea_rows="2"/>
+        <FIELD elem_type="splitter" caption="Изменять стадию заказа"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Изменять стадию" db_field="dostagechange" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int" title="При создании дела с этой целью изменить стадию заказа на указанную в этой карточке"/>
+        <FIELD elem_type="radiobutton" row_type_checked_index="0" caption="Только вперед" db_field="onlyforward" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_ynz_int" title="Менять стадию только в большую сторону"/>
+      </ELEMENTS>
+    </EDITCARD>
+  </DICTONARY>
+</DICT>

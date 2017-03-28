@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_graph_type">
+		<VALUES>
+			<ITEM db_value="0" caption=""/>
+			<ITEM db_value="1" caption="Пирог" code="pie"/>
+			<ITEM db_value="2" caption="Гистограмма (вертикально)" code="bar"/>
+			<ITEM db_value="3" caption="Гистограмма (горизонтально)" code="bar_h"/>
+			<ITEM db_value="7" caption="Гистограмма (многоуровневая)" code="bar_ml"/>
+			<ITEM db_value="4" caption="Линейный" code="line"/>
+			<ITEM db_value="5" caption="Линейный с апроксимацией" code="spline"/>
+			<ITEM db_value="6" caption="Воронка" code="funnel"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

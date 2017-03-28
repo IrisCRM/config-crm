@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_ynz_int">
+		<VALUES>
+			<ITEM db_value="1" caption="Да"/>
+			<ITEM db_value="0" caption="Нет"/>
+			<ITEM db_value="null" caption=""/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_compare_condition">
+		<VALUES>
+			<ITEM db_value="0" caption=""/>
+			<ITEM db_value="1" caption="="/>
+			<ITEM db_value="2" caption="&gt;"/>
+			<ITEM db_value="3" caption="&gt;="/>
+			<ITEM db_value="4" caption="&lt;"/>
+			<ITEM db_value="5" caption="&lt;="/>
+			<ITEM db_value="6" caption="!="/>
+			<ITEM db_value="7" caption="одно из"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>

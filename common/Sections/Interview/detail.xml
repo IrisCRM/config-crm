@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+	<DETAIL detail_table="iris_interview">
+		<GRID lines_count="1" display_search="no" sort_column="1" sort_direction="desc" name="g_Interview">
+			<COLUMNS>
+               <ITEM db_field="createdate" caption="Дата создания" width="10%" row_type="common" row_datatype="date"/>
+               <ITEM db_field="lastdate" caption="Последняя попытка" width="15%" row_type="common" row_datatype="date" display_format="none"/>
+               <ITEM db_field="attempts" caption="Попыток" width="10%" row_type="common" row_datatype="int" display_format="none"/>
+               <ITEM db_field="pollid" caption="Опрос" width="20%" row_type="fk_column" row_type_parent_table="iris_poll" row_type_parent_display_column="name" display_format="none"/>
+               <ITEM db_field="contactid" caption="Контакт" width="20%" row_type="fk_column" row_type_parent_table="iris_contact" row_type_parent_display_column="name" display_format="ongrid"/>
+               <ITEM db_field="accountid" caption="Компания" width="20%" row_type="fk_column" row_type_parent_table="iris_account" row_type_parent_display_column="name" display_format="none"/>
+               <ITEM db_field="phone" caption="Телефон" width="10%" row_type="common" display_format="none"/>
+               <ITEM db_field="operatorid" caption="Оператор" width="20%" row_type="fk_column" row_type_parent_table="iris_contact" row_type_parent_display_column="name" display_format="none"/>
+               <ITEM db_field="interviewstateid" caption="Состояние" width="10%" row_type="fk_column" row_type_parent_table="iris_interviewstate" row_type_parent_display_column="name" display_format="ongrid"/>
+               <ITEM db_field="interviewresultid" caption="Результат" width="10%" row_type="fk_column" row_type_parent_table="iris_interviewresult" row_type_parent_display_column="name" display_format="ongrid"/>
+               <ITEM db_field="result" caption="Результат (число)" width="10%" row_type="common" row_datatype="decimal" display_format="ongrid"/>
+               <ITEM db_field="ownerid" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_contact" row_type_parent_display_column="name" display_format="ongrid"/>
+               <ITEM db_field="description" caption="Описание" width="20%" row_type="common" display_format="none"/>
+			</COLUMNS>
+		</GRID>
+		<EDITCARD name="c_Interview" caption="Интервью" parent_card_source="grid" parent_card_name="Interview">
+		</EDITCARD>
+	</DETAIL>
+</EXTERNAL_DETAIL>

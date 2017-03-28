@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<EXTERNAL_DETAIL>
+   <DETAIL detail_table="iris_Pact">
+            <GRID lines_count="1" display_search="no" sort_column="1" sort_direction="desc" name="g_Pact">
+               <COLUMNS>
+                  <ITEM db_field="Name" caption="Договор" width="10%" row_type="common" />
+                  <ITEM db_field="StartDate" caption="Дата начала" width="15%" row_type="common" row_datatype="date" />
+                  <ITEM db_field="FinishDate" caption="Дата завершения" width="15%" row_type="common" row_datatype="date" />
+                  <ITEM db_field="PactTypeID" caption="Тип" width="15%" row_type="fk_column" row_type_parent_table="iris_PactType" row_type_parent_display_column="Name" ></ITEM>
+                  <ITEM db_field="PactStateID" caption="Состояние" width="15%" row_type="fk_column" row_type_parent_table="iris_PactState" row_type_parent_display_column="Name"></ITEM><ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" />
+                  <ITEM db_field="Amount" caption="Сумма" width="15%" row_type="common" row_datatype="decimal" />
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="c_Pact" caption="Договор" parent_card_source="grid" parent_card_name="Pact">
+            </EDITCARD>
+         </DETAIL>
+</EXTERNAL_DETAIL>

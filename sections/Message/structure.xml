@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<MENU_TAB>
+   <TAB section_type="common" caption="Общение" table="iris_Message" image_name="">
+      <GRID lines_count="1" name="g_Message">
+         <COLUMNS>
+            <ITEM db_field="Subject" caption="Тема" width="200px" row_type="common"/>
+            <ITEM db_field="Message" caption="Сообщение" width="" row_type="common"/>
+            <ITEM db_field="AutorID" caption="Автор" width="100px" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+            <ITEM db_field="RecipientID" caption="Кому" width="100px" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name"/>
+            <ITEM db_field="ImportanceID" caption="Важность" width="60px" row_type="fk_column" row_type_parent_table="iris_MessageImportance" row_type_parent_display_column="Name" row_type_alias="MImportance"/>
+            <ITEM db_field="StatusID" caption="Статус" width="70px" row_type="fk_column" row_type_parent_table="iris_MessageStatus" row_type_parent_display_column="Name" row_type_alias="MStatus"/>
+            <ITEM db_field="MessageDate" caption="Дата" width="110px" row_type="common" row_datatype="datetime"/>
+         </COLUMNS>
+         <FILTERS>
+            <ITEM caption="Все сообщения" item_style="font-weight: bold;" where_clause="1=1" default_selected="yes" sort_column="7" sort_direction="desc"/>
+			<ITEM caption="Статус" item_style="font-weight: bold;" auto_table="iris_MessageStatus" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.StatusID='#VALUE#'"/>
+			<ITEM caption="Важность" item_style="font-weight: bold;" auto_table="iris_MessageImportance" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.ImportanceID='#VALUE#'"/>
+            <ITEM caption="Назначение" item_style="font-weight: bold;" where_clause="">
+	            <ITEM caption="Мои сообщения" where_clause="T0.AutorID=_iris_user_id[]"/>
+	            <ITEM caption="Для меня" where_clause="T0.RecipientID=_iris_user_id[]"/>
+	            <ITEM caption="Связанные со мной" where_clause="(T0.AutorID=_iris_user_id[] or T0.RecipientID=_iris_user_id[])"/>
+			</ITEM>
+         </FILTERS>
+      </GRID>
+      <GRID_WND lines_count="1" caption="Общение" width="650" height="300" name="g_Message">
+         <COLUMNS>
+            <ITEM db_field="subject" caption="Тема" width="25%" row_type="common"/>
+            <ITEM db_field="message" caption="Сообщение" width="25%" row_type="common"/>
+            <ITEM db_field="statusID" caption="Статус" width="15%" row_type="fk_column" row_type_parent_table="iris_messagestatus" row_type_parent_display_column="Name"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="c_Message" caption="Сообщение" width="720" height="380" layout="2, 1, 1, 2, 2, 2">
+         <ELEMENTS>
+            <FIELD elem_type="lookup" caption="Кому" db_field="RecipientID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Автор" db_field="AutorID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+			<FIELD elem_type="text" caption="Тема" db_field="Subject" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="5" caption="Сообщение" db_field="message" mandatory="yes" datatype="string" row_type="common"/>
+
+            <FIELD elem_type="select" caption="Важность" db_field="ImportanceID" db_field_ext="code" order_by="orderpos" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_messageimportance" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="select" caption="Статус" db_field="StatusID" db_field_ext="code" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_messagestatus" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Заказ" db_field="ProjectID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Project" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="text" caption="Дата" db_field="MessageDate" mandatory="no" datatype="datetime" row_type="date"/>
+            <FIELD elem_type="lookup" caption="Замечание" db_field="BugID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Bug" row_type_parent_display_column="Name"/>
+            <FIELD elem_type="lookup" caption="Решение" db_field="AnswerID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Answer" row_type_parent_display_column="Name"/>
+         </ELEMENTS>
+      </EDITCARD>
+	  
+	  <DETAILS>
+         <DETAIL caption="Прочитали" name="d_contactreaded" detail_table="iris_message_contact" detail_fk_column="MessageID">
+		      <GRID lines_count="1" display_search="no" hide_buttons="yes" sort_column="1" sort_direction="desc">
+		         <COLUMNS>
+		            <ITEM db_field="ReadDate" caption="Дата" width="120px" row_type="common" row_datatype="datetime"/>
+		            <ITEM db_field="ContactID" caption="Контакт" width="100%" row_type="fk_column" row_type_parent_table="iris_contact" row_type_parent_display_column="Name"/>
+		         </COLUMNS>
+		      </GRID>
+        </DETAIL>
+	  </DETAILS>
+	  
+   </TAB>
+</MENU_TAB>

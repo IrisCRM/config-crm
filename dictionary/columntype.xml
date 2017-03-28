@@ -1,0 +1,21 @@
+﻿<?xml version="1.0"?>
+<DICT>
+   <DICTONARY table="iris_ColumnType">
+      <GRID_WND caption="Типы колонок таблиц" width="600" height="275">
+         <COLUMNS>
+            <ITEM caption="Название" db_field="Name" width="30%" row_type="common"/>
+            <ITEM caption="Код (тип колонки в БД)" db_field="Code" width="20%" row_type="common"/>
+            <ITEM caption="Системное имя" db_field="SystemCode" width="20%" row_type="common"/>
+            <ITEM caption="Описание" db_field="Description" width="20%" row_type="common"/>
+         </COLUMNS>
+      </GRID_WND>
+      <EDITCARD name="dc_ColumnType" caption="Тип колонки" width="450" height="225" layout="1, 1, 1, 1">
+         <ELEMENTS>
+            <FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Код (тип колонки в БД)" db_field="Code" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Системное имя" db_field="SystemCode" mandatory="no" datatype="string" row_type="common"/>
+            <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="Description" mandatory="no" datatype="string" row_type="common"/>
+         </ELEMENTS>
+      </EDITCARD>
+   </DICTONARY>
+</DICT>

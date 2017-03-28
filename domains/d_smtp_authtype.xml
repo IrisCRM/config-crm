@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<DOMAINS>
+	<DOMAIN name="d_smtp_authtype">
+		<VALUES>
+			<ITEM db_value="LOGIN" caption="Логин-пароль"/>
+			<ITEM db_value="CRAM-MD5" caption="cram-md5"/>
+			<ITEM db_value="PLAIN" caption="без авторизации"/>
+		</VALUES>
+	</DOMAIN>
+</DOMAINS>
