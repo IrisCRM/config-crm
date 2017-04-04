@@ -105,4 +105,15 @@ EOL;
         $fetcher = new EmailFetcher();
         return $fetcher->fetchEmail();
     }
+
+    public function getMailData($params)
+    {
+        list($subject, $body) = GetFieldValuesByID('Email', $params['id'], ['subject', 'body']);
+
+        return [
+            'subject' => $subject,
+            'body' => $body,
+            'id' => $params['id'],
+        ];
+    }
 }

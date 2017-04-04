@@ -58,7 +58,7 @@ class s_Email extends Config
 
     function onBeforePostEmailTypeID($params) {
         $emailTypeID = $this->fieldValue($params['old_data'], 'EmailTypeID');
-        $EmailTypeCode = GetFieldValueByID('emailtype', $emailTypeID, 'Code', $con);
+        $EmailTypeCode = GetFieldValueByID('emailtype', $emailTypeID, 'Code');
         if ('Template' == $EmailTypeCode) {
             $result['Attributes'][0]['FieldName'] = 'EmailAccountID';
             $result['Attributes'][0]['AttributeName'] = 'mandatory';
@@ -88,7 +88,7 @@ class s_Email extends Config
     function onAfterPost($tableName, $recordId, $oldData, $newData) {
         // _reply_email_id 3a79d78c-9072-4317-1a80-2fb1c6b25784
         // _params {"replyEmailId":"3a79d78c-9072-4317-1a80-2fb1c6b25784"}
-        $this->setParentEmailID($recordId, $_POST['_reply_email_id']);
+        $this->setParentEmailID($recordId, isset($_POST['_reply_email_id']) ? $_POST['_reply_email_id'] : null);
     }
 
     /**

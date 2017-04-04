@@ -3,6 +3,54 @@
 //********************************************************************
 
 irisControllers.classes.g_Email = IrisGridController.extend({
+    events: {
+        'click .grid_row_js': 'onOpenMail',
+        'click .mail_header_js': 'onCloseMail'
+    },
+
+    onOpenMail: function(e) {
+        var el = jQuery(e.currentTarget);
+        var recordId = el.attr('rec_id');
+        var wrapper = el.parents('.grid');
+        wrapper.find('.grid_row_js').show();
+        el.hide();
+        wrapper.find('.record_wrapper_js').hide();
+        var recordContent = wrapper.find('tr[parent_id="' + recordId + '"]');
+        if (recordContent.length === 1) {
+            recordContent.show();
+            return;
+        }
+        var columnCount = el.find('>td').length;
+        var recordWrapper = _.template(jQuery('#grid-record-wrapper').html(), {data: {
+            id: recordId,
+            columns: columnCount,
+            content: 'Loading...'
+        }});
+        var mailContent = jQuery(recordWrapper).insertAfter(el);
+        this.loadEmailData(recordId, mailContent, el);
+    },
+
+    loadEmailData(recordId, mailContent, el) {
+        this.request({
+            method: 'getMailData',
+            parameters: {
+                id: recordId
+            },
+            onSuccess: function (transport) {
+                var data = transport.responseText.evalJSON().data;
+                // @todo: use iframe
+                mailContent.find('.content_wrapper_js').html('<div class="mail_header mail_header_js"><h2>' + data.subject + '</h2></div><hr><div class="mail_body">' + data.body + '</div>');
+                el.removeClass('grid_newmail');
+            }
+        });
+    },
+
+    onCloseMail: function(e) {
+        var wrapper = jQuery(e.currentTarget).parents('.grid');
+        wrapper.find('.record_wrapper_js').hide();
+        wrapper.find('.grid_row_js').show();
+    },
+
     isEmailFetching: 0,
 
     onOpen: function() {
