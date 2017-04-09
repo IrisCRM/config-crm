@@ -21,7 +21,7 @@ class MarkInitialMigrationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var DB $db */
-        $db = Iris::$app->getContainer()->get('DB');
+        $db = Iris::$app->getContainer()->get('db_access');
 
         $db->connection->beginTransaction();
 
