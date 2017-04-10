@@ -38,12 +38,11 @@ irisControllers.classes.g_Email = IrisGridController.extend({
             },
             onSuccess: function (transport) {
                 var data = transport.responseText.evalJSON().data;
-                // @todo: view
-                mailContent.find('.content_wrapper_js').html('<div class="mail_header mail_header_js">' +
-                    '<h2>' + data.subject + '</h2></div><hr>' +
-                    '<div class="mail_body">' +
-                    '<iframe class="email" src="' + g_path + '?section=Email&action=show&params[id]=' + recordId + '" scrolling="no" onload="resizeIframe(this)"></iframe>' +
-                    '</div>');
+                mailContent.find('.content_wrapper_js').html(_.template(jQuery('#grid-email').html(), {
+                    id: recordId,
+                    baseUrl: g_path,
+                    subject: data.subject
+                }));
                 el.removeClass('grid_newmail');
             }
         });
