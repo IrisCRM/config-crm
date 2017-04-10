@@ -108,11 +108,10 @@ EOL;
 
     public function getMailData($params)
     {
-        list($subject, $body) = GetFieldValuesByID('Email', $params['id'], ['subject', 'body']);
+        list($subject) = GetFieldValuesByID('Email', $params['id'], ['subject']);
 
         return [
             'subject' => $subject,
-            'body' => $body,
             'id' => $params['id'],
         ];
     }

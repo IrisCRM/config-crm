@@ -104,4 +104,15 @@ class s_Email extends Config
         $cmd = $con->prepare("update iris_email set parentemailid = :parentid where id=:id");
         $cmd->execute(array(":parentid" => $parentEmailID, ":id" => $recordId));
     }
+
+    /**
+     * Show email
+     * @param $params
+     */
+    public function show($params)
+    {
+        list($subject, $body) = GetFieldValuesByID('Email', $params['id'],
+            ['subject', 'body']);
+        echo $body;
+    }
 }
