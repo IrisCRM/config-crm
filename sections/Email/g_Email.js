@@ -5,7 +5,7 @@
 irisControllers.classes.g_Email = IrisGridController.extend({
     events: {
         'click .grid_row_js': 'onOpenMail',
-        'click .mail_header_js': 'onCloseMail'
+        'click .mail_header_title_js': 'onCloseMail'
     },
 
     onOpenMail: function(e) {
@@ -41,7 +41,11 @@ irisControllers.classes.g_Email = IrisGridController.extend({
                 mailContent.find('.content_wrapper_js').html(_.template(jQuery('#grid-email').html(), {
                     id: recordId,
                     baseUrl: g_path,
-                    subject: data.subject
+                    subject: data.subject,
+                    from: data.from,
+                    to: data.to,
+                    contactName: data.contactName,
+                    accountName: data.accountName
                 }));
                 el.removeClass('grid_newmail');
             }

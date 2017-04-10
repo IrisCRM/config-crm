@@ -108,10 +108,17 @@ EOL;
 
     public function getMailData($params)
     {
-        list($subject) = GetFieldValuesByID('Email', $params['id'], ['subject']);
+        list($subject, $from, $to, $contactId, $accountId) = GetFieldValuesByID('Email', $params['id'],
+            ['subject', 'e_from', 'e_to', 'contactid', 'accountid']);
+        $contactName = $this->_DB->getRecord($contactId, '{contact}', ['name'])['name'];
+        $accountName = $this->_DB->getRecord($accountId, '{account}', ['name'])['name'];
 
         return [
             'subject' => $subject,
+            'from' => $from,
+            'to' => $to,
+            'contactName' => $contactName,
+            'accountName' => $accountName,
             'id' => $params['id'],
         ];
     }
