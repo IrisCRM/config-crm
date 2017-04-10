@@ -108,6 +108,7 @@ function GetLinkedValues($p_Source, $p_RecordID, $p_Dest, $p_con=null, $p_result
 
 /**
  * Получить название таблицы
+ * @deprecated use DB::tableName() instead
  */
 function GetTableName($table) {
 	$table_name = $table;

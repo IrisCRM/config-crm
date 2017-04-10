@@ -6,6 +6,7 @@
 namespace Iris\Config\CRM\sections\Email;
 
 use Config;
+use Iris\Credentials\Permissions;
 use Iris\Iris;
 
 class s_Email extends Config
@@ -111,8 +112,14 @@ class s_Email extends Config
      */
     public function show($params)
     {
-        list($subject, $body) = GetFieldValuesByID('Email', $params['id'],
-            ['subject', 'body']);
+        /** @var Permissions $permissions */
+        $permissions = Iris::$app->getContainer()->get('credentails.permissions');
+        if ($permissions->canRead('{email}', $params['id'])) {
+            $body = GetFieldValueByID('Email', $params['id'], 'body');
+        }
+        else {
+            $body = 'У вас нет доступа к просмотру этого письма';
+        }
         echo $body;
     }
 }
