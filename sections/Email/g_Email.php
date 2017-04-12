@@ -108,10 +108,18 @@ EOL;
 
     public function getMailData($params)
     {
-        list($subject, $from, $to, $contactId, $accountId) = GetFieldValuesByID('Email', $params['id'],
-            ['subject', 'e_from', 'e_to', 'contactid', 'accountid']);
+        list($subject, $from, $to, $contactId, $accountId, $hasReaded) = GetFieldValuesByID('Email', $params['id'],
+            ['subject', 'e_from', 'e_to', 'contactid', 'accountid', 'has_readed']);
         $contactName = $this->_DB->getRecord($contactId, '{contact}', ['name'])['name'];
         $accountName = $this->_DB->getRecord($accountId, '{account}', ['name'])['name'];
+
+        $userId = GetUserID();
+        $userIds = json_decode($hasReaded);
+        if (!in_array($userId, is_array($userIds) ? $userIds : [])) {
+            $userIds[] = $userId;
+            $Fields = FieldValueFormat('has_readed', json_encode($userIds));
+            UpdateRecord('Email', $Fields['FieldValues'], $params['id']);
+        }
 
         return [
             'subject' => $subject,
