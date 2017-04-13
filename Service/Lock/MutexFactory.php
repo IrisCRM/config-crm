@@ -25,7 +25,7 @@ class MutexFactory
 
         $lockFile = $lockDir . $resource;
         if (!is_file($lockFile)) {
-            touch($$lockFile);
+            touch($lockFile);
         }
 
         return new FlockMutex(fopen($lockFile, "r"));
