@@ -26,10 +26,10 @@ class EmailFetchCommand extends Command
             ->setName('iris:email:fetch')
             ->setDescription('Fetch new email messages')
             ->addOption(
-                'mail-account-id',
+                'email-account-id',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'ID of mail account'
+                'ID of email account'
             )
             ->addOption(
                 'batch-size',
@@ -43,7 +43,11 @@ class EmailFetchCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $mailAccountId = $input->getOption('mail-account-id');
+        $mailAccountId = $input->getOption('email-account-id');
+
+        if (!$mailAccountId) {
+            throw new \RuntimeException('Email account ID has not been specified');
+        }
 
         $mutex = MutexFactory::create($mailAccountId);
         $mutex->synchronized(function () use ($input, $output, $mailAccountId) {
