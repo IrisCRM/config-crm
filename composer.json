@@ -2,7 +2,6 @@
     "name": "iriscrm/config-crm",
     "description": "Standard CRM config for Iris",
     "require": {
-        "iriscrm/core": "dev-master"
     },
     "autoload": {
         "psr-4": {
