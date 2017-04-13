@@ -8,14 +8,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Iris\Config\CRM\sections\Email;
 
-require_once Iris::$app->getCoreDir() . 'core/engine/config.php';
-
-class FetchEmailCommand extends Command
+class EmailFetchPop3Command extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('iris:fetch-email')
+            ->setName('iris:email:fetch-pop3')
             ->setDescription('Fetch new email messages via pop3 protocol')
         ;
     }
