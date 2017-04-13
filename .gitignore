@@ -1,4 +1,5 @@
 # ignoring files
+composer.lock
 
 # for eclipse
 .settings/*

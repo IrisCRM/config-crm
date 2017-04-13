@@ -8,6 +8,7 @@
             <ITEM caption="" width="" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="(select count(E.id) from iris_email E where E.parentemailid = T0.id)" column_caption="replycnt" display_format="hidden"/>
             <ITEM caption="" width="" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="(select E.id from iris_email E where E.parentemailid = T0.id limit 1)" column_caption="replyfirstid" display_format="hidden"/>
             <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="CASE WHEN isimportant=1 THEN '*' ELSE '' END" column_caption="star" display_format="ongrid"/>
+            <ITEM caption="Письмо" db_field="subject || ' ' || body" width="" row_type="common" row_datatype="fulltext" display_format="none"/>
             <ITEM caption="Тема" db_field="Subject" width="40%" row_type="common"/>
             <ITEM caption="Сообщение" db_field="body" width="" row_type="common" display_format="none"/>
             <ITEM caption="Компания" db_field="AccountID" width="10%" row_type="fk_column" row_type_parent_table="iris_Account" row_type_parent_display_column="Name" row_type_alias="EAccount"/>
@@ -18,7 +19,7 @@
 			
             <ITEM caption="" db_field="has_readed" width="30%" row_type="common" display_format="hidden"/>
             <ITEM caption="Тип" db_field="emailtypeid" width="10%" row_type="fk_column" row_type_parent_table="iris_emailtype" row_type_parent_display_column="Code" row_type_alias="ET" display_format="hidden"/>
-            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="EOwner" display_format="none"/>			
+            <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" row_type_alias="EOwner" display_format="none"/>
          </COLUMNS>
          <FILTERS>
             <ITEM caption="Все письма" item_style="font-weight: bold;" where_clause="1=1"/>
