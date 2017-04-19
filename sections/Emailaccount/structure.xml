@@ -14,19 +14,21 @@
             <ITEM caption="Описание" db_field="description" width="30%" row_type="common"/>
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="750" height="320" layout="2, 1, 1, 2, 2, 2, 1, 2, 2, 2">
+      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="800" height="340" layout="2,1, 1,2,2,2,2, 1,2,2,2">
          <ELEMENTS>
             <FIELD elem_type="text" caption="Email адрес" db_field="email" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="checkbox" row_type_checked_index="0" caption="Активен?" 
                db_field="IsActive" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn"/>
             <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="description" mandatory="no" datatype="string" row_type="common"/>
-            <FIELD elem_type="splitter" caption="Получение почты (POP)"/>
-            <FIELD elem_type="text" caption="POP сервер" db_field="address" mandatory="yes" datatype="string" row_type="common"/>
-            <FIELD elem_type="text" caption="POP порт (110)" db_field="port" mandatory="yes" datatype="int" row_type="common"/>
-            <FIELD elem_type="text" caption="POP логин" db_field="login" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="splitter" caption="Получение почты"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="0" caption="Использовать IMAP?" db_field="IsUseIMAP" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_int"/>
+            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="text" caption="Сервер" db_field="address" mandatory="yes" datatype="string" row_type="common"/>
+            <FIELD elem_type="text" caption="Порт" db_field="port" mandatory="yes" datatype="int" row_type="common"/>
+            <FIELD elem_type="text" caption="Логин" db_field="login" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="select" caption="Шифрование" db_field="Encryption" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_encryption"/>
-            <FIELD elem_type="password" caption="POP пароль" db_field="password" mandatory="yes" datatype="string" row_type="common"/>
-            <FIELD elem_type="space"/>
+            <FIELD elem_type="password" caption="Пароль" db_field="password" mandatory="yes" datatype="string" row_type="common"/>
+             <FIELD elem_type="text" caption="Папка для отправленных" db_field="sentmailboxname" mandatory="no" datatype="string" row_type="common" title="Нзвание почтовой папки, в которую будут помещаться отправленные письма (только для IMAP)"/>
 
             <FIELD elem_type="splitter" caption="Отправка почты (SMTP)"/>
             <FIELD elem_type="text" caption="SMTP сервер" db_field="smtp_address" mandatory="yes" datatype="string" row_type="common"/>
@@ -38,6 +40,22 @@
          </ELEMENTS>
       </EDITCARD>
       <DETAILS>
+          <DETAIL caption="Папки для синхронизации" name="d_EmailAccount_mailbox" detail_table="iris_emailaccount_mailbox" detail_fk_column="EmailAccountID">
+              <GRID display_search="no">
+                  <COLUMNS>
+                      <ITEM caption="Имя" db_field="name" width="50%" row_type="common"/>
+                      <ITEM caption="Имя для отображения" db_field="displayname" width="50%" row_type="common"/>
+                  </COLUMNS>
+              </GRID>
+              <EDITCARD name="dc_EmailAccount_mailbox" caption="Папка для синхронизации (IMAP)" width="600" height="180" layout="1, 1, 1">
+                  <ELEMENTS>
+                      <FIELD elem_type="lookup" caption="Аккаунт" db_field="EmailAccountID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Emailaccount" row_type_parent_display_column="description"/>
+                      <FIELD elem_type="text" caption="Имя" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+                      <FIELD elem_type="text" caption="Имя для отображения" db_field="DisplayName" mandatory="yes" datatype="string" row_type="common"/>
+                  </ELEMENTS>
+              </EDITCARD>
+          </DETAIL>
+
          <DETAIL caption="Права для входящих писем" name="d_EmailAccount_defaccess" detail_table="iris_emailaccount_defaultaccess" detail_fk_column="EmailAccountID">
 			<GRID display_search="no">
 				<COLUMNS>
