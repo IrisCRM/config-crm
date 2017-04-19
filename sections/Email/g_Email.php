@@ -8,6 +8,7 @@ namespace Iris\Config\CRM\sections\Email;
 use Config;
 use Iris\Iris;
 use PDO;
+use Iris\Config\CRM\sections\Email\Imap as Imap;
 
 include_once Iris::$app->getCoreDir() . 'core/engine/emaillib.php';
 
@@ -102,8 +103,18 @@ EOL;
     }
 
     function fetchEmail($params) {
+        // POP3
         $fetcher = new EmailFetcher();
-        return $fetcher->fetchEmail();
+        $popResult =  $fetcher->fetchEmail();
+
+        // IMAP
+        $fetcher = new Imap\Fetcher();
+        $imapResult = $fetcher->fetch();
+
+        return array(
+            "isSuccess" => $popResult["isSuccess"] && $imapResult["isSuccess"],
+            "messagesCount" => $popResult["messagesCount"] + $imapResult["messagesCount"],
+        );
     }
 
     public function getMailData($params)
