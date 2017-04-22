@@ -24,7 +24,6 @@ class ImapAdapter
         $this->tempDir = $this->createTempDir();
         $this->connectionString = $this->getConnectionString($server, $port, $protocol);
         $this->debug("ImapAdapter __construct", $this->tempDir);
-        $this->debug("ImapAdapter __construct", $this->connectionString);
         $this->mailbox = new Mailbox($this->connectionString, $login, $password, $this->tempDir);
         $this->debug("ImapAdapter __construct ok");
     }
@@ -59,12 +58,42 @@ class ImapAdapter
          $stream = $this->mailbox->getImapStream();
          $startUid = ($uid ? $uid : 1);
          $sequence = $startUid . ":" . ($startUid + $batchSize);
+         $this->debug("ImapAdapter getEmailsFromUid sequence", $sequence);
+
          $emailOverviews = imap_fetch_overview($stream, $sequence, FT_UID);
          $result = array();
 
          foreach ($emailOverviews as $emailOverview) {
-             $result[] = $this->mailbox->getMail($emailOverview["uid"], false);
+             // TODO: change attachments dir via setAttachmentsDir
+             $email = $this->mailbox->getMail($emailOverview->uid, false);
+             $result[] = $this->convertIncomingMailToArray($email);
          }
+
+        return $result;
+    }
+
+    protected function convertIncomingMailToArray($email)
+    {
+        $result = array(
+            "uid" => $email->id,
+            "messageId" => $email->messageId,
+            "date" => date_format(date_create_from_format('Y-m-d H:i:s', $email->date), 'd.m.Y H:i:s'),
+            "from" => $email->fromAddress,
+            "to" => $email->toString,
+            "subject" => $email->subject,
+            "body" => $email->textHtml,
+            "attachments" => array(),
+        );
+
+        foreach ($email->getAttachments() as $attachment) {
+            $result["attachments"][] = array(
+                "attachmentId" => $attachment->id,
+                "fileName" => $attachment->name,
+                "filePath" => $attachment->filePath,
+            );
+        }
+
+        $result["cidPlaceholders"] = $email->getInternalLinksPlaceholders();
 
         return $result;
     }
@@ -72,5 +101,11 @@ class ImapAdapter
     private function debug($caption, $value = null)
     {
         $this->logger->addDebug("$caption " . var_export($value, true));
+    }
+
+    function __destruct()
+    {
+        array_map('unlink', glob($this->tempDir . "/*.*"));
+        rmdir($this->tempDir);
     }
 }
