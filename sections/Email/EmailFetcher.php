@@ -40,7 +40,7 @@ class EmailFetcher extends Config
         $con = $this->connection;
 
         $this->debug('fetchEmail begin');
-        $res = $con->query("select address, port, encryption, login, password, id, last_id, last_n from iris_emailaccount where isactive='Y' and isuseimap <> 1")->fetchAll(PDO::FETCH_ASSOC);
+        $res = $con->query("select address, port, encryption, login, password, id, last_id, last_n from iris_emailaccount where isactive='Y' and fetch_protocol = 1")->fetchAll(PDO::FETCH_ASSOC);
         $cnt = 0;
         foreach ($res as $row) {
             $this->debug($row['address'].' ['.$row['login'], ']-------------------------- new mailbox', 'warn');

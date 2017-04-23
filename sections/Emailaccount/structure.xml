@@ -21,7 +21,7 @@
                db_field="IsActive" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn"/>
             <FIELD elem_type="textarea" textarea_rows="2" caption="Описание" db_field="description" mandatory="no" datatype="string" row_type="common"/>
             <FIELD elem_type="splitter" caption="Получение почты"/>
-            <FIELD elem_type="checkbox" row_type_checked_index="0" caption="Использовать IMAP?" db_field="IsUseIMAP" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_yn_int"/>
+            <FIELD elem_type="select" row_type_checked_index="0" caption="Протокол" db_field="fetch_protocol" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_fetch_protocol"/>
             <FIELD elem_type="spacer"/>
             <FIELD elem_type="text" caption="Сервер" db_field="address" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="text" caption="Порт" db_field="port" mandatory="yes" datatype="int" row_type="common"/>
