@@ -148,7 +148,7 @@ class Fetcher extends Config
 
         $emailId = $this->insertEmail($email, $body, $mailbox["id"], $accountId, $contactId, $ownerId, $incidentId);
 
-        $this->insertAttachments($emailId, $accountId, $contactId, $ownerId, $incidentId, $attachments);
+        $this->insertAttachments($emailId, $mailbox["id"], $accountId, $contactId, $ownerId, $incidentId, $attachments);
 
         $this->updateLastFetchUid($mailbox["id"], $email["uid"]);
     }
@@ -237,19 +237,19 @@ class Fetcher extends Config
             throw new \RuntimeException('Email is not inserted: ' . var_export($cmd->errorInfo(), true));
         }
 
-        // TODO: insert access
+        $this->insertAccess("iris_email", $emailId, $mailboxId);
 
         return $emailId;
     }
 
-    protected function insertAttachments($emailId, $accountId, $contactId, $ownerId, $incidentId, $attachments)
+    protected function insertAttachments($emailId, $mailboxId, $accountId, $contactId, $ownerId, $incidentId, $attachments)
     {
         foreach ($attachments as $attachment) {
-            $this->insertAttachment($emailId, $accountId, $contactId, $ownerId, $incidentId, $attachment);
+            $this->insertAttachment($emailId, $mailboxId, $accountId, $contactId, $ownerId, $incidentId, $attachment);
         }
     }
 
-    protected function insertAttachment($emailId, $accountId, $contactId, $ownerId, $incidentId, $attachment)
+    protected function insertAttachment($emailId, $mailboxId, $accountId, $contactId, $ownerId, $incidentId, $attachment)
     {
         $fileRealName = create_guid();
         $fileRealPath = Iris::$app->getRootDir() . 'files/' . $fileRealName;
@@ -279,9 +279,22 @@ class Fetcher extends Config
             throw new \RuntimeException('Attachment rename error');
         }
 
-        // TODO: insert access
+        $this->insertAccess("iris_file", $attachment["fileId"], $mailboxId);
 
         return $attachment["fileId"];
+    }
+
+    protected function insertAccess($tableName, $recordId, $mailboxId)
+    {
+        $sql = "insert into ".$tableName."_access (ID, RecordID, ContactID, R, W, D, A) 
+          select iris_genguid() as id, :recordid as recordid, contactid, r, w, d, a from iris_emailaccount_defaultaccess
+          where emailaccountid = (select emailaccountid from iris_emailaccount_mailbox where id=:mailboxid)";
+
+        $cmd = $this->connection->prepare($sql);
+        $cmd->execute(array(
+            ":recordid" => $recordId,
+            ":mailboxid" => $mailboxId,
+        ));
     }
 
     protected function updateLastFetchUid($mailboxId, $uid)
