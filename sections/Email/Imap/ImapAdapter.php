@@ -57,11 +57,15 @@ class ImapAdapter
     {
          $stream = $this->mailbox->getImapStream();
          $startUid = ($uid ? $uid : 1);
-         $sequence = $startUid . ":" . ($startUid + $batchSize);
+         $sequence = $startUid . ":*";
          $this->debug("ImapAdapter getEmailsFromUid sequence", $sequence);
 
          $emailOverviews = imap_fetch_overview($stream, $sequence, FT_UID);
          $result = array();
+
+         if (count($emailOverviews) > $batchSize) {
+             $emailOverviews = array_slice($emailOverviews, 0, $batchSize);
+         }
 
          foreach ($emailOverviews as $emailOverview) {
              // TODO: change attachments dir via setAttachmentsDir
