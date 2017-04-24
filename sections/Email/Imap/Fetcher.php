@@ -155,8 +155,32 @@ class Fetcher extends Config
 
     protected function getEmailLinks($from, $subject)
     {
-        // TODO
-        return array(null, null, null, null);
+        $cmd = $this->connection->prepare("select id as contactid, accountid, ownerid from iris_contact
+            where email=:email or id in (select contactid from iris_contact_email where email = :email)");
+        $cmd->execute(array(
+            ":email" => $from,
+        ));
+        $data = current($cmd->fetchAll(pdo::FETCH_ASSOC));
+
+        return array($data["accountid"], $data["contactid"], $data["ownerid"], $this->getIncidentId($subject));
+    }
+
+    protected function getIncidentId($subject)
+    {
+        $matches = array();
+        $isFind = mb_ereg("\\[\\d{6}-\\d+\\]", $subject, $matches);
+
+        $this->debug("getIncidentId match", array($subject, $matches));
+        if (!$isFind) {
+            return null;
+        }
+
+        $incidentNumber = trim($matches[0], "\x5B..\x5D"); // обрезаем скобки [ и ]
+        $cmd = $this->connection->prepare("select id as id from iris_incident where number = :number");
+        $cmd->execute(array(":number" => $incidentNumber));
+        $data = current($cmd->fetchAll(PDO::FETCH_ASSOC));
+
+        return $data["id"];
     }
 
     protected function isSupportMailbox($mailboxId)
