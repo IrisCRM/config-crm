@@ -289,10 +289,11 @@ class Fetcher extends Config
         $emailId = create_guid();
 
         $sql = "insert into iris_email(id, createid, createdate, uid, e_from, e_to, subject, body, emailtypeid,
-            mailboxid, accountid, contactid, ownerid, messagedate, incidentid) 
+            mailboxid, accountid, contactid, ownerid, messagedate, incidentid, isimportant) 
             values (:id, :createid, now(), :uid, :e_from, :e_to, :subject, :body,
             (select id from iris_emailtype where code='Inbox'), :mailboxid,
-            :accountid, :contactid, :ownerid, to_timestamp(:messagedate, 'DD.MM.YYYY HH24:MI:SS'), :incidentid)";
+            :accountid, :contactid, :ownerid, to_timestamp(:messagedate, 'DD.MM.YYYY HH24:MI:SS'), :incidentid,
+            :isimportant)";
 
         $cmd = $this->connection->prepare($sql);
         $cmd->execute(array(
@@ -309,6 +310,7 @@ class Fetcher extends Config
             ":ownerid" => $ownerId,
             ":messagedate" => $email["date"],
             ":incidentid" => $incidentId,
+            ":isimportant" => $email["flagged"],
         ));
 
         if ($cmd->errorCode() != '00000') {

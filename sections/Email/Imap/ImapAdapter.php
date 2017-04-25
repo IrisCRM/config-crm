@@ -71,13 +71,13 @@ class ImapAdapter
              // set unique attachments dir for each email to avoid possible name coincidence
              $this->mailbox->setAttachmentsDir($this->getDirForUid($emailOverview->uid));
              $email = $this->mailbox->getMail($emailOverview->uid, false);
-             $result[] = $this->convertIncomingMailToArray($email);
+             $result[] = $this->convertIncomingMailToArray($email, $emailOverview);
          }
 
         return $result;
     }
 
-    protected function convertIncomingMailToArray($email)
+    protected function convertIncomingMailToArray($email, $emailOverview)
     {
         $result = array(
             "uid" => $email->id,
@@ -86,6 +86,7 @@ class ImapAdapter
             "from" => $email->fromAddress,
             "to" => $email->toString,
             "subject" => $email->subject,
+            "flagged" => $emailOverview->flagged,
             "body" => $email->textHtml,
             "attachments" => array(),
         );
