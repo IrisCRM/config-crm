@@ -47,10 +47,24 @@ class ImapAdapter
         return "{" . $server . ":" . $port . "/imap" . ($protocol ? "/" . $protocol : "") . "}";
     }
 
+    protected function convertMailboxName($mailboxName)
+    {
+        return mb_convert_encoding($mailboxName, "UTF7-IMAP", "UTF-8");
+    }
+
+    public function addMimeMessageToMailbox($mailboxName, $MimeMessage)
+    {
+        return imap_append(
+            $this->mailbox->getImapStream(),
+            $this->connectionString . $this->convertMailboxName($mailboxName),
+            $MimeMessage,
+            "\\Seen");
+    }
+
     public function selectMailbox($mailboxName)
     {
         $this->mailbox->switchMailbox(
-            $this->connectionString . mb_convert_encoding($mailboxName, "UTF7-IMAP", "UTF-8"));
+            $this->connectionString . $this->convertMailboxName($mailboxName));
     }
 
     public function getEmailsFromUid($uid, $batchSize)

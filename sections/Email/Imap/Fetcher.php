@@ -24,7 +24,6 @@ class Fetcher extends Config
             'common/Lib/access.php',
         ]);
 
-        $this->supportEmails = $this->getSupportEmails();
         $this->logger = Iris::$app->getContainer()->get('logger.factory')->get('imap');
     }
 
@@ -42,6 +41,12 @@ class Fetcher extends Config
 
         return $result;
     }
+    public function addMimeMessageToMailbox($emailAccountId, $mailboxName, $MimeMessage)
+    {
+        $emailAccounts = $this->getEmailAccounts($emailAccountId);
+        $adapter = $this->getImapAdapter($emailAccounts[0]);
+        return $adapter->addMimeMessageToMailbox($mailboxName, $MimeMessage);
+    }
 
     /**
      * Fetch new email
@@ -55,6 +60,8 @@ class Fetcher extends Config
             "messagesCount" => 0,
         );
 
+        $this->supportEmails = $this->getSupportEmails();
+
         $this->debug("");
         $this->debug("fetch emailAccountId", $emailAccountId);
         $emailAccounts = $this->getEmailAccounts($emailAccountId);
@@ -67,8 +74,7 @@ class Fetcher extends Config
                 continue;
             }
 
-            $imapAdapter = new ImapAdapter($emailAccount["server"], $emailAccount["port"], $emailAccount["protocol"],
-                $emailAccount["login"], $emailAccount["password"]);
+            $imapAdapter = $this->getImapAdapter($emailAccount);
             foreach ($mailboxes as $mailbox) {
                 $this->debug("mailbox", $mailbox);
 
@@ -108,6 +114,12 @@ class Fetcher extends Config
         $cmd->execute(array(":emailaccountid" => $emailAccount["id"]));
 
         return $cmd->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    protected function getImapAdapter($emailAccount)
+    {
+        return new ImapAdapter($emailAccount["server"], $emailAccount["port"], $emailAccount["protocol"],
+            $emailAccount["login"], $emailAccount["password"]);
     }
 
     protected function fetchMailbox(ImapAdapter $imapAdapter, $mailbox, $lastUid, $batchSize)

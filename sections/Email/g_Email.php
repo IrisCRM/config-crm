@@ -51,8 +51,11 @@ class g_Email extends Config
 
         // получение письма по его id
         $sql = <<<EOL
-select e_from as from, e_to as to, subject, body, emailaccountid, T1.code as code from 
-iris_email T0 left join iris_emailtype T1 on T0.emailtypeid=T1.id where T0.id=:emailid
+select e_from as from, e_to as to, subject, body, emailaccountid, T1.code as code, T2.sentmailboxname
+from iris_email T0
+left join iris_emailtype T1 on T0.emailtypeid=T1.id
+left join iris_emailaccount T2 on T0.emailaccountid = T2.id
+where T0.id=:emailid
 EOL;
         $cmd = $con->prepare($sql);
         $cmd->execute(array(":emailid" => $id));
@@ -85,8 +88,12 @@ EOL;
             ));
         }
 
+        if ($email["sentmailboxname"]) {
+            $mimeMessage = "";
+        }
+
         // отправка письма
-        $errm = email_send_message($email['to'], $email['subject'], $email['body'], $email['from'], $attachments);
+        $errm = email_send_message($email['to'], $email['subject'], $email['body'], $email['from'], $attachments, $mimeMessage);
         if ($errm != '') {
             return array("status" => "-", "message" => "Ошибка: ".trim(strip_tags($errm)));
         }
@@ -98,6 +105,12 @@ EOL;
             ":id" => $id,
             ":code" => (($mode == 'Outbox') ? 'Sent' : 'Mailing_sent')
         ));
+
+        // сохранение письма в папку "Папка для отправленных" (для imap)
+        if ($mimeMessage and $email["sentmailboxname"]) {
+            $fetcher = new Imap\Fetcher();
+            $fetcher->addMimeMessageToMailbox($email["emailaccountid"], $email["sentmailboxname"], $mimeMessage);
+        }
 
         return array("status" => "+", "message" => "Письмо отправлено");
     }
