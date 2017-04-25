@@ -14,6 +14,8 @@ use PDO;
 class Fetcher extends Config
 {
     protected $logger;
+    private $supportEmails = array();
+    const MAX_INCIDENT_BODY_LENGTH = 1000;
 
     function __construct()
     {
@@ -22,9 +24,24 @@ class Fetcher extends Config
             'common/Lib/access.php',
         ]);
 
+        $this->supportEmails = $this->getSupportEmails();
         $this->logger = Iris::$app->getContainer()->get('logger.factory')->get('imap');
     }
 
+    // TODO: copied from EmailFetcher class
+    protected function getSupportEmails() {
+        $result = array();
+
+        $res = $this->connection->query("select stringvalue as value from iris_systemvariable
+          where code='support_email_addresses'")->fetchAll(PDO::FETCH_ASSOC);
+        $emails = $res[0]['value'];
+        if ($emails != '') {
+            $emails = iris_str_replace(' ', '', $emails);
+            $result = explode(',', $emails);
+        }
+
+        return $result;
+    }
 
     /**
      * Fetch new email
@@ -132,9 +149,9 @@ class Fetcher extends Config
     {
         list ($accountId, $contactId, $ownerId, $incidentId) = $this->getEmailLinks($email["from"], $email["subject"]);
 
-         if (!$incidentId && $this->isSupportMailbox($mailbox["id"])) {
+         if (!$incidentId && $this->isSupportEmail($email["to"])) {
              list($incidentId, $incidentNumber) = $this->insertIncident(
-                 $email["subject"], $email["body"], $accountId, $contactId, $ownerId);
+                 $mailbox["id"], $email["subject"], $email["body"], $accountId, $contactId, $ownerId);
              $email["subject"] = $this->addIncidentNumberToSubject($incidentNumber, $email["subject"]);
          }
 
@@ -183,16 +200,53 @@ class Fetcher extends Config
         return $data["id"];
     }
 
-    protected function isSupportMailbox($mailboxId)
+    protected function isSupportEmail($email)
     {
-        // TODO
-        return false;
+        $this->debug("isSupportEmail match", array($this->supportEmails, $email));
+        return in_array($email, $this->supportEmails) === true;
     }
 
-    protected function insertIncident($subject, $body, $accountId, $contactId, $ownerId)
+    // TODO: use method in EmailFetcher
+    protected function insertIncident($mailboxId, $subject, $body, $accountId, $contactId, $ownerId)
     {
-        // TODO
-        return null;
+        $incidentNumber = GenerateNewNumber('IncidentNumber', null, $this->connection);
+        $incidentId = create_guid();
+
+        // сформируем текстовое содержимое письма, которое не превышает 1000 символов
+        $shortBody = $body;
+        $shortBody = iris_str_replace(chr(13).chr(10), '', $shortBody);
+        $shortBody = iris_str_replace(chr(10).chr(13), '', $shortBody);
+        $shortBody = iris_str_replace('<br>', chr(10), $shortBody);
+        $shortBody = iris_str_replace('<BR>', chr(10), $shortBody);
+        $shortBody = strip_tags($shortBody);
+        if (iris_strlen($shortBody) >= self::MAX_INCIDENT_BODY_LENGTH) {
+            $shortBody = iris_substr($shortBody, 0, self::MAX_INCIDENT_BODY_LENGTH);
+        }
+
+        $sql = "insert into iris_incident (id, number, name, description, accountid, contactid, ownerid, date,
+          incidentstateid, isremind, reminddate) values (:id, :number, :name, :description, :accountid,
+          :contactid, :ownerid, now(), (select id from iris_incidentstate where code='Plan'), 1, now())";
+        $cmd = $this->connection->prepare($sql);
+        $cmd->execute(array(
+            ":id" => $incidentId,
+            ":number" => $incidentNumber,
+            ":name" => $subject,
+            ":description" => $shortBody,
+            ":accountid" => $accountId,
+            ":contactid" => $contactId,
+            ":ownerid" => $ownerId
+        ));
+
+        if ($cmd->errorCode() != '00000') {
+            throw new \RuntimeException('Incident is not inserted: ' . var_export($cmd->errorInfo(), true));
+        }
+
+        // увеличим номер инцидента
+        UpdateNumber('Incident', $incidentId, 'IncidentNumber');
+
+        $this->insertAccess("iris_incident", $incidentId, $mailboxId);
+
+        return array($incidentId, $incidentNumber);
     }
 
     protected function addIncidentNumberToSubject($incidentNumber, $subject)
