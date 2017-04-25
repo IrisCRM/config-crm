@@ -68,7 +68,8 @@ class ImapAdapter
          }
 
          foreach ($emailOverviews as $emailOverview) {
-             // TODO: change attachments dir via setAttachmentsDir
+             // set unique attachments dir for each email to avoid possible name coincidence
+             $this->mailbox->setAttachmentsDir($this->getDirForUid($emailOverview->uid));
              $email = $this->mailbox->getMail($emailOverview->uid, false);
              $result[] = $this->convertIncomingMailToArray($email);
          }
@@ -102,14 +103,40 @@ class ImapAdapter
         return $result;
     }
 
+    protected function getDirForUid($uid)
+    {
+        $result = $this->tempDir . "/" . $uid;
+        mkdir($result);
+
+        return $result;
+    }
+
     private function debug($caption, $value = null)
     {
         $this->logger->addDebug("$caption " . var_export($value, true));
     }
 
+    protected static function deleteDir($dirPath) {
+        if (!is_dir($dirPath)) {
+            throw new \InvalidArgumentException("$dirPath must be a directory");
+        }
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+            $dirPath .= '/';
+        }
+
+        $files = glob($dirPath . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                self::deleteDir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($dirPath);
+    }
+
     function __destruct()
     {
-        array_map('unlink', glob($this->tempDir . "/*.*"));
-        rmdir($this->tempDir);
+        self::deleteDir($this->tempDir);
     }
 }
