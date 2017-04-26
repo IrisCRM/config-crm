@@ -154,4 +154,43 @@ EOL;
             'id' => $params['id'],
         ];
     }
+
+    function updateReaders($params) {
+        $emailId = $params["recordId"];
+        $userId = $this->_User->property("id");
+
+        $sql = "select T0.uid, T0.has_readed, MB.name as mailboxname, MB.emailaccountid, EA.ownerid
+          from iris_email T0
+          left join iris_emailaccount_mailbox MB on T0.mailboxid = MB.id
+          left join iris_emailaccount EA on MB.emailaccountid = EA.id
+          where T0.id = :id";
+        $cmd = $this->connection->prepare($sql);
+        $cmd->execute(array(":id" => $emailId));
+        $data = current($cmd->fetchAll(PDO::FETCH_ASSOC));
+
+        if (empty($data["has_readed"])) {
+            $data["has_readed"] = "[]";
+        }
+
+        $readers = json_decode($data["has_readed"], true);
+
+        if (in_array($userId, $readers)) {
+            return array("isSuccess" => true);
+        }
+
+        array_push($readers, $userId);
+
+        if ($userId === $data["ownerid"]) {
+            $fetcher = new Imap\Fetcher();
+            $fetcher->markMailAsRead($data["emailaccountid"], $data["mailboxname"], $data["uid"]);
+        }
+
+        $cmd = $this->connection->prepare("update iris_email set has_readed = :readedstr  where id = :id");
+        $cmd->execute(array(
+            ":readedstr" => json_encode($readers),
+            ":id" => $emailId,
+        ));
+
+        return array("isSuccess" => true);
+    }
 }

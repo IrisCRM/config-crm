@@ -190,35 +190,15 @@ irisControllers.classes.c_Email = IrisCardController.extend({
     },
 
     addSelfToReaders: function(form) {
-        var has_readed_str = $(form._parent_id.value).rows[$(form._parent_id.value).getAttribute('selectedrow')].getAttribute('t0_has_readed');
-        var has_readed_str_old = has_readed_str;
-        if (has_readed_str == '') {
-            has_readed_str = '["'+g_session_values['userid']+'"]';
-        }
-        else {
-            if ((has_readed_str.indexOf(g_session_values['userid']) == -1) && (has_readed_str.isJSON() == true)) {
-                var has_readed_arr = has_readed_str.evalJSON();
-                has_readed_arr[has_readed_arr.length] = g_session_values['userid'];
-                has_readed_str = Object.toJSON(has_readed_arr);
-            }
-        }
-
-        if (has_readed_str_old === has_readed_str) {
-            return;
-        }
-
-        //Отправим запрос на обновление списка прочитавших
         Transport.request({
             section: "Email",
-            'class': "c_Email",
-            method: 'UpdateReaders',
+            'class': "g_Email",
+            method: 'updateReaders',
             parameters: {
-                recordId: form._id.value,
-                readers: has_readed_str
+                recordId: form._id.value
             },
             skipErrors: ['class_not_found', 'file_not_found'],
             onSuccess: function(transport) {
-                // var data = transport.responseText.evalJSON().data;
                 var grid = $(form._parent_id.value); // берем id родительского грида из карточки
                 grid.rows[grid.getAttribute('selectedrow')].removeClassName('grid_newmail'); // отмечаем строчку как прочитаную
             }

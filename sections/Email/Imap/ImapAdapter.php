@@ -61,6 +61,11 @@ class ImapAdapter
             "\\Seen");
     }
 
+    public function markMailAsRead($uid)
+    {
+        return $this->mailbox->markMailAsRead($uid);
+    }
+
     public function selectMailbox($mailboxName)
     {
         $this->mailbox->switchMailbox(

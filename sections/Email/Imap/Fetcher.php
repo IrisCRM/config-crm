@@ -41,11 +41,21 @@ class Fetcher extends Config
 
         return $result;
     }
+
     public function addMimeMessageToMailbox($emailAccountId, $mailboxName, $MimeMessage)
     {
         $emailAccounts = $this->getEmailAccounts($emailAccountId);
         $adapter = $this->getImapAdapter($emailAccounts[0]);
         return $adapter->addMimeMessageToMailbox($mailboxName, $MimeMessage);
+    }
+
+    public function markMailAsRead($emailAccountId, $mailboxName, $uid)
+    {
+        $emailAccounts = $this->getEmailAccounts($emailAccountId);
+        $adapter = $this->getImapAdapter($emailAccounts[0]);
+        $adapter->selectMailbox($mailboxName);
+
+        return $adapter->markMailAsRead($uid);
     }
 
     /**

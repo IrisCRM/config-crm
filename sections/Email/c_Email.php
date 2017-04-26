@@ -20,17 +20,6 @@ class c_Email extends Config
         ));
     }
 
-    function UpdateReaders($params) {
-        $con = $this->connection;
-        //Обновим список прочитавших
-        $Fields = FieldValueFormat('has_readed', $params['readers']);
-        UpdateRecord('Email', $Fields['FieldValues'], $params['recordId'], $con);
-        //Результат не используется
-        $result['UpdateReaders']['id'] = $params['recordId'];
-
-        return $result;
-    }
-
     function FillTemplate($params, $result = null) {
         $contactId = $params['contactId'];
         $templateId = $params['templateId'];
