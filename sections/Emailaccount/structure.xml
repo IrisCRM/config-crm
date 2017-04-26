@@ -14,7 +14,11 @@
             <ITEM caption="Описание" db_field="description" width="30%" row_type="common"/>
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="800" height="340" layout="2,1, 1,2,2,2,2, 1,2,2,2">
+      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="800" height="360" layout="2,1, 1,2,2,2,2, 1,2,2,2,   2,2">
+          <TABS>
+              <TAB caption="Общее" rows="11"/>
+              <TAB caption="Для IMAP" rows="2"/>
+          </TABS>
          <ELEMENTS>
             <FIELD elem_type="text" caption="Email адрес" db_field="email" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="checkbox" row_type_checked_index="0" caption="Активен?" 
@@ -28,7 +32,7 @@
             <FIELD elem_type="text" caption="Логин" db_field="login" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="select" caption="Шифрование" db_field="Encryption" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_encryption"/>
             <FIELD elem_type="password" caption="Пароль" db_field="password" mandatory="yes" datatype="string" row_type="common"/>
-             <FIELD elem_type="text" caption="Папка для отправленных" db_field="sentmailboxname" mandatory="no" datatype="string" row_type="common" title="Нзвание почтовой папки, в которую будут помещаться отправленные письма (только для IMAP)"/>
+             <FIELD elem_type="spacer"/>
 
             <FIELD elem_type="splitter" caption="Отправка почты (SMTP)"/>
             <FIELD elem_type="text" caption="SMTP сервер" db_field="smtp_address" mandatory="yes" datatype="string" row_type="common"/>
@@ -37,6 +41,11 @@
             <FIELD elem_type="select" caption="Шифрование" db_field="smtp_Encryption" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_encryption"/>
             <FIELD elem_type="password" caption="SMTP пароль" db_field="smtp_password" mandatory="no" datatype="string" row_type="common"/>
             <FIELD elem_type="select" caption="Авторизация" db_field="smtp_authtype" mandatory="yes" datatype="string" row_type="domain" row_type_domain_name="d_smtp_authtype"/>
+
+             <FIELD elem_type="text" caption="Папка для отправленных" db_field="sentmailboxname" mandatory="no" datatype="string" row_type="common" title="Название почтовой папки, в которую будут помещаться отправленные письма"/>
+             <FIELD elem_type="spacer"/>
+             <FIELD elem_type="lookup" caption="Владелец" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name" title="Используется для синхронизации прочитанных писем"/>
+             <FIELD elem_type="spacer"/>
          </ELEMENTS>
       </EDITCARD>
       <DETAILS>
