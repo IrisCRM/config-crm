@@ -106,6 +106,7 @@ class ImapAdapter
             "to" => $email->toString,
             "subject" => $email->subject,
             "flagged" => $emailOverview->flagged,
+            "seen" => $emailOverview->seen,
             "body" => $email->textHtml,
             "attachments" => array(),
         );
