@@ -30,7 +30,7 @@ irisControllers.classes.g_Email = IrisGridController.extend({
         this.loadEmailData(recordId, mailContent, el);
     },
 
-    loadEmailData(recordId, mailContent, el) {
+    loadEmailData: function(recordId, mailContent, el) {
         this.request({
             method: 'getMailData',
             parameters: {
