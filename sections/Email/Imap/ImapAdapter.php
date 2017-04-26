@@ -66,6 +66,15 @@ class ImapAdapter
         return $this->mailbox->markMailAsRead($uid);
     }
 
+    public function triggerMailImportantState($uid, $isImportant)
+    {
+        if ($isImportant) {
+            return $this->mailbox->markMailAsImportant($uid);
+        }
+
+        return $this->mailbox->clearFlag(array($uid), '\\Flagged');
+    }
+
     public function selectMailbox($mailboxName)
     {
         $this->mailbox->switchMailbox(

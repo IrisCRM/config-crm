@@ -58,6 +58,15 @@ class Fetcher extends Config
         return $adapter->markMailAsRead($uid);
     }
 
+    public function triggerMailImportantState($emailAccountId, $mailboxName, $uid, $isImportant)
+    {
+        $emailAccounts = $this->getEmailAccounts($emailAccountId);
+        $adapter = $this->getImapAdapter($emailAccounts[0]);
+        $adapter->selectMailbox($mailboxName);
+
+        return $adapter->triggerMailImportantState($uid, $isImportant);
+    }
+
     /**
      * Fetch new email
      * @param guid $emailAccountId

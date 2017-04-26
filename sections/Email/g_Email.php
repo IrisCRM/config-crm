@@ -23,21 +23,28 @@ class g_Email extends Config
     }
 
     function triggerStar($params) {
-        $recordId = $params['recordId'];
+        $emailId = $params['recordId'];
         $currentValue = $params['currentValue'];
         $newValue = !$currentValue;
         $permissions = array();
+        $emailInfo = $this->getEmailInfo($emailId);
 
         // права RW
-        GetUserRecordPermissions('iris_email', $recordId, GetUserId(), $permissions);
+        GetUserRecordPermissions('iris_email', $emailId, GetUserId(), $permissions);
         if (($permissions['r'] == 0) or ($permissions['w'] == 0)) {
             return array("success" => 0);
+        }
+
+        if ($emailInfo["isimap"] == 1) {
+            $fetcher = new Imap\Fetcher();
+            $fetcher->triggerMailImportantState(
+                $emailInfo["emailaccountid"], $emailInfo["mailboxname"], $emailInfo["uid"], $newValue);
         }
 
         $val = (int)$newValue;
         $con = $this->connection;
         $cmd = $con->prepare("update iris_email set isimportant = :val where id=:id");
-        $cmd->execute(array(":id" => $recordId, ":val" => $val));
+        $cmd->execute(array(":id" => $emailId, ":val" => $val));
         $success = ($cmd->errorCode() == '00000' ? 1 : 0);
 
         return array("success" => $success, "currentValue" => $currentValue, "val" => $val);
@@ -158,31 +165,23 @@ EOL;
     function updateReaders($params) {
         $emailId = $params["recordId"];
         $userId = $this->_User->property("id");
+        $emailInfo = $this->getEmailInfo($emailId);
 
-        $sql = "select T0.uid, T0.has_readed, MB.name as mailboxname, MB.emailaccountid, EA.ownerid
-          from iris_email T0
-          left join iris_emailaccount_mailbox MB on T0.mailboxid = MB.id
-          left join iris_emailaccount EA on MB.emailaccountid = EA.id
-          where T0.id = :id";
-        $cmd = $this->connection->prepare($sql);
-        $cmd->execute(array(":id" => $emailId));
-        $data = current($cmd->fetchAll(PDO::FETCH_ASSOC));
-
-        if (empty($data["has_readed"])) {
-            $data["has_readed"] = "[]";
+        if (empty($emailInfo["has_readed"])) {
+            $emailInfo["has_readed"] = "[]";
         }
 
-        $readers = json_decode($data["has_readed"], true);
+        $readers = json_decode($emailInfo["has_readed"], true);
 
-        if (in_array($userId, $readers)) {
+        if (in_array($userId, $readers) or $emailInfo["isimap"] === 0) {
             return array("isSuccess" => true);
         }
 
         array_push($readers, $userId);
 
-        if ($userId === $data["ownerid"]) {
+        if ($userId === $emailInfo["ownerid"]) {
             $fetcher = new Imap\Fetcher();
-            $fetcher->markMailAsRead($data["emailaccountid"], $data["mailboxname"], $data["uid"]);
+            $fetcher->markMailAsRead($emailInfo["emailaccountid"], $emailInfo["mailboxname"], $emailInfo["uid"]);
         }
 
         $cmd = $this->connection->prepare("update iris_email set has_readed = :readedstr  where id = :id");
@@ -192,5 +191,18 @@ EOL;
         ));
 
         return array("isSuccess" => true);
+    }
+
+    protected function getEmailInfo($emailId)
+    {
+        $sql = "select T0.uid, T0.has_readed, MB.name as mailboxname, MB.emailaccountid, EA.ownerid,
+          case when EA.fetch_protocol = 2 then 1 else 0 end as isimap
+          from iris_email T0
+          left join iris_emailaccount_mailbox MB on T0.mailboxid = MB.id
+          left join iris_emailaccount EA on MB.emailaccountid = EA.id
+          where T0.id = :id";
+        $cmd = $this->connection->prepare($sql);
+        $cmd->execute(array(":id" => $emailId));
+        return current($cmd->fetchAll(PDO::FETCH_ASSOC));
     }
 }
