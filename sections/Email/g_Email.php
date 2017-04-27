@@ -193,13 +193,25 @@ EOL;
         return array("isSuccess" => true);
     }
 
+    function deleteFromImapServer($emailId) {
+        $emailInfo = $this->getEmailInfo($emailId);
+        if (!$emailInfo["isimap"] or !$emailInfo["isinbox"] or !$emailInfo["isdeletefromserver"]) {
+            return array("isSuccess" => true);
+        }
+
+        $fetcher = new Imap\Fetcher();
+        $fetcher->deleteMail($emailInfo["emailaccountid"], $emailInfo["mailboxname"], $emailInfo["uid"]);
+    }
+
     protected function getEmailInfo($emailId)
     {
         $sql = "select T0.uid, T0.has_readed, MB.name as mailboxname, MB.emailaccountid, EA.ownerid,
-          case when EA.fetch_protocol = 2 then 1 else 0 end as isimap
+          case when EA.fetch_protocol = 2 then 1 else 0 end as isimap,
+          case when ET.code = 'Inbox' then 1 else 0 end as isinbox, EA.isdeletefromserver
           from iris_email T0
           left join iris_emailaccount_mailbox MB on T0.mailboxid = MB.id
           left join iris_emailaccount EA on MB.emailaccountid = EA.id
+          left join iris_emailtype ET on T0.emailtypeid = ET.id
           where T0.id = :id";
         $cmd = $this->connection->prepare($sql);
         $cmd->execute(array(":id" => $emailId));

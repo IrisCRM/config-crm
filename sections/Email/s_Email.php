@@ -86,6 +86,15 @@ class s_Email extends Config
         return $result;
     }
 
+    function onBeforePost($parameters) {
+        if ($parameters['new_data']  === null) {
+            $emailId = $this->fieldValue($parameters['old_data'], 'id');
+            $className = $this->_Loader->getActualClassName('sections\\Email\\g_Email');
+            $g_Email = new $className($this->_Loader);
+            $g_Email->deleteFromImapServer($emailId);
+        }
+    }
+
     function onAfterPost($tableName, $recordId, $oldData, $newData) {
         // _reply_email_id 3a79d78c-9072-4317-1a80-2fb1c6b25784
         // _params {"replyEmailId":"3a79d78c-9072-4317-1a80-2fb1c6b25784"}

@@ -67,6 +67,15 @@ class Fetcher extends Config
         return $adapter->triggerMailImportantState($uid, $isImportant);
     }
 
+    public function deleteMail($emailAccountId, $mailboxName, $uid)
+    {
+        $emailAccounts = $this->getEmailAccounts($emailAccountId);
+        $adapter = $this->getImapAdapter($emailAccounts[0]);
+        $adapter->selectMailbox($mailboxName);
+
+        return $adapter->deleteMail($uid);
+    }
+
     /**
      * Fetch new email
      * @param guid $emailAccountId

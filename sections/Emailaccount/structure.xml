@@ -14,10 +14,10 @@
             <ITEM caption="Описание" db_field="description" width="30%" row_type="common"/>
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="800" height="360" layout="2,1, 1,2,2,2,2, 1,2,2,2,   2,2">
+      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="800" height="360" layout="2,1, 1,2,2,2,2, 1,2,2,2,   2,2,2">
           <TABS>
               <TAB caption="Общее" rows="11"/>
-              <TAB caption="Для IMAP" rows="2"/>
+              <TAB caption="Для IMAP" rows="3"/>
           </TABS>
          <ELEMENTS>
             <FIELD elem_type="text" caption="Email адрес" db_field="email" mandatory="yes" datatype="string" row_type="common"/>
@@ -46,6 +46,7 @@
              <FIELD elem_type="spacer"/>
              <FIELD elem_type="lookup" caption="Владелец" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name" title="Используется для синхронизации прочитанных писем"/>
              <FIELD elem_type="spacer"/>
+             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Удалять с сервера при удалении?" db_field="IsDeleteFromServer" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
          </ELEMENTS>
       </EDITCARD>
       <DETAILS>

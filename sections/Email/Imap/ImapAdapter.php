@@ -75,6 +75,11 @@ class ImapAdapter
         return $this->mailbox->clearFlag(array($uid), '\\Flagged');
     }
 
+    public function deleteMail($uid)
+    {
+        return $this->mailbox->deleteMail($uid);
+    }
+
     public function selectMailbox($mailboxName)
     {
         $this->mailbox->switchMailbox(
