@@ -88,24 +88,24 @@ class ImapAdapter
 
     public function getEmailsFromUid($uid, $batchSize)
     {
-         $stream = $this->mailbox->getImapStream();
-         $startUid = ($uid ? $uid : 1);
-         $sequence = $startUid . ":*";
-         $this->debug("ImapAdapter getEmailsFromUid sequence", $sequence);
+        $stream = $this->mailbox->getImapStream();
+        $startUid = ($uid ? $uid : 1);
+        $sequence = $startUid . ":*";
+        $this->debug("ImapAdapter getEmailsFromUid sequence", $sequence);
 
-         $emailOverviews = imap_fetch_overview($stream, $sequence, FT_UID);
-         $result = array();
+        $emailOverviews = imap_fetch_overview($stream, $sequence, FT_UID);
+        $result = array();
 
-         if (count($emailOverviews) > $batchSize) {
-             $emailOverviews = array_slice($emailOverviews, 0, $batchSize);
-         }
+        if (count($emailOverviews) > $batchSize) {
+            $emailOverviews = array_slice($emailOverviews, 0, $batchSize);
+        }
 
-         foreach ($emailOverviews as $emailOverview) {
-             // set unique attachments dir for each email to avoid possible name coincidence
-             $this->mailbox->setAttachmentsDir($this->getDirForUid($emailOverview->uid));
-             $email = $this->mailbox->getMail($emailOverview->uid, false);
-             $result[] = $this->convertIncomingMailToArray($email, $emailOverview);
-         }
+        foreach ($emailOverviews as $emailOverview) {
+            // set unique attachments dir for each email to avoid possible name coincidence
+            $this->mailbox->setAttachmentsDir($this->getDirForUid($emailOverview->uid));
+            $email = $this->mailbox->getMail($emailOverview->uid, false);
+            $result[] = $this->convertIncomingMailToArray($email, $emailOverview);
+        }
 
         return $result;
     }
