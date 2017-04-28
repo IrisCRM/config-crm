@@ -76,6 +76,107 @@ class Fetcher extends Config
         return $adapter->deleteMail($uid);
     }
 
+    public function syncFlags($emailAccountId = null)
+    {
+        $emailAccounts = $this->getEmailAccounts($emailAccountId);
+        foreach ($emailAccounts as $emailAccount) {
+            $mailboxes = $this->getMailboxes($emailAccount);
+            if (count($mailboxes) === 0) {
+                continue;
+            }
+
+            $imapAdapter = $this->getImapAdapter($emailAccount);
+            foreach ($mailboxes as $mailbox) {
+                $this->syncMailboxFlags($imapAdapter, $mailbox);
+            }
+        }
+    }
+
+    protected function syncMailboxFlags(ImapAdapter $imapAdapter, $mailbox)
+    {
+        $dbOverviews = $this->getEmailsOverviewFromDB($mailbox['id']);
+        $dbOverviewLookup = $this->createOverviewLookup($dbOverviews);
+        $serverOverviews = $this->getEmailsOverviewFromServer($imapAdapter, $mailbox["name"]);
+
+        foreach($serverOverviews as $serverOverview) {
+            $dbOverview = $dbOverviewLookup[$serverOverview["uid"]];
+            if ($this->isFlagsEqual($dbOverview, $serverOverview)) {
+                continue;
+            }
+
+            $this->debug("syncMailboxFlags sync flags for", $serverOverview["uid"]);
+            $this->updateFlags($dbOverview, $serverOverview);
+        }
+    }
+
+    protected function getEmailsOverviewFromDB($mailboxId)
+    {
+        $sql = "select T0.id, T0.uid, T0.has_readed, EA.ownerid,
+          case when strpos(T0.has_readed, EA.ownerid) > 0 then 1 else 0 end as seen, isimportant
+          from iris_email T0
+          left join iris_emailaccount_mailbox MB on T0.mailboxid = MB.id
+          left join iris_emailaccount EA on MB.emailaccountid = EA.id
+            where T0.mailboxid= :mailboxid
+            order by uid";
+        $cmd = $this->connection->prepare($sql);
+        $cmd->execute(array(
+            ":mailboxid" => $mailboxId,
+        ));
+
+        return $cmd->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    protected function createOverviewLookup($dbOverviews)
+    {
+        $result = array();
+
+        foreach ($dbOverviews as $dbOverview) {
+            $result[$dbOverview["uid"]] = $dbOverview;
+        }
+
+        return $result;
+    }
+
+    protected function getEmailsOverviewFromServer(ImapAdapter $imapAdapter, $mailboxName)
+    {
+        return $imapAdapter->getEmailsOverview($mailboxName);
+    }
+
+    protected function isFlagsEqual($dbOverview, $serverOverview)
+    {
+        return ($dbOverview["seen"] == $serverOverview["seen"]) and
+            ($dbOverview["isimportant"] == $serverOverview["flagged"]);
+    }
+
+    protected function updateFlags($dbOverview, $serverOverview)
+    {
+        $hasReadedStr = $this->updateHasReadedStr($dbOverview["has_readed"], $dbOverview["ownerid"], $serverOverview["seen"]);
+        $this->debug("updateFlags hasReadedStr", array($hasReadedStr, $dbOverview["has_readed"], $dbOverview["ownerid"], $serverOverview["seen"]));
+
+        $sql = "update iris_email set has_readed = :hasreaded, isimportant = :isimportant where id = :id";
+        $cmd = $this->connection->prepare($sql);
+        $cmd->execute(array(
+            ":hasreaded" =>$hasReadedStr,
+            ":isimportant" => $serverOverview["flagged"],
+            ":id" => $dbOverview["id"],
+        ));
+    }
+
+    protected function updateHasReadedStr($hasReadedStr, $ownerId, $isSeen)
+    {
+        $readedIds = json_decode($hasReadedStr, true);
+
+        if ($isSeen and !in_array($ownerId, $readedIds)) {
+            $readedIds[] = $ownerId;
+        }
+
+        if (!$isSeen and in_array($ownerId, $readedIds)) {
+            array_splice($readedIds, array_search($ownerId, $readedIds), 1);
+        }
+
+        return count($readedIds) == 0 ? null : json_encode($readedIds);
+    }
+
     /**
      * Fetch new email
      * @param guid $emailAccountId

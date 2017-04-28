@@ -86,25 +86,50 @@ class ImapAdapter
             $this->connectionString . $this->convertMailboxName($mailboxName));
     }
 
-    public function getEmailsFromUid($uid, $batchSize)
+    public function getEmailsOverview($mailboxName)
     {
-        $stream = $this->mailbox->getImapStream();
-        $startUid = ($uid ? $uid : 1);
-        $sequence = $startUid . ":*";
-        $this->debug("ImapAdapter getEmailsFromUid sequence", $sequence);
-
-        $emailOverviews = imap_fetch_overview($stream, $sequence, FT_UID);
         $result = array();
+        $this->selectMailbox($mailboxName);
+        $emailOverviews = $this->getEmailsOverviewFromUid(0, 0);
 
-        if (count($emailOverviews) > $batchSize) {
-            $emailOverviews = array_slice($emailOverviews, 0, $batchSize);
+        foreach($emailOverviews as $emailOverview) {
+            $result[] = array(
+                "uid" => $emailOverview->uid,
+                "seen" => $emailOverview->seen,
+                "flagged" => $emailOverview->flagged,
+            );
         }
 
+        return $result;
+    }
+
+    public function getEmailsFromUid($uid, $batchSize)
+    {
+        $emailOverviews = $this->getEmailsOverviewFromUid($uid, $batchSize);
+        $result = array();
+
         foreach ($emailOverviews as $emailOverview) {
+            $this->debug("getEmailsFromUid emailOverview", $emailOverview);
             // set unique attachments dir for each email to avoid possible name coincidence
             $this->mailbox->setAttachmentsDir($this->getDirForUid($emailOverview->uid));
             $email = $this->mailbox->getMail($emailOverview->uid, false);
             $result[] = $this->convertIncomingMailToArray($email, $emailOverview);
+        }
+
+        return $result;
+    }
+
+    protected function getEmailsOverviewFromUid($uid, $batchSize)
+    {
+        $stream = $this->mailbox->getImapStream();
+        $startUid = ($uid ? $uid : 1);
+        $sequence = $startUid . ":*";
+        $this->debug("ImapAdapter getEmailsOverviewFromUid sequence", $sequence);
+
+        $result = imap_fetch_overview($stream, $sequence, FT_UID);
+
+        if ($batchSize > 0 and count($result) > $batchSize) {
+            $result = array_slice($result, 0, $batchSize);
         }
 
         return $result;

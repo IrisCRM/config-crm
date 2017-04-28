@@ -130,6 +130,8 @@ EOL;
         // IMAP
         $fetcher = new Imap\Fetcher();
         $imapResult = $fetcher->fetch();
+        // TODO: move to cron job
+        $fetcher->syncFlags();
 
         return array(
             "isSuccess" => $popResult["isSuccess"] && $imapResult["isSuccess"],
