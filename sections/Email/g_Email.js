@@ -4,12 +4,15 @@
 
 irisControllers.classes.g_Email = IrisGridController.extend({
     events: {
-        'click .grid_row_js': 'onOpenMail',
+        'click .grid_row_js td:nth-child(4)': 'onOpenMail',
         'click .mail_header_title_js': 'onCloseMail'
     },
 
     onOpenMail: function(e) {
-        var el = jQuery(e.currentTarget);
+        if (e.ctrlKey || e.shiftKey) {
+            return;
+        }
+        var el = jQuery(e.currentTarget).parents('.grid_row_js');
         var recordId = el.attr('rec_id');
         var wrapper = el.parents('.grid');
         wrapper.find('.grid_row_js').show();
