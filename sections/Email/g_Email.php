@@ -7,6 +7,7 @@ namespace Iris\Config\CRM\sections\Email;
 
 use Config;
 use Iris\Iris;
+use Iris\Queue\DispatchesJobs;
 use PDO;
 use Iris\Config\CRM\sections\Email\Imap as Imap;
 
@@ -14,6 +15,8 @@ include_once Iris::$app->getCoreDir() . 'core/engine/emaillib.php';
 
 class g_Email extends Config
 {
+    use DispatchesJobs;
+
     function __construct()
     {
         parent::__construct(array(
@@ -123,20 +126,13 @@ EOL;
     }
 
     function fetchEmail($params) {
-        // POP3
-        $fetcher = new EmailFetcher();
-        $popResult =  $fetcher->fetchEmail();
+        $this->dispatch('email:fetch', ['rr'=>'ss']);
 
-        // IMAP
-        $fetcher = new Imap\Fetcher();
-        $imapResult = $fetcher->fetch();
-        // TODO: move to cron job
-        $fetcher->syncFlags();
-
-        return array(
-            "isSuccess" => $popResult["isSuccess"] && $imapResult["isSuccess"],
-            "messagesCount" => $popResult["messagesCount"] + $imapResult["messagesCount"],
-        );
+        // @todo: В этом ответе не должно быть отчета о полученных письмах. Сразу
+//        return array(
+//            "isSuccess" => $popResult["isSuccess"] && $imapResult["isSuccess"],
+//            "messagesCount" => $popResult["messagesCount"] + $imapResult["messagesCount"],
+//        );
     }
 
     public function getMailData($params)
