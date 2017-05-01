@@ -126,13 +126,25 @@ EOL;
     }
 
     function fetchEmail($params) {
-        $this->dispatch('email:fetch', ['rr'=>'ss']);
+        foreach ($this->getEmailAccountIds() as $emailAccountId) {
+            $this->dispatch('email:fetch', [
+                'emailAccountId' => $emailAccountId
+            ]);
+        }
+    }
 
-        // @todo: В этом ответе не должно быть отчета о полученных письмах. Сразу
-//        return array(
-//            "isSuccess" => $popResult["isSuccess"] && $imapResult["isSuccess"],
-//            "messagesCount" => $popResult["messagesCount"] + $imapResult["messagesCount"],
-//        );
+    /**
+     * Get email accounts for current user
+     * @return array
+     */
+    protected function getEmailAccountIds()
+    {
+        $sql = "select id 
+            from iris_emailaccount 
+            where isactive='Y'";
+        $cmd = $this->connection->prepare($sql);
+        $cmd->execute();
+        return $cmd->fetchAll(PDO::FETCH_COLUMN);
     }
 
     public function getMailData($params)

@@ -3,6 +3,7 @@
 namespace Iris\Config\CRM\sections\Email\Imap;
 
 use Config;
+use Iris\Config\CRM\sections\Email\Fetcher\FetcherInterface;
 use Iris\Iris;
 use PDO;
 
@@ -11,7 +12,7 @@ use PDO;
  * Class Fetcher
  * @package sections\Email\Imap
  */
-class Fetcher extends Config
+class Fetcher extends Config implements FetcherInterface
 {
     protected $logger;
     private $supportEmails = array();
