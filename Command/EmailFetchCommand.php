@@ -2,24 +2,26 @@
 
 namespace Iris\Config\CRM\Command;
 
-use Iris\Config\CRM\Service\Lock\MutexFactory;
+use Bernard\QueueFactory\InMemoryFactory;
+use Iris\Config\CRM\sections\Email\Imap;
+use Iris\Config\CRM\sections\Email\g_Email;
 use Iris\Iris;
+use Iris\Queue\ConsumingProducer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Iris\Config\CRM\sections\Email\Imap;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Read portion of incoming messages
  * Class EmailFetchCommand
  * @package Iris\Config\CRM\Command
- * @usage ./iris iris:email:fetch --mail-account-id=GUID
+ * @usage ./iris iris:email:fetch
+ * @usage ./iris iris:email:fetch --mail-account-id=GUID --queue=sync
  */
 class EmailFetchCommand extends Command
 {
-    const DEFAULT_BATCH_SIZE = 10;
-
     protected function configure()
     {
         $this
@@ -32,28 +34,40 @@ class EmailFetchCommand extends Command
                 'ID of email account'
             )
             ->addOption(
-                'batch-size',
+                'queue',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                'Maximum amount of messages to read per one reqiuest',
-                static::DEFAULT_BATCH_SIZE
+                'Fetch immediately in sync mode'
             )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $mailAccountId = $input->getOption('email-account-id');
+        $emailAccountId = $input->getOption('email-account-id');
 
-        if (!$mailAccountId) {
-            throw new \RuntimeException('Email account ID has not been specified');
+        if ($input->getOption('queue') == 'sync') {
+            $container = Iris::$app->getContainer();
+
+            $container
+                ->register('queue.factory', InMemoryFactory::class)
+                ->addArgument(new Reference('queue.event_dispatcher'));
+
+            $container
+                ->register('queue.producer', ConsumingProducer::class)
+                ->addArgument(new Reference('queue.factory'))
+                ->addArgument(new Reference('queue.event_dispatcher'))
+                ->addArgument(new Reference('queue.consumer'));
         }
 
-        $mutex = MutexFactory::create($mailAccountId);
-        $mutex->synchronized(function () use ($input, $output, $mailAccountId) {
-            $fetcher = new Imap\Fetcher();
-            $count = $fetcher->fetch($mailAccountId, $input->getOption('batch-size'));
-            $output->writeln(sprintf('Fetched %d mesages', $count));
-        });
+        if (!$emailAccountId) {
+            $gEmail = new g_Email();
+            $gEmail->fetchEmail();
+        }
+        else {
+            $this->dispatch('email:fetch', [
+                'emailAccountId' => $emailAccountId
+            ]);
+        }
     }
 }

@@ -125,7 +125,7 @@ EOL;
         return array("status" => "+", "message" => "Письмо отправлено");
     }
 
-    function fetchEmail($params) {
+    function fetchEmail($params = null) {
         foreach ($this->getEmailAccountIds() as $emailAccountId) {
             $this->dispatch('email:fetch', [
                 'emailAccountId' => $emailAccountId
@@ -134,7 +134,7 @@ EOL;
     }
 
     /**
-     * Get email accounts for current user
+     * Get all active email accounts
      * @return array
      */
     protected function getEmailAccountIds()

@@ -4,6 +4,7 @@ namespace Iris\Config\CRM\Job\Email;
 
 use Bernard\Message\AbstractMessage;
 use Iris\Config\CRM\sections\Email\Fetcher\FetcherInterface;
+use Iris\Config\CRM\Service\Lock\MutexFactory;
 use Iris\Iris;
 use Iris\Job\AbstractJob;
 
@@ -21,7 +22,11 @@ class FetchJob extends AbstractJob
         $fetcherFactory = Iris::$app->getContainer()->get('email.fetcher_factory');
         /** @var FetcherInterface $fetcher */
         $fetcher = $fetcherFactory->create($message->emailAccountId);
-        $fetcher->fetch($message->emailAccountId);
-        $fetcher->syncFlags($message->emailAccountId);
+
+        $mutex = MutexFactory::create($message->emailAccountId);
+        $mutex->synchronized(function () use ($fetcher, $message) {
+            $fetcher->fetch($message->emailAccountId);
+            $fetcher->syncFlags($message->emailAccountId);
+        });
     }
 }
