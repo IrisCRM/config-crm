@@ -154,6 +154,20 @@ EOL;
         $contactName = $this->_DB->getRecord($contactId, '{contact}', ['name'])['name'];
         $accountName = $this->_DB->getRecord($accountId, '{account}', ['name'])['name'];
 
+        $stmt = $this->connection->prepare("select id, file_file, file_filename 
+            from iris_file 
+            where emailid = :email_id");
+        $stmt->execute([
+            ':email_id' => $params['id'],
+        ]);
+        $files = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($files as &$file) {
+            $file['download_url'] = getFileDownloadUrl(GetTableName('{File}'), $file['id'], 'file_file');
+            $fileparts = explode('.', $file['file_filename']);
+            $file['extension'] = $fileparts ? array_pop($fileparts) : null;
+            $file['name'] = implode('.', $fileparts);
+        }
+
         $userId = GetUserID();
         $userIds = json_decode($hasReaded);
         if (!in_array($userId, is_array($userIds) ? $userIds : [])) {
@@ -169,6 +183,7 @@ EOL;
             'contactName' => $contactName,
             'accountName' => $accountName,
             'id' => $params['id'],
+            'files' => $files,
         ];
     }
 

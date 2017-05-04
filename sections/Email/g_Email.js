@@ -48,7 +48,8 @@ irisControllers.classes.g_Email = IrisGridController.extend({
                     from: data.from,
                     to: data.to,
                     contactName: data.contactName,
-                    accountName: data.accountName
+                    accountName: data.accountName,
+                    files: data.files
                 }));
                 el.removeClass('grid_newmail');
             }
