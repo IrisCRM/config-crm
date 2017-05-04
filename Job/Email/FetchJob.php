@@ -13,6 +13,8 @@ use Iris\Job\AbstractJob;
  */
 class FetchJob extends AbstractJob
 {
+    const MUTEX_PREFIX = 'email_fetch_';
+
     /**
      * @inheritdoc
      */
@@ -23,7 +25,7 @@ class FetchJob extends AbstractJob
         /** @var FetcherInterface $fetcher */
         $fetcher = $fetcherFactory->create($message->emailAccountId);
 
-        $mutex = MutexFactory::create($message->emailAccountId);
+        $mutex = MutexFactory::create(static::MUTEX_PREFIX . $message->emailAccountId);
         $mutex->synchronized(function () use ($fetcher, $message) {
             $fetcher->fetch($message->emailAccountId);
             $fetcher->syncFlags($message->emailAccountId);

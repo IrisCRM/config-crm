@@ -68,61 +68,32 @@ left join iris_emailaccount T2 on T0.emailaccountid = T2.id
 where T0.id=:emailid
 EOL;
         $cmd = $con->prepare($sql);
-        $cmd->execute(array(":emailid" => $id));
-        $email = current($cmd->fetchAll(PDO::FETCH_ASSOC));
+        $cmd->execute([":emailid" => $id]);
+        $email = $cmd->fetch(PDO::FETCH_ASSOC);
 
         // проверка того, что письмо еще не отправлено
         if ($email['code'] != $mode) {
-            return array("status" => "-", "message" => "Разрешено отправлять только исходящие письма");
+            return [
+                "status" => "-",
+                "message" => "Разрешено отправлять только исходящие письма",
+            ];
         }
 
         // если не указана учетная запись, то вернем ошибку
         if (!$email['emailaccountid']) {
-            return array("status" => "-", "message" => "Невозможно отправить письмо, так как у него не задан обратный адрес", "www"=> $email);
+            return [
+                "status" => "-",
+                "message" => "Невозможно отправить письмо, так как у него не задан обратный адрес",
+                "www" => $email,
+            ];
         }
 
-        // формируем массив с вложениями с элементами вида (file_name => имя, file_path => путь)
-        $sql = <<<EOL
-select file_filename, file_file from iris_file 
-where emailid=:emailid or id in (select fileid from iris_email_file where emailid=:emailid)
-EOL;
-        $cmd = $con->prepare($sql);
-        $cmd->execute(array(":emailid" => $id));
-        $files = $cmd->fetchAll(PDO::FETCH_ASSOC);
+        $this->dispatch('email:send', [
+            'emailId' => $id,
+            'mode' => $mode
+        ]);
 
-        $attachments = array();
-        foreach ($files as $file) {
-            array_push($attachments, array(
-                "file_name" => $file['file_filename'],
-                "file_path" => Iris::$app->getRootDir() . 'files/' . $file['file_file'],
-            ));
-        }
-
-        if ($email["sentmailboxname"]) {
-            $mimeMessage = "";
-        }
-
-        // отправка письма
-        $errm = email_send_message($email['to'], $email['subject'], $email['body'], $email['from'], $attachments, $mimeMessage);
-        if ($errm != '') {
-            return array("status" => "-", "message" => "Ошибка: ".trim(strip_tags($errm)));
-        }
-
-        // проставление статуса "Отправленое" (или "Рассылка - отправленное")
-        $sql = "update iris_email set emailtypeid = (select et.id from iris_emailtype et where et.code=:code) where id=:id";
-        $cmd = $con->prepare($sql);
-        $cmd->execute(array(
-            ":id" => $id,
-            ":code" => (($mode == 'Outbox') ? 'Sent' : 'Mailing_sent')
-        ));
-
-        // сохранение письма в папку "Папка для отправленных" (для imap)
-        if ($mimeMessage and $email["sentmailboxname"]) {
-            $fetcher = new Imap\Fetcher();
-            $fetcher->addMimeMessageToMailbox($email["emailaccountid"], $email["sentmailboxname"], $mimeMessage);
-        }
-
-        return array("status" => "+", "message" => "Письмо отправлено");
+        return array("status" => "+", "message" => "Письмо поставлено в очередь на отправку");
     }
 
     function fetchEmail($params = null) {
