@@ -13,6 +13,11 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         'change #EmailAccountID': 'onChangeEmailAccountID'
     },
 
+    state: {
+        initialCardHeight: null,
+        initialCkEditorHeight: null
+    },
+
     onOpen: function() {
         var self = this;
         var form = $(this.el.id).down('form');
@@ -96,7 +101,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             }
         }
 
-            if ((form._mode.value == 'update') && (emailType == 'Inbox')) {
+        if ((form._mode.value == 'update') && (emailType == 'Inbox')) {
             // если редактируем входящее письмо, то нарисуем кнопку "создать инцидент"
             var button_cont = $(form.btn_cancel).up('table.form_table_buttons_panel').rows[0].cells[0];
             button_cont.innerHTML += '<input type="button" onclick="'+this.instanceName()+'.createIncident(this)" value="'+T.t('Создать инцидент')+'" style="width: 180px;" class="button" id="_createincident">';
@@ -124,9 +129,29 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             addCardFooterButton(windowId, 'top', T.t('Отправить письмо'), this.instanceName()+'.saveAndSend(this)', '');
         }
 
-        //Уменьшим высоту карточки
-        UpdateCardHeight(windowId);
+        // Подстраиваем высоту ckeditor под высоту карточки
+        var window = Windows.getWindow(windowId);
+        this.state.initialCardHeight = window.height;
+        var self = this;
+        window.options.onResize = function () {
+            self.onCardResize();
+        };
+        window.options.onMaximize = function () {
+            self.onCardResize();
+        };
+
         form._hash.value = GetCardMD5(get_window_id(form));
+    },
+
+    onCardResize() {
+        var window = Windows.getWindow(this.el.id);
+        var form = $(this.el.id).down('form');
+        var editor = CKEDITOR.instances[form.body.getAttribute('actualelement')];
+        if (!this.state.initialCkEditorHeight) {
+            this.state.initialCkEditorHeight = jQuery('#'+this.el.id).find('#body').parent().height();
+        }
+        Windows.notify('onResize', window);
+        editor.resize('100%', this.state.initialCkEditorHeight + window.height - this.state.initialCardHeight);
     },
 
     onAfterSave: function(recordId, mode, params, windowId) {
