@@ -106,14 +106,10 @@ class g_Email extends Config
             $file['extension'] = $fileparts ? array_pop($fileparts) : null;
             $file['name'] = implode('.', $fileparts);
         }
-
-        $userId = GetUserID();
-        $userIds = json_decode($hasReaded);
-        if (!in_array($userId, is_array($userIds) ? $userIds : [])) {
-            $userIds[] = $userId;
-            $Fields = FieldValueFormat('has_readed', json_encode($userIds));
-            UpdateRecord('Email', $Fields['FieldValues'], $params['id']);
-        }
+        
+        $this->updateReaders([
+            'recordId' => $params['id'],
+        ]);
 
         return [
             'subject' => $subject,
