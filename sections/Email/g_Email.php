@@ -54,46 +54,14 @@ class g_Email extends Config
     }
 
     function sendEmail($params) {
-        $id = $params['recordId'];
-        $mode = $params['sendMode'];
-
-        $con = $this->connection;
-
-        // получение письма по его id
-        $sql = <<<EOL
-select e_from as from, e_to as to, subject, body, emailaccountid, T1.code as code, T2.sentmailboxname
-from iris_email T0
-left join iris_emailtype T1 on T0.emailtypeid=T1.id
-left join iris_emailaccount T2 on T0.emailaccountid = T2.id
-where T0.id=:emailid
-EOL;
-        $cmd = $con->prepare($sql);
-        $cmd->execute([":emailid" => $id]);
-        $email = $cmd->fetch(PDO::FETCH_ASSOC);
-
-        // проверка того, что письмо еще не отправлено
-        if ($email['code'] != $mode) {
-            return [
-                "status" => "-",
-                "message" => "Разрешено отправлять только исходящие письма",
-            ];
-        }
-
-        // если не указана учетная запись, то вернем ошибку
-        if (!$email['emailaccountid']) {
-            return [
-                "status" => "-",
-                "message" => "Невозможно отправить письмо, так как у него не задан обратный адрес",
-                "www" => $email,
-            ];
-        }
-
         $this->dispatch('email:send', [
-            'emailId' => $id,
-            'mode' => $mode
+            'emailId' => $params['recordId'],
+            'mode' => $params['sendMode']
         ]);
-
-        return array("status" => "+", "message" => "Письмо поставлено в очередь на отправку");
+        return [
+            "status" => "+",
+            "message" => "Письмо поставлено в очередь на отправку",
+        ];
     }
 
     function fetchEmail($params = null) {
