@@ -169,8 +169,6 @@ irisControllers.classes.g_Email = IrisGridController.extend({
             onSuccess: function(transport) {
                 console.log('fetchEmail onSuccess');
                 var response = transport.responseText;
-                var data = null;
-                var grid = $(self.el.id);
 
                 self.isEmailFetching = 0;
 
@@ -178,30 +176,19 @@ irisControllers.classes.g_Email = IrisGridController.extend({
                     self.toggleFetchButton(element, true);
                 }
 
-                if ((response.toLowerCase().indexOf('maximum execution time', 0) > 0) ||
-                    (response.toLowerCase().indexOf('allowed memory size') > 0)) {
-                    // если скрипт закончился из-за времени(или из-за нехватки памяти), то сделаем вид что он считал новые письма
-                    response = '{"data": {"messagesCount": "1"}}';
-                }
-
                 if (!response.isJSON()) {
                     debug('ошибка проверки почты');
+                    self.notify(T.t('Возникла ошибка при получении почты'));
                     return;
                 }
 
-                data = response.evalJSON().data;
-                //Если есть новые письма, то загрузим все что осталось
-                if (data.messagesCount > 0) {
-                    self.fetchEmail(element);
-                } else {
-                    grid.setAttribute('page_show_rec_id', '');
-                    redraw_grid(self.el.id); // miv 10.09.2010: перерисуем грид после получения почты
-                }
+                self.notify(T.t('Отправлено задание на чтение почты'));
             },
             onFail: function(transport) {
                 console.log('fetchEmail onFail');
                 self.toggleFetchButton(element, true);
                 self.isEmailFetching = 0;
+                self.notify(T.t('Возникла ошибка при получении почты'));
             }
         });
         this.isEmailFetching = 1;
@@ -232,20 +219,15 @@ irisControllers.classes.g_Email = IrisGridController.extend({
             skipErrors: ['class_not_found', 'file_not_found'],
             onSuccess: function(transport) {
                 var response = transport.responseText;
-                var data = null;
-                var messageHTML = '';
+                var message;
 
-                if (!response.isJSON()) {
-                    messageHTML = T.t('Возникла ошибка при отправке почты');
-                    messageHTML += ':<br><textarea class="edtText" style="margin: 10px 5px 0px 5px; width: 280px; heigh: 80px" readonly="true">'+data+'</textarea>';
-                    wnd_alert(messageHTML, 300, 60);
+                if (response.isJSON()) {
+                    message = response.evalJSON().data.message;
                 }
-
-                data = response.evalJSON().data;
-                if (data.status === '+') {
-                    redraw_grid(self.el.id);
+                else {
+                    message = T.t('Возникла ошибка при отправке почты');
                 }
-                wnd_alert(data.message, 300, 60);
+                self.notify(message);
             }
         });
     },

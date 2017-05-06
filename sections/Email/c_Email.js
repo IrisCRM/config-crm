@@ -439,6 +439,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
     },
 
     sendEmail: function(recordId) {
+        var self = this;
         Transport.request({
             section: "Email",
             'class': "g_Email",
@@ -450,16 +451,14 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             skipErrors: ['class_not_found', 'file_not_found'],
             onSuccess: function(transport) {
                 var result = transport.responseText;
+                var message;
                 if (result.isJSON() == true) {
-                    var data = result.evalJSON().data;
-                    var messageHTML = data.message;
+                    message = result.evalJSON().data.message;
                 }
                 else {
-                    messageHTML = T.t('Возникла ошибка при отправке почты');
-                    messageHTML += ':<br><textarea class="edtText" style="margin: 10px 5px 0px 5px; width: 280px; heigh: 80px" readonly="true">'+result+'</textarea>';
+                    message = T.t('Возникла ошибка при отправке почты');
                 }
-                wnd_alert(messageHTML, 300);
-
+                self.notify(message);
             }
         });
     }
