@@ -88,10 +88,13 @@ class g_Email extends Config
 
     public function getMailData($params)
     {
-        list($subject, $from, $to, $contactId, $accountId, $hasReaded) = GetFieldValuesByID('Email', $params['id'],
-            ['subject', 'e_from', 'e_to', 'contactid', 'accountid', 'has_readed']);
+        list($subject, $from, $to, $contactId, $accountId, $hasReaded, $emailTypeId) =
+            GetFieldValuesByID('Email', $params['id'], [
+                'subject', 'e_from', 'e_to', 'contactid', 'accountid', 'has_readed', 'emailtypeid',
+            ]);
         $contactName = $this->_DB->getRecord($contactId, '{contact}', ['name'])['name'];
         $accountName = $this->_DB->getRecord($accountId, '{account}', ['name'])['name'];
+        $emailTypeCode = $this->_DB->getRecord($emailTypeId, '{emailtype}', ['code'])['code'];
 
         $stmt = $this->connection->prepare("select id, file_file, file_filename 
             from iris_file 
@@ -117,6 +120,7 @@ class g_Email extends Config
             'to' => $to,
             'contactName' => $contactName,
             'accountName' => $accountName,
+            'emailTypeCode' => $emailTypeCode,
             'id' => $params['id'],
             'files' => $files,
         ];

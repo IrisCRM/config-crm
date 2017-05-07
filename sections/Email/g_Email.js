@@ -34,6 +34,7 @@ irisControllers.classes.g_Email = IrisGridController.extend({
     },
 
     loadEmailData: function(recordId, mailContent, el) {
+        var self = this;
         this.request({
             method: 'getMailData',
             parameters: {
@@ -49,6 +50,8 @@ irisControllers.classes.g_Email = IrisGridController.extend({
                     to: data.to,
                     contactName: data.contactName,
                     accountName: data.accountName,
+                    emailTypeCode: data.emailTypeCode,
+                    instanceName: self.instanceName(),
                     files: data.files
                 }));
                 el.removeClass('grid_newmail');
@@ -76,10 +79,6 @@ irisControllers.classes.g_Email = IrisGridController.extend({
 
         //Добавление кнопок на панель
         g_InsertUserButtons(this.el.id, [
-            {
-                name: T.t('Ответить'),
-                onclick: this.instanceName() + ".replyMessage();"
-            },
             {
                 name: T.t('Отправить'),
                 onclick: this.instanceName() + ".sendEmail();"
@@ -149,6 +148,16 @@ irisControllers.classes.g_Email = IrisGridController.extend({
             rec_id: '',
             card_params: Object.toJSON({replyEmailId: recordId})
         });
+    },
+
+    replyToAll: function() {
+        // @todo
+        this.replyMessage();
+    },
+
+    forwardMessage: function() {
+        // @todo
+        this.replyMessage();
     },
 
     fetchEmail: function(element) {
