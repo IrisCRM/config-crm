@@ -76,7 +76,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             // если карточку открыли в режиме "ответить", то заполним нужные поля и выйдем
             if (cardParams.replyEmailId) {
                 this.isDefaultValuesLoading = true; // miv 13.01.2011: чтобы не вызывалось событие, так как оно вешается до того, как приходят данные
-                this.setReplyFields(form, cardParams.replyEmailId);
+                this.setReplyFields(form, cardParams.replyEmailId, cardParams.replyToAll);
             }
 
             //Выберем ящик отправки письма по умолчанию
@@ -313,7 +313,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         return params;
     },
 
-    setReplyFields: function(form, replyEmailId) {
+    setReplyFields: function(form, replyEmailId, replyToAll = false) {
         var self = this;
 
         $(form._params).insert({'after': '<input id="_reply_email_id" type="hidden" value="'+replyEmailId+'">'});
@@ -324,13 +324,13 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             'class': "c_Email",
             method: 'getReplyFields',
             parameters: {
-                replyEmailId: replyEmailId
+                replyEmailId: replyEmailId,
+                replyToAll: replyToAll === true
             },
             skipErrors: ['class_not_found', 'file_not_found'],
             onSuccess: function(transport) {
                 var data = transport.responseText.evalJSON().data;
 
-                // c_Common_SetFieldValues_end(transport, p_form, true);
                 self.setFields(data, {
                     disableEvents: true,
                     rewriteValues: true,

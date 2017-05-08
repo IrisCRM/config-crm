@@ -137,22 +137,34 @@ irisControllers.classes.g_Email = IrisGridController.extend({
         }
     },
 
+    reply: function(data) {
+        openCard({
+            source_type: 'grid',
+            source_name: 'Email',
+            rec_id: '',
+            card_params: Object.toJSON(data)
+        });
+    },
+
     replyMessage: function() {
         var grid = $(this.el.id);
         var row = grid.getAttribute('selectedrow');
         var recordId = grid.rows[row].getAttribute('rec_id');
 
-        openCard({
-            source_type: 'grid',
-            source_name: 'Email',
-            rec_id: '',
-            card_params: Object.toJSON({replyEmailId: recordId})
+        this.reply({
+            replyEmailId: recordId
         });
     },
 
     replyToAll: function() {
-        // @todo
-        this.replyMessage();
+        var grid = $(this.el.id);
+        var row = grid.getAttribute('selectedrow');
+        var recordId = grid.rows[row].getAttribute('rec_id');
+
+        this.reply({
+            replyEmailId: recordId,
+            replyToAll: true
+        });
     },
 
     forwardMessage: function() {

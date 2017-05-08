@@ -52,10 +52,18 @@ class c_Email extends Config
 
     function getReplyFields($params) {
         $replyEmailId = $params['replyEmailId'];
+        $replyToAll = isset($params['replyToAll']) ? $params['replyToAll'] : false;
         $con = $this->connection;
 
         $result = GetFormatedFieldValuesByFieldValue('Email', 'ID', $replyEmailId, array('e_from', 'Subject', 'body'), $con);
         $result['FieldValues'][0]['Name'] = 'e_to';
+
+        if ($replyToAll) {
+            $to = GetFieldValueByID('Email', $replyEmailId, 'e_to', $con);
+            $addresses = $result['FieldValues'][0]['Value'] . ', ' . $to;
+            $result['FieldValues'][0]['Value'] = $addresses;
+        }
+
         // miv 02.08.2010: если письмо привязано к инциденту, то в теме письма долен быть его номер
         $subject = $result['FieldValues'][1]['Value'];
         list($incident_id) = GetFieldValuesByFieldValue('email', 'id', $replyEmailId, array('incidentid'), $con);
