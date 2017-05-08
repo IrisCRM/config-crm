@@ -78,6 +78,10 @@ irisControllers.classes.c_Email = IrisCardController.extend({
                 this.isDefaultValuesLoading = true; // miv 13.01.2011: чтобы не вызывалось событие, так как оно вешается до того, как приходят данные
                 this.setReplyFields(form, cardParams.replyEmailId, cardParams.replyToAll);
             }
+            if (cardParams.forwardEmailId) {
+                this.isDefaultValuesLoading = true;
+                this.setForwardFields(form, cardParams.forwardEmailId);
+            }
 
             //Выберем ящик отправки письма по умолчанию
             this.fieldValue('EmailAccountID', jQuery('#EmailAccountID').find('option[is_primary="1"]').val());
@@ -340,6 +344,29 @@ irisControllers.classes.c_Email = IrisCardController.extend({
                 this.isDefaultValuesLoading = false;
 
                 // сохраняем текст письма, на которое отвечаем
+                form.setAttribute('parent_body', GetFieldValueByFieldName(data.FieldValues, '_parent_body'));
+                form._hash.value = GetCardMD5(get_window_id(form));
+            }
+        });
+    },
+
+    setForwardFields: function(form, forwardEmailId) {
+        var self = this;
+
+        Transport.request({
+            section: "Email",
+            'class': "c_Email",
+            method: 'getForwardFields',
+            parameters: {
+                forwardEmailId: forwardEmailId
+            },
+            onSuccess: function(transport) {
+                var data = transport.responseText.evalJSON().data;
+
+                self.setFields(data);
+
+                this.isDefaultValuesLoading = false;
+
                 form.setAttribute('parent_body', GetFieldValueByFieldName(data.FieldValues, '_parent_body'));
                 form._hash.value = GetCardMD5(get_window_id(form));
             }

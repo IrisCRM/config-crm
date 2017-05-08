@@ -166,8 +166,18 @@ irisControllers.classes.g_Email = IrisGridController.extend({
     },
 
     forwardMessage: function() {
-        // @todo
-        this.replyMessage();
+        var grid = $(this.el.id);
+        var row = grid.getAttribute('selectedrow');
+        var recordId = grid.rows[row].getAttribute('rec_id');
+
+        openCard({
+            source_type: 'grid',
+            source_name: 'Email',
+            rec_id: '',
+            card_params: Object.toJSON({
+                forwardEmailId: recordId
+            })
+        });
     },
 
     fetchEmail: function(element) {

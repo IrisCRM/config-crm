@@ -53,6 +53,8 @@ class s_Email extends Config
         $con = $this->connection;
         $contactId = $this->fieldValue($params['old_data'], 'ContactID');
         $result = GetLinkedValues('Contact', $contactId, array('Account'), $con);
+        $email = GetFieldValueByID('Contact', $contactId, 'email');
+        $result = FieldValueFormat('e_to', $email, '', $result);
 
         return $result;
     }

@@ -93,4 +93,42 @@ class c_Email extends Config
 
         return $result;
     }
+
+    function getForwardFields($params) {
+        $replyEmailId = $params['forwardEmailId'];
+
+        $result = GetFormatedFieldValuesByFieldValue('Email', 'ID', $replyEmailId, ['Subject', 'body']);
+
+        $subject = $result['FieldValues'][0]['Value'];
+        list($incidentId) = GetFieldValuesByFieldValue('email', 'id', $replyEmailId, ['incidentid']);
+        if ($incidentId != '') {
+            list($incidentNumber) = GetFieldValuesByFieldValue('incident', 'id', $incidentId, ['number']);
+            $result = FieldValueFormat('IncidentID', $incidentId, $incidentNumber, $result);
+            if (iris_preg_match("/\\[\\d{6}-\\d+\\]/", $subject, $matches, PREG_OFFSET_CAPTURE) == 0) {
+                // если в теме письма не обнаружили инцидента
+                $result['FieldValues'][0]['Value'] = 'Fwd: ['.$incidentNumber.'] '.$result['FieldValues'][0]['Value'];
+            }
+        } else {
+            if (iris_substr($subject, 0, 3) != 'Re:') {
+                $result['FieldValues'][0]['Value'] = 'Fwd: ' . $subject;
+            }
+        }
+
+        // подставим текст письма как шаблон ответа + текст старого письма
+        $templateid = GetFieldValueByFieldValue('contact', 'id', GetUserId(), 'emailtemplateid');
+        $templatebody = GetFieldValueByFieldValue('email', 'id', $templateid, 'body');
+        $templatebody = FillFormFromText($templatebody, 'Contact', null);
+
+        $parentbody = '<br><br>Пересылаемое сообщение:<br>'
+            . '<BLOCKQUOTE style="margin: 5px 0 0 5px; padding: 0 0 0 5px; border-left: 2px solid #484F9E">'
+            . GetFieldValueByFieldValue('email', 'id', $replyEmailId, 'body')
+            . '</BLOCKQUOTE>';
+        $result['FieldValues'][1]['Value'] = json_convert($templatebody).json_convert($parentbody);
+        $result['FieldValues'][] = [
+            "Name" => '_parent_body',
+            "Value" => json_convert($parentbody),
+        ];
+
+        return $result;
+    }
 }
