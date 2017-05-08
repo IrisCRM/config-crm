@@ -138,6 +138,15 @@ irisControllers.classes.g_Email = IrisGridController.extend({
     },
 
     reply: function(data) {
+        var grid = $(this.el.id);
+        var row = grid.getAttribute('selectedrow');
+        var recordId = grid.rows[row].getAttribute('rec_id');
+
+        if (!data) {
+            data = {};
+        }
+        data.replyEmailId = recordId;
+
         openCard({
             source_type: 'grid',
             source_name: 'Email',
@@ -147,22 +156,11 @@ irisControllers.classes.g_Email = IrisGridController.extend({
     },
 
     replyMessage: function() {
-        var grid = $(this.el.id);
-        var row = grid.getAttribute('selectedrow');
-        var recordId = grid.rows[row].getAttribute('rec_id');
-
-        this.reply({
-            replyEmailId: recordId
-        });
+        this.reply();
     },
 
     replyToAll: function() {
-        var grid = $(this.el.id);
-        var row = grid.getAttribute('selectedrow');
-        var recordId = grid.rows[row].getAttribute('rec_id');
-
         this.reply({
-            replyEmailId: recordId,
             replyToAll: true
         });
     },
