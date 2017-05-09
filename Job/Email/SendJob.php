@@ -82,7 +82,10 @@ SQL;
             }
 
             // проставление статуса "Отправленое" (или "Рассылка - отправленное")
-            $sql = "update iris_email set emailtypeid = (select et.id from iris_emailtype et where et.code=:code) where id=:id";
+            $sql = "update iris_email 
+                set emailtypeid = (select et.id from iris_emailtype et where et.code=:code),
+                messagedate = now()
+                where id=:id";
             $cmd = $db->connection->prepare($sql);
             $cmd->execute([
                 ":id" => $message->emailId,
