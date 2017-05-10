@@ -167,6 +167,10 @@ class Fetcher extends Config implements FetcherInterface
     {
         $readedIds = json_decode($hasReadedStr, true);
 
+        if (!is_array($readedIds)) {
+            $readedIds = array();
+        }
+
         if ($isSeen and !in_array($ownerId, $readedIds)) {
             $readedIds[] = $ownerId;
         }
