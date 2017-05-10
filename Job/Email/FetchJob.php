@@ -30,7 +30,7 @@ class FetchJob extends AbstractJob
             do {
                 $result = $fetcher->fetch($message->emailAccountId);
                 $fetcher->syncFlags($message->emailAccountId);
-            } while ($result['messagesCount'] > 0 || !$result["isSuccess"]);
+            } while ($result['messagesCount'] > 0 && $result["isSuccess"]);
         });
     }
 }
