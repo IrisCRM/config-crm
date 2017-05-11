@@ -123,17 +123,33 @@ class ImapAdapter
     {
         $stream = $this->mailbox->getImapStream();
         $startUid = ($uid ? $uid : 1);
-        $sequence = $startUid . ":*";
-        $this->debug("ImapAdapter getEmailsOverviewFromUid sequence", $sequence);
 
-        $result = imap_fetch_overview($stream, $sequence, FT_UID);
-        $this->debug("ImapAdapter getEmailsOverviewFromUid imap_fetch_overview OK. count:", count($result));
+        $finals = [
+            $startUid + $batchSize,
+            $startUid + 10 * $batchSize,
+            $startUid + 100 * $batchSize,
+            '*',
+        ];
+        if ($batchSize == 0) {
+            $finals = ['*'];
+        }
+        foreach ($finals as $final) {
+            $sequence = $startUid . ":" . $final;
+            $this->debug("ImapAdapter getEmailsOverviewFromUid sequence", $sequence);
 
-        if ($batchSize > 0 and count($result) > $batchSize) {
-            $result = array_slice($result, 0, $batchSize);
+            $result = imap_fetch_overview($stream, $sequence, FT_UID);
+            $this->debug("ImapAdapter getEmailsOverviewFromUid imap_fetch_overview OK. count:", count($result));
+
+            if (count($result) > 0) {
+                if (count($result) > $batchSize) {
+                    $result = array_slice($result, 0, $batchSize);
+                }
+
+                return $result;
+            }
         }
 
-        return $result;
+        return [];
     }
 
     protected function convertIncomingMailToArray($email, $emailOverview)

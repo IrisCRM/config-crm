@@ -14,7 +14,7 @@ use Iris\Job\AbstractJob;
 class FetchJob extends AbstractJob
 {
     const MUTEX_PREFIX = 'email_fetch_';
-    const FETCH_BATCH_SIZE = 100;
+    const FETCH_BATCH_SIZE = 10;
 
     /**
      * @inheritdoc
