@@ -229,7 +229,9 @@ class Fetcher extends Config implements FetcherInterface
     {
         $con = $this->connection;
 
-        $sql = "select id, address as server, port, encryption as protocol, login, password from iris_emailaccount 
+        $sql = "select id, address as server, port,
+                case when encryption <> 'no' then encryption else null end as protocol, login, password
+                from iris_emailaccount 
                 where isactive='Y' and fetch_protocol = 2 and (id = :emailaccountid or :emailaccountid is null)";
 
         $cmd = $con->prepare($sql);
