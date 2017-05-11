@@ -9,7 +9,7 @@ interface FetcherInterface
      * @param string $emailAccountId
      * @return mixed
      */
-    public function fetch($emailAccountId);
+    public function fetch($emailAccountId, $batchSize);
 
     /**
      * @param $emailAccountId

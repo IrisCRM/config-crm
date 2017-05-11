@@ -16,7 +16,7 @@ class FetcherPop3Adapter implements FetcherInterface
     /**
      * @inheritdoc
      */
-    public function fetch($emailAccountId)
+    public function fetch($emailAccountId, $batchSize)
     {
         return $this->pop3Fetcher->fetchEmail($emailAccountId);
     }

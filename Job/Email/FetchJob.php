@@ -14,6 +14,7 @@ use Iris\Job\AbstractJob;
 class FetchJob extends AbstractJob
 {
     const MUTEX_PREFIX = 'email_fetch_';
+    const FETCH_BATCH_SIZE = 100;
 
     /**
      * @inheritdoc
@@ -28,7 +29,7 @@ class FetchJob extends AbstractJob
         $mutex = MutexFactory::create(static::MUTEX_PREFIX . $message->emailAccountId);
         $mutex->synchronized(function () use ($fetcher, $message) {
             do {
-                $result = $fetcher->fetch($message->emailAccountId);
+                $result = $fetcher->fetch($message->emailAccountId, static::FETCH_BATCH_SIZE);
                 $fetcher->syncFlags($message->emailAccountId);
             } while ($result['messagesCount'] > 0 && $result["isSuccess"]);
         });
