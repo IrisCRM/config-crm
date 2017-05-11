@@ -30,8 +30,8 @@ class FetchJob extends AbstractJob
         $mutex->synchronized(function () use ($fetcher, $message) {
             do {
                 $result = $fetcher->fetch($message->emailAccountId, static::FETCH_BATCH_SIZE);
-                $fetcher->syncFlags($message->emailAccountId);
             } while ($result['messagesCount'] > 0 && $result["isSuccess"]);
+            $fetcher->syncFlags($message->emailAccountId);
         });
     }
 }
