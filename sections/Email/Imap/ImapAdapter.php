@@ -44,7 +44,7 @@ class ImapAdapter
 
     protected function getConnectionString($server, $port, $protocol)
     {
-        return "{" . $server . ":" . $port . "/imap" . ($protocol ? "/" . $protocol : "") . "}";
+        return "{" . $server . ":" . $port . "/imap" . ($protocol ? "/" . $protocol . "/novalidate-cert" : "") . "}";
     }
 
     protected function convertMailboxName($mailboxName)
