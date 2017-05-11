@@ -211,6 +211,7 @@ class Fetcher extends Config implements FetcherInterface
             $imapAdapter = $this->getImapAdapter($emailAccount);
             foreach ($mailboxes as $mailbox) {
                 $this->debug("mailbox", $mailbox);
+                $this->debug("mailbox lastuid", $mailbox["lastuid"] + 1);
 
                 $fetchResult = $this->fetchMailbox($imapAdapter, $mailbox, $mailbox["lastuid"] + 1,
                     $batchSize - $result["messagesCount"]);

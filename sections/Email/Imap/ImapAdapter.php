@@ -23,7 +23,7 @@ class ImapAdapter
 
         $this->tempDir = $this->createTempDir();
         $this->connectionString = $this->getConnectionString($server, $port, $protocol);
-        $this->debug("ImapAdapter __construct", $this->tempDir);
+        $this->debug("ImapAdapter __construct", $this->tempDir .', ' . $this->connectionString);
         $this->mailbox = new Mailbox($this->connectionString, $login, $password, $this->tempDir);
         $this->debug("ImapAdapter __construct ok");
     }
@@ -127,6 +127,7 @@ class ImapAdapter
         $this->debug("ImapAdapter getEmailsOverviewFromUid sequence", $sequence);
 
         $result = imap_fetch_overview($stream, $sequence, FT_UID);
+        $this->debug("ImapAdapter getEmailsOverviewFromUid imap_fetch_overview OK. count:", count($result));
 
         if ($batchSize > 0 and count($result) > $batchSize) {
             $result = array_slice($result, 0, $batchSize);
