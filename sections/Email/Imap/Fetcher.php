@@ -425,11 +425,11 @@ class Fetcher extends Config implements FetcherInterface
         $result = $body;
 
         foreach ($attachments as $attachment) {
-            $placeholder = $cidPlaceholders[$attachment["attachmentId"]];
-            if (empty($placeholder)) {
+            if (!array_key_exists($attachment["attachmentId"], $cidPlaceholders)) {
                 continue;
             }
 
+            $placeholder = $cidPlaceholders[$attachment["attachmentId"]];
             $replaceTo = "web.php?_func=DownloadFile&table=iris_File&id=".$attachment["fileId"]."&column=file_file";
             $result = str_replace($placeholder, $replaceTo, $result);
         }
