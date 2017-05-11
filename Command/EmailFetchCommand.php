@@ -34,9 +34,9 @@ class EmailFetchCommand extends Command
                 'ID of email account'
             )
             ->addOption(
-                'queue',
+                'sync',
                 null,
-                InputOption::VALUE_OPTIONAL,
+                InputOption::VALUE_NONE,
                 'Fetch immediately in sync mode'
             )
         ;
@@ -46,7 +46,7 @@ class EmailFetchCommand extends Command
     {
         $emailAccountId = $input->getOption('email-account-id');
 
-        if ($input->getOption('queue') == 'sync') {
+        if ($input->getOption('sync')) {
             $container = Iris::$app->getContainer();
 
             $container
