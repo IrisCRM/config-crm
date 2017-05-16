@@ -163,7 +163,7 @@ class ImapAdapter
             "subject" => $email->subject,
             "flagged" => $emailOverview->flagged,
             "seen" => $emailOverview->seen,
-            "body" => $email->textHtml,
+            "body" => !empty($email->textHtml) ? $email->textHtml : $email->textPlain,
             "attachments" => array(),
         );
 
