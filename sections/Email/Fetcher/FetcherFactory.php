@@ -38,7 +38,7 @@ class FetcherFactory
             return new Imap\Fetcher();
         }
         elseif ($protocol == IrisDomain::getDomain('d_fetch_protocol')->get('pop3', 'code', 'db_value')) {
-            return new EmailFetcher();
+            return new FetcherPop3Adapter();
         }
 
         throw new IrisException('Unknown email protocol ' . $protocol);

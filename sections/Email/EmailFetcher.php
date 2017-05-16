@@ -5,6 +5,7 @@ namespace Iris\Config\CRM\sections\Email;
 use Config;
 use Iris\Iris;
 use PDO;
+use Iris\IrisException as Exception;
 
 class EmailFetcher extends Config
 {

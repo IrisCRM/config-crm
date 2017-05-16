@@ -10,7 +10,7 @@ class FetcherPop3Adapter implements FetcherInterface
 
     public function __construct()
     {
-        $pop3Fetcher = new EmailFetcher();
+        $this->pop3Fetcher = new EmailFetcher();
     }
 
     /**
