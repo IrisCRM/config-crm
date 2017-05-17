@@ -245,7 +245,8 @@ class Fetcher extends Config implements FetcherInterface
     {
         $con = $this->connection;
 
-        $sql = "select T0.id, T0.name, T0.lastuid, T1.ownerid as emailaccountownerid
+        $sql = "select T0.id, T0.name, T0.lastuid, T1.ownerid as emailaccountownerid,
+          T0.emailaccountid as emailaccountid
           from iris_emailaccount_mailbox T0
           left join iris_emailaccount T1 on T0.emailaccountid = T1.id
           where emailaccountid = :emailaccountid";
@@ -315,7 +316,7 @@ class Fetcher extends Config implements FetcherInterface
         $this->debug("saveEmail attachments", $attachments);
         $this->debug("saveEmail cidPlaceholders", $email["cidPlaceholders"]);
 
-        $emailId = $this->insertEmail($email, $body, $mailbox["id"], $mailbox["emailaccountownerid"],
+        $emailId = $this->insertEmail($email, $body, $mailbox["emailaccountid"], $mailbox["id"], $mailbox["emailaccountownerid"],
             $accountId, $contactId, $ownerId, $incidentId);
 
         $this->insertAttachments($emailId, $mailbox["id"], $accountId, $contactId, $ownerId, $incidentId, $attachments);
@@ -437,15 +438,15 @@ class Fetcher extends Config implements FetcherInterface
         return $result;
     }
 
-    protected function insertEmail($email, $body, $mailboxId, $emailAccountOwnerId, $accountId, $contactId, $ownerId, $incidentId)
+    protected function insertEmail($email, $body, $emailAccountId, $mailboxId, $emailAccountOwnerId, $accountId, $contactId, $ownerId, $incidentId)
     {
         $emailId = create_guid();
         $readedStr = $email["seen"] ? json_encode(array($emailAccountOwnerId)) : null;
 
         $sql = "insert into iris_email(id, createid, createdate, uid, e_from, e_to, subject, body, emailtypeid,
-            mailboxid, accountid, contactid, ownerid, messagedate, incidentid, isimportant, has_readed) 
+            emailaccountid, mailboxid, accountid, contactid, ownerid, messagedate, incidentid, isimportant, has_readed) 
             values (:id, :createid, now(), :uid, :e_from, :e_to, :subject, :body,
-            (select id from iris_emailtype where code='Inbox'), :mailboxid,
+            (select id from iris_emailtype where code='Inbox'), :emailaccountid, :mailboxid,
             :accountid, :contactid, :ownerid, to_timestamp(:messagedate, 'DD.MM.YYYY HH24:MI:SS'), :incidentid,
             :isimportant, :readedstr)";
 
@@ -459,6 +460,7 @@ class Fetcher extends Config implements FetcherInterface
             ":subject" => $email["subject"],
             ":body" => $body,
             ":accountid" => $accountId,
+            ":emailaccountid" => $emailAccountId,
             ":mailboxid" => $mailboxId,
             ":contactid" => $contactId,
             ":ownerid" => $ownerId,
