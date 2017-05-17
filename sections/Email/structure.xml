@@ -34,7 +34,7 @@
 				<ITEM caption="Черновики" where_clause="ET.Code='Draft'"/>
 				<ITEM caption="Шаблоны" where_clause="ET.Code='Template'"/>
 			</ITEM>
-			<ITEM caption="Почтовый ящик" item_style="font-weight: bold;" auto_table="iris_EmailAccount" auto_filter_column="email" auto_display_column="email" auto_sort_column="email" auto_where_clause="T0.e_to='#VALUE#'" 
+			<ITEM caption="Почтовый ящик" item_style="font-weight: bold;" auto_table="iris_EmailAccount" auto_filter_column="id" auto_display_column="email" auto_sort_column="email" auto_where_clause="T0.emailaccountid='#VALUE#'"
             values_where_clause="ID in (select tt.EmailAccountID from iris_emailaccount_defaultaccess tt where tt.ContactID = _iris_user_id[] and tt.r = '1') or ID in (select tt.EmailAccountID from iris_emailaccount_outboxaccess tt where tt.ContactID = _iris_user_id[] and tt.r = '1')"/>
          </FILTERS>
       </GRID>
