@@ -163,7 +163,7 @@ class ImapAdapter
             "subject" => $email->subject,
             "flagged" => $emailOverview->flagged,
             "seen" => $emailOverview->seen,
-            "body" => !empty($email->textHtml) ? $email->textHtml : $email->textPlain,
+            "body" => !empty($email->textHtml) ? $email->textHtml : $this->convertLineEndingsToBR($email->textPlain),
             "attachments" => array(),
         );
 
@@ -178,6 +178,11 @@ class ImapAdapter
         $result["cidPlaceholders"] = $email->getInternalLinksPlaceholders();
 
         return $result;
+    }
+
+    protected function convertLineEndingsToBR($string)
+    {
+        return nl2br($string);
     }
 
     protected function getDirForUid($uid)
