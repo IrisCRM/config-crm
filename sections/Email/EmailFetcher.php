@@ -540,7 +540,7 @@ class EmailFetcher extends Config
             if ($messageDateStr == '') {
                 $messageDateStr = date('d.m.Y H:i:s');
             }
-            $insert_sql = "insert into iris_email(id, createdate, e_from, e_to, subject, body, emailtypeid, accountid, contactid, ownerid, messagedate, incidentid) values (:id, now(), :e_from, :e_to, :subject, :body, :emailtypeid, :accountid, :contactid, :ownerid, to_timestamp('".$messageDateStr."', 'DD.MM.YYYY HH24:MI:SS'), :incidentid)";
+            $insert_sql = "insert into iris_email(id, createdate, e_from, e_to, subject, body, emailtypeid, accountid, contactid, ownerid, messagedate, incidentid, emailaccountid) values (:id, now(), :e_from, :e_to, :subject, :body, :emailtypeid, :accountid, :contactid, :ownerid, to_timestamp('".$messageDateStr."', 'DD.MM.YYYY HH24:MI:SS'), :incidentid, :emailaccountid)";
 
             $cmd=$con->prepare($insert_sql);
             $cmd->bindParam(":id", $EmailID);
@@ -553,6 +553,7 @@ class EmailFetcher extends Config
             $cmd->bindParam(":contactid", $contactID);
             $cmd->bindParam(":ownerid", $p_ownerID);
             $cmd->bindParam(":incidentid", $incident[0]['id']);
+            $cmd->bindParam(":emailaccountid", $p_emailaccountID);
             $cmd->execute();
             $this->debug($cmd->errorInfo(), 'inserting email status', 'info');
             if ($cmd->errorCode() != '00000')
