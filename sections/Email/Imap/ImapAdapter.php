@@ -23,7 +23,7 @@ class ImapAdapter
 
         $this->tempDir = $this->createTempDir();
         $this->connectionString = $this->getConnectionString($server, $port, $protocol);
-        $this->debug("ImapAdapter __construct", $this->tempDir .', ' . $this->connectionString);
+        $this->debug("ImapAdapter __construct", $this->tempDir .', ' . $this->connectionString . ', ' . $login);
         $this->mailbox = new Mailbox($this->connectionString, $login, $password, $this->tempDir);
         $this->debug("ImapAdapter __construct ok");
     }

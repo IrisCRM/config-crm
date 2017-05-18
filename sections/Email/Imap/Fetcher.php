@@ -3,9 +3,11 @@
 namespace Iris\Config\CRM\sections\Email\Imap;
 
 use Config;
+use Iris\Config\CRM\sections\Email\EmailException;
 use Iris\Config\CRM\sections\Email\Fetcher\FetcherInterface;
 use Iris\Iris;
 use PDO;
+use Psr\Log\LoggerInterface;
 
 /**
  * Fetch emails using IMAP
@@ -14,8 +16,13 @@ use PDO;
  */
 class Fetcher extends Config implements FetcherInterface
 {
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
-    private $supportEmails = array();
+
+    private $supportEmails = [];
+
     const MAX_INCIDENT_BODY_LENGTH = 1000;
 
     function __construct()
@@ -108,6 +115,7 @@ class Fetcher extends Config implements FetcherInterface
             $this->debug("syncMailboxFlags sync flags for", $serverOverview["uid"]);
             $this->updateFlags($dbOverview, $serverOverview);
         }
+        $this->debug("syncMailboxFlags completed");
     }
 
     protected function getEmailsOverviewFromDB($mailboxId)
@@ -272,11 +280,20 @@ class Fetcher extends Config implements FetcherInterface
 
         foreach ($emails as $email) {
             $this->debug("fetch email", array($email["uid"], $email["from"], $email["subject"]));
-            if (!$this->isNewEmail($mailbox["id"], $email["uid"])) {
-                $this->debug("isNewEmail false");
-                 continue;
+            try {
+                if (!$this->isNewEmail($mailbox["id"], $email["uid"])) {
+                    $this->debug("isNewEmail false");
+                    throw new EmailException('Just continue');
+                }
+
+                $this->saveEmail($mailbox, $email);
             }
-            $this->saveEmail($mailbox, $email);
+            catch (EmailException $e) {
+                // Just continue
+            }
+
+            $this->updateLastFetchUid($mailbox["id"], $email["uid"]);
+
             $messagesCount++;
         }
 
@@ -320,8 +337,6 @@ class Fetcher extends Config implements FetcherInterface
             $accountId, $contactId, $ownerId, $incidentId);
 
         $this->insertAttachments($emailId, $mailbox["id"], $accountId, $contactId, $ownerId, $incidentId, $attachments);
-
-        $this->updateLastFetchUid($mailbox["id"], $email["uid"]);
     }
 
     protected function getEmailLinks($from, $subject)
@@ -451,7 +466,7 @@ class Fetcher extends Config implements FetcherInterface
             :isimportant, :readedstr)";
 
         $cmd = $this->connection->prepare($sql);
-        $cmd->execute(array(
+        $emailParams = [
             ":id" => $emailId,
             ":createid" => $this->_User->property('id'),
             ":uid" => $email["uid"],
@@ -468,10 +483,16 @@ class Fetcher extends Config implements FetcherInterface
             ":incidentid" => $incidentId,
             ":isimportant" => $email["flagged"],
             ":readedstr" => $readedStr,
-        ));
+        ];
+        $cmd->execute($emailParams);
 
         if ($cmd->errorCode() != '00000') {
-            throw new \RuntimeException('Email is not inserted: ' . var_export($cmd->errorInfo(), true));
+            // Из-за кривой кодировки не все попадает в лог, поэтому тут столько сообщений
+            $this->logger->error('Cant insert email', $cmd->errorInfo());
+            $this->logger->error('Cant insert email with next body', [ $emailParams[':body'] ]);
+            unset($emailParams[':body']);
+            $this->logger->error('Cant insert email (other params)', $emailParams);
+            throw new EmailException('Email is not inserted: ' . var_export($cmd->errorInfo(), true));
         }
 
         $this->insertAccess("iris_email", $emailId, $mailboxId);
