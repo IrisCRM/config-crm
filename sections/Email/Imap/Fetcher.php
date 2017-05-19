@@ -407,7 +407,8 @@ class Fetcher extends Config implements FetcherInterface
         ));
 
         if ($cmd->errorCode() != '00000') {
-            throw new \RuntimeException('Incident is not inserted: ' . var_export($cmd->errorInfo(), true));
+            $this->logger->error('Cant insert incident ' . $incidentNumber, $cmd->errorInfo());
+            throw new EmailException('Cant insert incident');
         }
 
         // увеличим номер инцидента
@@ -530,7 +531,8 @@ class Fetcher extends Config implements FetcherInterface
         ));
 
         if ($cmd->errorCode() != '00000') {
-            throw new \RuntimeException('Attachment is not inserted: ' . var_export($cmd->errorInfo(), true));
+            $this->logger->error('Cant insert attachment for email ' . $emailId, $cmd->errorInfo());
+            throw new EmailException('Cant insert attachment for email');
         }
 
         if (!rename($attachment["filePath"], $fileRealPath)) {
