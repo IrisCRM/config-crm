@@ -271,10 +271,10 @@ class Fetcher extends Config implements FetcherInterface
             $emailAccount["login"], $emailAccount["password"]);
     }
 
-    protected function fetchMailbox(ImapAdapter $imapAdapter, $mailbox, $lastUid, $batchSize)
+    protected function fetchMailbox(ImapAdapter $imapAdapter, $mailbox, $fetchFromUid, $batchSize)
     {
         $imapAdapter->selectMailbox($mailbox["name"]);
-        $emails = $imapAdapter->getEmailsFromUid($lastUid, $batchSize);
+        $emails = $imapAdapter->getEmailsFromUid($fetchFromUid, $batchSize);
         $this->debug("getEmailsFromUid count", count($emails));
         $messagesCount = 0;
 
@@ -559,10 +559,19 @@ class Fetcher extends Config implements FetcherInterface
 
     protected function updateLastFetchUid($mailboxId, $uid)
     {
-        $cmd = $this->connection->prepare("update iris_emailaccount_mailbox set lastuid=:uid where id=:id");
+        $this->logger->debug("updateLastFetchUid", [
+            'mailbox_id' => $mailboxId,
+            'uid' => $uid,
+        ]);
+        $cmd = $this->connection->prepare("
+            update iris_emailaccount_mailbox 
+            set lastuid = case when coalesce(lastuid, 0) < coalesce(:uid1, 0) then coalesce(:uid2, 0) else lastuid end  
+            where id = :id
+        ");
         $cmd->execute(array(
             ":id" => $mailboxId,
-            ":uid" => $uid,
+            ":uid1" => $uid,
+            ":uid2" => $uid,
         ));
     }
 
