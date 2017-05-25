@@ -469,7 +469,7 @@ class Fetcher extends Config implements FetcherInterface
         $cmd = $this->connection->prepare($sql);
         $emailParams = [
             ":id" => $emailId,
-            ":createid" => $this->_User->property('id'),
+            ":createid" => $this->_User ? $this->_User->property('id') : null,
             ":uid" => $email["uid"],
             ":e_from" => $email["from"],
             ":e_to" => $email["to"],
