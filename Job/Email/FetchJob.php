@@ -10,6 +10,7 @@ use Iris\Job\AbstractJob;
 
 /**
  * Fetch email using IMAP or POP3 protocol according to email account settings
+ * @usage ./iris iris:worker email:fetch
  */
 class FetchJob extends AbstractJob
 {

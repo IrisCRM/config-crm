@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * Send email using IMAP or POP3 protocol according to email account settings
+ * @usage ./iris iris:worker email:send
  */
 class SendJob extends AbstractJob
 {
