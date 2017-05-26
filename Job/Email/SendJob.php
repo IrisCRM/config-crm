@@ -24,6 +24,10 @@ class SendJob extends AbstractJob
      */
     public function handle(AbstractMessage $message)
     {
+        if (!function_exists('email_send_message'))
+        {
+            include_once Iris::$app->getCoreDir() . 'core/engine/emaillib.php';
+        }
         $mutex = MutexFactory::create(static::MUTEX_PREFIX . $message->emailAccountId);
         $mutex->synchronized(function () use ($message) {
             /** @var LoggerInterface $logger */
