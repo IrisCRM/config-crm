@@ -102,6 +102,7 @@ class Fetcher extends Config implements FetcherInterface
 
     protected function syncMailboxFlags(ImapAdapter $imapAdapter, $mailbox)
     {
+        $this->debug("syncMailboxFlags emailAccountId", $mailbox);
         $dbOverviews = $this->getEmailsOverviewFromDB($mailbox['id']);
         $dbOverviewLookup = $this->createOverviewLookup($dbOverviews);
         $serverOverviews = $this->getEmailsOverviewFromServer($imapAdapter, $mailbox["name"]);
@@ -204,10 +205,9 @@ class Fetcher extends Config implements FetcherInterface
 
         $this->supportEmails = $this->getSupportEmails();
 
-        $this->debug("");
+        $this->debug("---------------------------------------------------------------------------------------");
         $this->debug("fetch emailAccountId", $emailAccountId);
         $emailAccounts = $this->getEmailAccounts($emailAccountId);
-        $this->debug("", $emailAccounts);
         foreach ($emailAccounts as $emailAccount) {
             $this->debug("emailAccount",$emailAccount);
 
@@ -219,7 +219,7 @@ class Fetcher extends Config implements FetcherInterface
             $imapAdapter = $this->getImapAdapter($emailAccount);
             foreach ($mailboxes as $mailbox) {
                 $this->debug("mailbox", $mailbox);
-                $this->debug("mailbox lastuid", $mailbox["lastuid"] + 1);
+                $this->debug("mailbox lastuid (DB)", $mailbox["lastuid"]);
 
                 $fetchResult = $this->fetchMailbox($imapAdapter, $mailbox, $mailbox["lastuid"] + 1,
                     $batchSize - $result["messagesCount"]);
