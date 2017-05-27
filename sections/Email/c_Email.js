@@ -147,7 +147,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         form._hash.value = GetCardMD5(get_window_id(form));
     },
 
-    onCardResize() {
+    onCardResize: function() {
         var window = Windows.getWindow(this.el.id);
         var form = $(this.el.id).down('form');
         var editor = CKEDITOR.instances[form.body.getAttribute('actualelement')];
@@ -317,7 +317,10 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         return params;
     },
 
-    setReplyFields: function(form, replyEmailId, replyToAll = false) {
+    setReplyFields: function(form, replyEmailId, replyToAll) {
+        if (replyToAll === 'undefined') {
+            replyToAll = false;
+        }
         var self = this;
 
         $(form._params).insert({'after': '<input id="_reply_email_id" type="hidden" value="'+replyEmailId+'">'});
