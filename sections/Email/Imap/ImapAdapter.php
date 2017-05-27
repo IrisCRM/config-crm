@@ -15,6 +15,7 @@ class ImapAdapter
     protected $connectionString;
     protected $tempDir;
     protected $mailbox;
+    protected $mailboxNextUid;
     protected $logger;
 
     function __construct($server, $port, $protocol, $login, $password)
@@ -84,13 +85,15 @@ class ImapAdapter
     {
         $this->mailbox->switchMailbox(
             $this->connectionString . $this->convertMailboxName($mailboxName));
+        $status = $this->mailbox->statusMailbox();
+        $this->mailboxNextUid = $status->uidnext;
     }
 
     public function getEmailsOverview($mailboxName)
     {
         $result = array();
         $this->selectMailbox($mailboxName);
-        $emailOverviews = $this->getEmailsOverviewFromUid(0, 0);
+        $emailOverviews = $this->getEmailsOverviewFromUid(1, 0);
 
         foreach($emailOverviews as $emailOverview) {
             $result[] = array(
@@ -124,15 +127,29 @@ class ImapAdapter
         $stream = $this->mailbox->getImapStream();
         $startUid = ($uid ? $uid : 1);
 
-        $finals = [
-            $startUid + $batchSize,
-            $startUid + 10 * $batchSize,
-            $startUid + 100 * $batchSize,
-            '*',
-        ];
-        if ($batchSize == 0) {
-            $finals = ['*'];
+        $mailboxFinalUid = $this->mailboxNextUid - 1;
+        if ($uid > $mailboxFinalUid) {
+            $this->debug("ImapAdapter getEmailsOverviewFromUid: ",
+                "start uid is greater than final uid, skip mailbox");
+            return [];
         }
+
+        $finals = [];
+        $multiple = 1;
+        while (true) {
+            $finalUid = $startUid + $multiple * (!$batchSize ? 1 : $batchSize);
+            $finals[] = $finalUid;
+            $multiple *= 10;
+
+            if ($finalUid > $mailboxFinalUid) {
+                $finals[count($finals) - 1] = $mailboxFinalUid;
+                break;
+            }
+        }
+        if ($batchSize == 0) {
+            $finals = [$mailboxFinalUid]; // for sync flags
+        }
+
         foreach ($finals as $final) {
             $sequence = $startUid . ":" . $final;
             $this->debug("ImapAdapter getEmailsOverviewFromUid sequence", $sequence);
@@ -141,7 +158,7 @@ class ImapAdapter
             $this->debug("ImapAdapter getEmailsOverviewFromUid imap_fetch_overview OK. count:", count($result));
 
             if (count($result) > 0) {
-                if (count($result) > $batchSize) {
+                if ($batchSize > 0 and count($result) > $batchSize) {
                     $result = array_slice($result, 0, $batchSize);
                 }
 

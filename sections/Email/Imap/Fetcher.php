@@ -274,6 +274,7 @@ class Fetcher extends Config implements FetcherInterface
     protected function fetchMailbox(ImapAdapter $imapAdapter, $mailbox, $fetchFromUid, $batchSize)
     {
         $imapAdapter->selectMailbox($mailbox["name"]);
+        $this->debug("fetchMailbox selectMailbox", "OK");
         $emails = $imapAdapter->getEmailsFromUid($fetchFromUid, $batchSize);
         $this->debug("getEmailsFromUid count", count($emails));
         $messagesCount = 0;
