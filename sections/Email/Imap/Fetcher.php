@@ -287,14 +287,13 @@ class Fetcher extends Config implements FetcherInterface
                 }
 
                 $this->saveEmail($mailbox, $email);
+                $messagesCount++;
             }
             catch (EmailException $e) {
                 // Just continue
             }
 
             $this->updateLastFetchUid($mailbox["id"], $email["uid"]);
-
-            $messagesCount++;
         }
 
         return array(
