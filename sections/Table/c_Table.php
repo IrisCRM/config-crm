@@ -90,7 +90,7 @@ class c_Table extends Config
         }
 
         /** @var Loader $Loader */
-        $Loader = Iris::$app->getContainer()->get('Loader');
+        $Loader = Iris::$app->getContainer()->get('loader');
         $dictName = $Loader->getNewFileName('dictionary/' . $p_dict_code . '.xml');
         if (file_exists($dictName)) {
             return [
@@ -133,7 +133,7 @@ class c_Table extends Config
 
         // сохранение файла
         /** @var Loader $Loader */
-        $Loader = Iris::$app->getContainer()->get('Loader');
+        $Loader = Iris::$app->getContainer()->get('loader');
         $filename = $Loader->getNewFileName('dictionary/' . $p_dict_code . '.xml');
         $dirname = dirname($filename);
         if (!is_dir($dirname)) {

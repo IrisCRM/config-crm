@@ -5,6 +5,7 @@ namespace Iris\Config\CRM\sections\Email;
 use Config;
 use Iris\Iris;
 use PDO;
+use Iris\IrisException as Exception;
 
 class EmailFetcher extends Config
 {
@@ -40,7 +41,7 @@ class EmailFetcher extends Config
         $con = $this->connection;
 
         $this->debug('fetchEmail begin');
-        $res = $con->query("select address, port, encryption, login, password, id, last_id, last_n from iris_emailaccount where isactive='Y'")->fetchAll(PDO::FETCH_ASSOC);
+        $res = $con->query("select address, port, encryption, login, password, id, last_id, last_n from iris_emailaccount where isactive='Y' and fetch_protocol = 1")->fetchAll(PDO::FETCH_ASSOC);
         $cnt = 0;
         foreach ($res as $row) {
             $this->debug($row['address'].' ['.$row['login'], ']-------------------------- new mailbox', 'warn');
@@ -539,7 +540,7 @@ class EmailFetcher extends Config
             if ($messageDateStr == '') {
                 $messageDateStr = date('d.m.Y H:i:s');
             }
-            $insert_sql = "insert into iris_email(id, createdate, e_from, e_to, subject, body, emailtypeid, accountid, contactid, ownerid, messagedate, incidentid) values (:id, now(), :e_from, :e_to, :subject, :body, :emailtypeid, :accountid, :contactid, :ownerid, to_timestamp('".$messageDateStr."', 'DD.MM.YYYY HH24:MI:SS'), :incidentid)";
+            $insert_sql = "insert into iris_email(id, createdate, e_from, e_to, subject, body, emailtypeid, accountid, contactid, ownerid, messagedate, incidentid, emailaccountid) values (:id, now(), :e_from, :e_to, :subject, :body, :emailtypeid, :accountid, :contactid, :ownerid, to_timestamp('".$messageDateStr."', 'DD.MM.YYYY HH24:MI:SS'), :incidentid, :emailaccountid)";
 
             $cmd=$con->prepare($insert_sql);
             $cmd->bindParam(":id", $EmailID);
@@ -552,6 +553,7 @@ class EmailFetcher extends Config
             $cmd->bindParam(":contactid", $contactID);
             $cmd->bindParam(":ownerid", $p_ownerID);
             $cmd->bindParam(":incidentid", $incident[0]['id']);
+            $cmd->bindParam(":emailaccountid", $p_emailaccountID);
             $cmd->execute();
             $this->debug($cmd->errorInfo(), 'inserting email status', 'info');
             if ($cmd->errorCode() != '00000')

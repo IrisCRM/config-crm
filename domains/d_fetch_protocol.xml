@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<DOMAINS>
+  <DOMAIN name="d_fetch_protocol">
+    <VALUES>
+      <ITEM db_value="2" caption="IMAP" code="imap"/>
+      <ITEM db_value="1" caption="POP3" code="pop3"/>
+    </VALUES>
+  </DOMAIN>
+</DOMAINS>

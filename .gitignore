@@ -1,0 +1,23 @@
+# ignoring files
+composer.lock
+
+# for eclipse
+.settings/*
+.buildpath
+.project
+
+# netbeans files
+nbproject/*
+
+# phpstorm files
+.idea
+
+# sublime files
+*.sublime-workspace
+*.sublime-project
+*-test.xml
+*-test.xml~
+
+/vendor/
+
+tests/_output/*

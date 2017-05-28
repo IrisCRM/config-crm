@@ -3,6 +3,68 @@
 //********************************************************************
 
 irisControllers.classes.g_Email = IrisGridController.extend({
+    events: {
+        'click .grid_row_js td:nth-child(4)': 'onOpenMail',
+        'click .mail_header_title_js': 'onCloseMail'
+    },
+
+    onOpenMail: function(e) {
+        if (e.ctrlKey || e.shiftKey) {
+            return;
+        }
+        var el = jQuery(e.currentTarget).parents('.grid_row_js');
+        var recordId = el.attr('rec_id');
+        var wrapper = el.parents('.grid');
+        wrapper.find('.grid_row_js').show();
+        el.hide();
+        wrapper.find('.record_wrapper_js').hide();
+        var recordContent = wrapper.find('tr[parent_id="' + recordId + '"]');
+        if (recordContent.length === 1) {
+            recordContent.show();
+            return;
+        }
+        var columnCount = el.find('>td').length;
+        var recordWrapper = _.template(jQuery('#grid-record-wrapper').html(), {data: {
+            id: recordId,
+            columns: columnCount,
+            content: 'Loading...'
+        }});
+        var mailContent = jQuery(recordWrapper).insertAfter(el);
+        this.loadEmailData(recordId, mailContent, el);
+    },
+
+    loadEmailData: function(recordId, mailContent, el) {
+        var self = this;
+        this.request({
+            method: 'getMailData',
+            parameters: {
+                id: recordId
+            },
+            onSuccess: function (transport) {
+                var data = transport.responseText.evalJSON().data;
+                mailContent.find('.content_wrapper_js').html(_.template(jQuery('#grid-email').html(), {
+                    id: recordId,
+                    baseUrl: g_path,
+                    subject: data.subject,
+                    from: data.from,
+                    to: data.to,
+                    contactName: data.contactName,
+                    accountName: data.accountName,
+                    emailTypeCode: data.emailTypeCode,
+                    instanceName: self.instanceName(),
+                    files: data.files
+                }));
+                el.removeClass('grid_newmail');
+            }
+        });
+    },
+
+    onCloseMail: function(e) {
+        var wrapper = jQuery(e.currentTarget).parents('.grid');
+        wrapper.find('.record_wrapper_js').hide();
+        wrapper.find('.grid_row_js').show();
+    },
+
     isEmailFetching: 0,
 
     onOpen: function() {
@@ -17,10 +79,6 @@ irisControllers.classes.g_Email = IrisGridController.extend({
 
         //Добавление кнопок на панель
         g_InsertUserButtons(this.el.id, [
-            {
-                name: T.t('Ответить'),
-                onclick: this.instanceName() + ".replyMessage();"
-            },
             {
                 name: T.t('Отправить'),
                 onclick: this.instanceName() + ".sendEmail();"
@@ -79,7 +137,35 @@ irisControllers.classes.g_Email = IrisGridController.extend({
         }
     },
 
+    reply: function(data) {
+        var grid = $(this.el.id);
+        var row = grid.getAttribute('selectedrow');
+        var recordId = grid.rows[row].getAttribute('rec_id');
+
+        if (!data) {
+            data = {};
+        }
+        data.replyEmailId = recordId;
+
+        openCard({
+            source_type: 'grid',
+            source_name: 'Email',
+            rec_id: '',
+            card_params: Object.toJSON(data)
+        });
+    },
+
     replyMessage: function() {
+        this.reply();
+    },
+
+    replyToAll: function() {
+        this.reply({
+            replyToAll: true
+        });
+    },
+
+    forwardMessage: function() {
         var grid = $(this.el.id);
         var row = grid.getAttribute('selectedrow');
         var recordId = grid.rows[row].getAttribute('rec_id');
@@ -88,7 +174,9 @@ irisControllers.classes.g_Email = IrisGridController.extend({
             source_type: 'grid',
             source_name: 'Email',
             rec_id: '',
-            card_params: Object.toJSON({replyEmailId: recordId})
+            card_params: Object.toJSON({
+                forwardEmailId: recordId
+            })
         });
     },
 
@@ -110,8 +198,6 @@ irisControllers.classes.g_Email = IrisGridController.extend({
             onSuccess: function(transport) {
                 console.log('fetchEmail onSuccess');
                 var response = transport.responseText;
-                var data = null;
-                var grid = $(self.el.id);
 
                 self.isEmailFetching = 0;
 
@@ -119,30 +205,19 @@ irisControllers.classes.g_Email = IrisGridController.extend({
                     self.toggleFetchButton(element, true);
                 }
 
-                if ((response.toLowerCase().indexOf('maximum execution time', 0) > 0) ||
-                    (response.toLowerCase().indexOf('allowed memory size') > 0)) {
-                    // если скрипт закончился из-за времени(или из-за нехватки памяти), то сделаем вид что он считал новые письма
-                    response = '{"data": {"messagesCount": "1"}}';
-                }
-
                 if (!response.isJSON()) {
                     debug('ошибка проверки почты');
+                    self.notify(T.t('Возникла ошибка при получении почты'));
                     return;
                 }
 
-                data = response.evalJSON().data;
-                //Если есть новые письма, то загрузим все что осталось
-                if (data.messagesCount > 0) {
-                    self.fetchEmail(element);
-                } else {
-                    grid.setAttribute('page_show_rec_id', '');
-                    redraw_grid(self.el.id); // miv 10.09.2010: перерисуем грид после получения почты
-                }
+                self.notify(T.t('Отправлено задание на чтение почты'));
             },
             onFail: function(transport) {
                 console.log('fetchEmail onFail');
                 self.toggleFetchButton(element, true);
                 self.isEmailFetching = 0;
+                self.notify(T.t('Возникла ошибка при получении почты'));
             }
         });
         this.isEmailFetching = 1;
@@ -173,20 +248,15 @@ irisControllers.classes.g_Email = IrisGridController.extend({
             skipErrors: ['class_not_found', 'file_not_found'],
             onSuccess: function(transport) {
                 var response = transport.responseText;
-                var data = null;
-                var messageHTML = '';
+                var message;
 
-                if (!response.isJSON()) {
-                    messageHTML = T.t('Возникла ошибка при отправке почты');
-                    messageHTML += ':<br><textarea class="edtText" style="margin: 10px 5px 0px 5px; width: 280px; heigh: 80px" readonly="true">'+data+'</textarea>';
-                    wnd_alert(messageHTML, 300, 60);
+                if (response.isJSON()) {
+                    message = response.evalJSON().data.message;
                 }
-
-                data = response.evalJSON().data;
-                if (data.status === '+') {
-                    redraw_grid(self.el.id);
+                else {
+                    message = T.t('Возникла ошибка при отправке почты');
                 }
-                wnd_alert(data.message, 300, 60);
+                self.notify(message);
             }
         });
     },

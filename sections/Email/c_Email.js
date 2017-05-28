@@ -13,6 +13,11 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         'change #EmailAccountID': 'onChangeEmailAccountID'
     },
 
+    state: {
+        initialCardHeight: null,
+        initialCkEditorHeight: null
+    },
+
     onOpen: function() {
         var self = this;
         var form = $(this.el.id).down('form');
@@ -71,7 +76,11 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             // если карточку открыли в режиме "ответить", то заполним нужные поля и выйдем
             if (cardParams.replyEmailId) {
                 this.isDefaultValuesLoading = true; // miv 13.01.2011: чтобы не вызывалось событие, так как оно вешается до того, как приходят данные
-                this.setReplyFields(form, cardParams.replyEmailId);
+                this.setReplyFields(form, cardParams.replyEmailId, cardParams.replyToAll);
+            }
+            if (cardParams.forwardEmailId) {
+                this.isDefaultValuesLoading = true;
+                this.setForwardFields(form, cardParams.forwardEmailId);
             }
 
             //Выберем ящик отправки письма по умолчанию
@@ -96,7 +105,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             }
         }
 
-            if ((form._mode.value == 'update') && (emailType == 'Inbox')) {
+        if ((form._mode.value == 'update') && (emailType == 'Inbox')) {
             // если редактируем входящее письмо, то нарисуем кнопку "создать инцидент"
             var button_cont = $(form.btn_cancel).up('table.form_table_buttons_panel').rows[0].cells[0];
             button_cont.innerHTML += '<input type="button" onclick="'+this.instanceName()+'.createIncident(this)" value="'+T.t('Создать инцидент')+'" style="width: 180px;" class="button" id="_createincident">';
@@ -124,9 +133,29 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             addCardFooterButton(windowId, 'top', T.t('Отправить письмо'), this.instanceName()+'.saveAndSend(this)', '');
         }
 
-        //Уменьшим высоту карточки
-        UpdateCardHeight(windowId);
+        // Подстраиваем высоту ckeditor под высоту карточки
+        var window = Windows.getWindow(windowId);
+        this.state.initialCardHeight = window.height;
+        var self = this;
+        window.options.onResize = function () {
+            self.onCardResize();
+        };
+        window.options.onMaximize = function () {
+            self.onCardResize();
+        };
+
         form._hash.value = GetCardMD5(get_window_id(form));
+    },
+
+    onCardResize: function() {
+        var window = Windows.getWindow(this.el.id);
+        var form = $(this.el.id).down('form');
+        var editor = CKEDITOR.instances[form.body.getAttribute('actualelement')];
+        if (!this.state.initialCkEditorHeight) {
+            this.state.initialCkEditorHeight = jQuery('#'+this.el.id).find('#body').parent().height();
+        }
+        Windows.notify('onResize', window);
+        editor.resize('100%', this.state.initialCkEditorHeight + window.height - this.state.initialCardHeight);
     },
 
     onAfterSave: function(recordId, mode, params, windowId) {
@@ -190,35 +219,15 @@ irisControllers.classes.c_Email = IrisCardController.extend({
     },
 
     addSelfToReaders: function(form) {
-        var has_readed_str = $(form._parent_id.value).rows[$(form._parent_id.value).getAttribute('selectedrow')].getAttribute('t0_has_readed');
-        var has_readed_str_old = has_readed_str;
-        if (has_readed_str == '') {
-            has_readed_str = '["'+g_session_values['userid']+'"]';
-        }
-        else {
-            if ((has_readed_str.indexOf(g_session_values['userid']) == -1) && (has_readed_str.isJSON() == true)) {
-                var has_readed_arr = has_readed_str.evalJSON();
-                has_readed_arr[has_readed_arr.length] = g_session_values['userid'];
-                has_readed_str = Object.toJSON(has_readed_arr);
-            }
-        }
-
-        if (has_readed_str_old === has_readed_str) {
-            return;
-        }
-
-        //Отправим запрос на обновление списка прочитавших
         Transport.request({
             section: "Email",
-            'class': "c_Email",
-            method: 'UpdateReaders',
+            'class': "g_Email",
+            method: 'updateReaders',
             parameters: {
-                recordId: form._id.value,
-                readers: has_readed_str
+                recordId: form._id.value
             },
             skipErrors: ['class_not_found', 'file_not_found'],
             onSuccess: function(transport) {
-                // var data = transport.responseText.evalJSON().data;
                 var grid = $(form._parent_id.value); // берем id родительского грида из карточки
                 grid.rows[grid.getAttribute('selectedrow')].removeClassName('grid_newmail'); // отмечаем строчку как прочитаную
             }
@@ -308,7 +317,10 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         return params;
     },
 
-    setReplyFields: function(form, replyEmailId) {
+    setReplyFields: function(form, replyEmailId, replyToAll) {
+        if (replyToAll === 'undefined') {
+            replyToAll = false;
+        }
         var self = this;
 
         $(form._params).insert({'after': '<input id="_reply_email_id" type="hidden" value="'+replyEmailId+'">'});
@@ -319,13 +331,13 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             'class': "c_Email",
             method: 'getReplyFields',
             parameters: {
-                replyEmailId: replyEmailId
+                replyEmailId: replyEmailId,
+                replyToAll: replyToAll === true
             },
             skipErrors: ['class_not_found', 'file_not_found'],
             onSuccess: function(transport) {
                 var data = transport.responseText.evalJSON().data;
 
-                // c_Common_SetFieldValues_end(transport, p_form, true);
                 self.setFields(data, {
                     disableEvents: true,
                     rewriteValues: true,
@@ -335,6 +347,29 @@ irisControllers.classes.c_Email = IrisCardController.extend({
                 this.isDefaultValuesLoading = false;
 
                 // сохраняем текст письма, на которое отвечаем
+                form.setAttribute('parent_body', GetFieldValueByFieldName(data.FieldValues, '_parent_body'));
+                form._hash.value = GetCardMD5(get_window_id(form));
+            }
+        });
+    },
+
+    setForwardFields: function(form, forwardEmailId) {
+        var self = this;
+
+        Transport.request({
+            section: "Email",
+            'class': "c_Email",
+            method: 'getForwardFields',
+            parameters: {
+                forwardEmailId: forwardEmailId
+            },
+            onSuccess: function(transport) {
+                var data = transport.responseText.evalJSON().data;
+
+                self.setFields(data);
+
+                this.isDefaultValuesLoading = false;
+
                 form.setAttribute('parent_body', GetFieldValueByFieldName(data.FieldValues, '_parent_body'));
                 form._hash.value = GetCardMD5(get_window_id(form));
             }
@@ -434,6 +469,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
     },
 
     sendEmail: function(recordId) {
+        var self = this;
         Transport.request({
             section: "Email",
             'class': "g_Email",
@@ -445,16 +481,14 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             skipErrors: ['class_not_found', 'file_not_found'],
             onSuccess: function(transport) {
                 var result = transport.responseText;
+                var message;
                 if (result.isJSON() == true) {
-                    var data = result.evalJSON().data;
-                    var messageHTML = data.message;
+                    message = result.evalJSON().data.message;
                 }
                 else {
-                    messageHTML = T.t('Возникла ошибка при отправке почты');
-                    messageHTML += ':<br><textarea class="edtText" style="margin: 10px 5px 0px 5px; width: 280px; heigh: 80px" readonly="true">'+result+'</textarea>';
+                    message = T.t('Возникла ошибка при отправке почты');
                 }
-                wnd_alert(messageHTML, 300);
-
+                self.notify(message);
             }
         });
     }

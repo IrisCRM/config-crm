@@ -6,6 +6,7 @@
 namespace Iris\Config\CRM\sections\Email;
 
 use Config;
+use Iris\Credentials\Permissions;
 use Iris\Iris;
 
 class s_Email extends Config
@@ -52,13 +53,15 @@ class s_Email extends Config
         $con = $this->connection;
         $contactId = $this->fieldValue($params['old_data'], 'ContactID');
         $result = GetLinkedValues('Contact', $contactId, array('Account'), $con);
+        $email = GetFieldValueByID('Contact', $contactId, 'email');
+        $result = FieldValueFormat('e_to', $email, '', $result);
 
         return $result;
     }
 
     function onBeforePostEmailTypeID($params) {
         $emailTypeID = $this->fieldValue($params['old_data'], 'EmailTypeID');
-        $EmailTypeCode = GetFieldValueByID('emailtype', $emailTypeID, 'Code', $con);
+        $EmailTypeCode = GetFieldValueByID('emailtype', $emailTypeID, 'Code');
         if ('Template' == $EmailTypeCode) {
             $result['Attributes'][0]['FieldName'] = 'EmailAccountID';
             $result['Attributes'][0]['AttributeName'] = 'mandatory';
@@ -85,10 +88,19 @@ class s_Email extends Config
         return $result;
     }
 
+    function onBeforePost($parameters) {
+        if ($parameters['new_data']  === null) {
+            $emailId = $this->fieldValue($parameters['old_data'], 'id');
+            $className = $this->_Loader->getActualClassName('sections\\Email\\g_Email');
+            $g_Email = new $className($this->_Loader);
+            $g_Email->deleteFromImapServer($emailId);
+        }
+    }
+
     function onAfterPost($tableName, $recordId, $oldData, $newData) {
         // _reply_email_id 3a79d78c-9072-4317-1a80-2fb1c6b25784
         // _params {"replyEmailId":"3a79d78c-9072-4317-1a80-2fb1c6b25784"}
-        $this->setParentEmailID($recordId, $_POST['_reply_email_id']);
+        $this->setParentEmailID($recordId, isset($_POST['_reply_email_id']) ? $_POST['_reply_email_id'] : null);
     }
 
     /**
@@ -103,5 +115,22 @@ class s_Email extends Config
 
         $cmd = $con->prepare("update iris_email set parentemailid = :parentid where id=:id");
         $cmd->execute(array(":parentid" => $parentEmailID, ":id" => $recordId));
+    }
+
+    /**
+     * Show email
+     * @param $params
+     */
+    public function show($params)
+    {
+        /** @var Permissions $permissions */
+        $permissions = Iris::$app->getContainer()->get('credentails.permissions');
+        if ($permissions->canRead('{email}', $params['id'])) {
+            $body = GetFieldValueByID('Email', $params['id'], 'body');
+        }
+        else {
+            $body = 'У вас нет доступа к просмотру этого письма';
+        }
+        echo $body;
     }
 }
