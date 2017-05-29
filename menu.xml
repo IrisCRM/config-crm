@@ -2,7 +2,6 @@
 <MENU type="mini">
 
    <GROUP name="CRM">
-      <ITEM name="Email" quicknew="1"/>
       <ITEM name="Account" quicknew="1"/>
       <ITEM name="Contact" quicknew="1"/>
       <ITEM name="Object" quicknew="1"/>
