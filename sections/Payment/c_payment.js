@@ -5,8 +5,8 @@
 irisControllers.classes.c_Payment = IrisCardController.extend({
 
   events: {
-    'lookup:changed #ContactID, #ProjectID': 'onChangeLookup',
-    'lookup:changed #InvoiceID, #PactID, #FactInvoiceID': 'onChangeLookup',
+    'lookup:changed #ContactID, #ProjectID': 'onChangeEvent',
+    'lookup:changed #InvoiceID, #PactID, #FactInvoiceID': 'onChangeEvent',
     'lookup:changed #AccountID': 'onChangeAccountID',
     'change #PaymentTypeID': 'onChangePaymentTypeID',
     'change #PaymentStateID': 'onChangePaymentStateID',
@@ -21,11 +21,6 @@ irisControllers.classes.c_Payment = IrisCardController.extend({
         (this.getField('Number').val() == '') ? '' : ' - ';
     this.getField('Name').val(this.getField('Number').val() + l_tire + 
         this.getField('AccountID').val());
-  },
-
-  onChangeLookup: function(event) {
-    c_Common_LinkedField_OnChange($(this.el).down('form'), event.target.id, 
-      null, false, this.updateName);
   },
 
   onChangeAccountID: function () {

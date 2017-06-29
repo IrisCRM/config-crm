@@ -19,6 +19,36 @@ class s_Payment extends Config
         $this->_section_name = substr(__CLASS__, 2);
     }
 
+    public function onBeforePostContactID($params)
+    {
+        $id = $this->getActualValue($params['old_data'], $params['new_data'], 'ContactID');
+        return $this->getLinkedValues('{Contact}', $id, ['{{Account}}']);
+    }
+
+    public function onBeforePostProjectID($params)
+    {
+        $id = $this->getActualValue($params['old_data'], $params['new_data'], 'ProjectID');
+        return $this->getLinkedValues('{Project}', $id, ['{{Account}}', '{{Contact}}']);
+    }
+
+    public function onBeforePostInvoiceID($params)
+    {
+        $id = $this->getActualValue($params['old_data'], $params['new_data'], 'InvoiceID');
+        return $this->getLinkedValues('{Invoice}', $id, ['{{Account}}', '{{Contact}}', '{{Project}}', '{{Pact}}']);
+    }
+
+    public function onBeforePostPactID($params)
+    {
+        $id = $this->getActualValue($params['old_data'], $params['new_data'], 'PactID');
+        return $this->getLinkedValues('{Pact}', $id, ['{{Account}}', '{{Contact}}', '{{Project}}']);
+    }
+
+    public function onBeforePostFactInvoiceID($params)
+    {
+        $id = $this->getActualValue($params['old_data'], $params['new_data'], 'FactInvoiceID');
+        return $this->getLinkedValues('{FactInvoice}', $id, ['{{Account}}', '{{Contact}}', '{{Project}}']);
+    }
+
     public function onPrepare($params, $result = null) 
     {
         // Заполняем значения по умолчанию только при создании новой записи
