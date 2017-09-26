@@ -27,7 +27,7 @@
                <ITEM caption="Недавние" item_style="" where_clause="((T0.StartDate between _iris_current_date[]-7 and _iris_current_date[]+7) or (T0.FinishDate between _iris_current_date[]-7 and _iris_current_date[]+7)) and (TState.Code not in ('Finish'))" title="Дела за последнюю неделю и на неделю вперед"/>
                <ITEM caption="Просроченные" item_style="" where_clause="_iris_current_date[]&gt;T0.FinishDate and TState.Code not in ('Finish', 'Cancel')"/>
                <ITEM caption="Дата с" where_clause="((T0.StartDate &gt;= _iris_string_to_datetime['#VALUE#']) or (T0.FinishDate &gt;= _iris_string_to_datetime['#VALUE#']))" field="StartDate"/>
-               <ITEM caption="Дата по" where_clause="((T0.StartDate &lt;= _iris_string_to_datetime['#VALUE#']) or (T0.FinishDate &lt;= _iris_string_to_datetime['#VALUE#']))" field="StartDate"/>
+               <ITEM caption="Дата по" where_clause="((T0.StartDate &lt;= _iris_string_to_datetime['#VALUE#']) or (T0.FinishDate &lt;= _iris_string_to_datetime['#VALUE#']))" field="FinishDate"/>
             </ITEM>
    			<ITEM caption="Состояние" item_style="font-weight: bold;" auto_table="iris_taskstate" auto_filter_column="id" auto_display_column="name" auto_sort_column="orderpos" auto_where_clause="T0.taskstateid='#VALUE#'"/>
    			<ITEM caption="Тип" item_style="font-weight: bold;" auto_table="iris_tasktype" auto_filter_column="id" auto_display_column="name" auto_sort_column="name" auto_where_clause="T0.tasktypeid='#VALUE#'"/>
