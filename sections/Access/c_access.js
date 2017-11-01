@@ -21,9 +21,9 @@ irisControllers.classes.c_Access = IrisCardController.extend({
         }
 
         // устанавливаем значение RecordID
-        form.RecordID.value = this.parameter('detail_column_value');
+        this.fieldValue('RecordID', this.parameter('detail_column_value'));
         // скрываем первый столбец, который содержит ID родительской записи
-        jQuery(form.RecordID).parents('.form_row').hide();
+        this.hideField('RecordID');
         // UpdateCardHeight(windowId);
 
         this.parameter('hash', GetCardMD5(windowId));
