@@ -7,12 +7,15 @@ irisControllers.classes.c_Table = IrisCardController.extend({
   onOpen: function () {
     // при нажатии на название поля "Справочник (код)" откроем справочник
     var card_form = document.getElementById(this.el.id).getElementsByTagName("form")[0];
-    var dict_cap_elem = $(card_form.Dictionary).up('td.form_table').previous().down();
-    dict_cap_elem.setStyle({"cursor": 'pointer', "color": "#3E569C"}).observe('click', function() {
-      if (card_form.Dictionary.value != '') {
-        opengridwindow("", "", "dict", card_form.Dictionary.value);
-      }
-    });
+    var dictionaryLabel = this.getFieldLabel("Dictionary");
+    var dictionaryCode = this.fieldValue("Dictionary");
+
+    dictionaryLabel.css({"cursor": 'pointer', "color": "#3E569C"}).
+      on('click', function() {
+        if (dictionaryCode != '') {
+          opengridwindow("", "", "dict", dictionaryCode);
+        }
+      });
 
     if (this.parameter('mode') === 'insert') {
       this.getField('ShowColumnID').attr('readonly', true);
