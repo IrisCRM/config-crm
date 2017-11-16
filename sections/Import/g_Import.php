@@ -51,7 +51,7 @@ class g_Import extends Config
         //Откроем xls файл
         list($FileID, $Encoding) = GetFieldValuesByID('Import', $params['recordId'], array('FileID', 'Encoding'), $con);
         $FileName = Iris::$app->getRootDir() . 'files/'.GetFieldValueByID('File', $FileID, 'File_File', $con);
-        $data = new Spreadsheet_Excel_Reader($FileName, true, $Encoding);
+        $data = new \Spreadsheet_Excel_Reader($FileName, true, $Encoding);
 
         //Пройдемся по каждому листу
         $AddDictCount = 0;
@@ -484,7 +484,7 @@ class g_Import extends Config
         list($FileID, $Encoding, $Duplicate1, $Duplicate2) = GetFieldValuesByID('Import', $params['recordId'],
             array('FileID', 'Encoding', 'Duplicate1', 'Duplicate2'), $con);
         $FileName = Iris::$app->getRootDir() . 'files/'.GetFieldValueByID('File', $FileID, 'File_File', $con);
-        $data = new Spreadsheet_Excel_Reader($FileName, true, $Encoding);
+        $data = new \Spreadsheet_Excel_Reader($FileName, true, $Encoding);
 
 
         //Пройдемся по каждому листу
