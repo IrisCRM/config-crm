@@ -39,17 +39,11 @@ irisControllers.classes.g_Project = IrisGridController.extend({
     var p_grid_id = this.el.id;
     var self = this;
     if (p_confirm_flag != 1) {
-      Dialog.confirm(T.t('Вы уверены, что хотите скопировать данный заказ?'), {
+      IrisDialog.confirm(T.t('Вы уверены, что хотите скопировать данный заказ?'), {
         onOk: function() { 
+          IrisDialog.closeInfo(); 
           self.copyProject(1); 
-          Dialog.closeInfo(); 
-        }, 
-        className: "iris_win", 
-        width: 300, 
-        height: null, 
-        buttonClass: "button", 
-        okLabel: "Да", 
-        cancelLabel: "Нет"
+        }
       });
       return;
     }

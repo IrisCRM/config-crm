@@ -24,16 +24,7 @@ irisControllers.classes.g_Myinvoice = IrisGridController.extend({
         var self = this;
         var invoiceId = getGridSelectedID(this.el.id);
         var errorHandler = function(message) {
-            Dialog.alert(message || T.t('Ошибка'), {
-                className: "iris_win",
-                buttonClass: "button",
-                width: 350,
-                height: null//,
-                // okLabel: "ОК",
-                // ok: function(win) {
-                //     return true;
-                // }
-            });
+            IrisDialog.alert(message || T.t('Ошибка'), {});
         };
 
         this.request({
@@ -54,38 +45,26 @@ irisControllers.classes.g_Myinvoice = IrisGridController.extend({
                 data = result.data;
 
                 if (data.errorMessage) {
-                    Dialog.alert(data.errorMessage, {
-                        className: "iris_win",
-                        buttonClass: "button",
-                        width: 350,
-                        height: null
-                    });
+                    IrisDialog.alert(data.errorMessage, {});
                     return;
                 }
 
                 if (data.isOk) {
                     // Средств баланса достаточно, чтобы оплатить счет => оплата счета
-                    Dialog.confirm("Внимание! Нажимая кнопку <b>«Оплатить»</b>, Вы соглашаетесь с тем, что Ваш баланс уменьшится на <b>"+data.amount+"</b>. Вернуть эту сумму будет нельзя. Если Вы НЕ хотите, чтобы с Вашего баланса списывались деньги, нажмите «Отмена».", {
+                    IrisDialog.confirm("Внимание! Нажимая кнопку <b>«Оплатить»</b>, Вы соглашаетесь с тем, что Ваш баланс уменьшится на <b>"+data.amount+"</b>. Вернуть эту сумму будет нельзя. Если Вы НЕ хотите, чтобы с Вашего баланса списывались деньги, нажмите «Отмена».", {
                         onOk: function() {
-                            Dialog.closeInfo();
+                            IrisDialog.closeInfo();
                             self.payInvoice(invoiceId);
                         },
-                        className: "iris_win",
                         width: 400,
-                        height: null,
-                        buttonClass: "button",
                         okLabel: "Оплатить",
                         cancelLabel: "Отмена"
                     });
                 }
                 else {
                     //Средств недостаточно => нужно пополнить баласн
-                    Dialog.alert("Средств на Вашем кошельке недостаточно для оплаты счета. <br>Доступный баланс: <b>"+data.balance+"</b>.<br> Сумма оплаты: <b>"+data.amount+"</b>.", {
-                        className: "iris_win",
-                        width: 400,
-                        height: null,
-                        okLabel: "ОК",
-                        buttonClass: "button"
+                    IrisDialog.alert("Средств на Вашем кошельке недостаточно для оплаты счета. <br>Доступный баланс: <b>"+data.balance+"</b>.<br> Сумма оплаты: <b>"+data.amount+"</b>.", {
+                        width: 400
                     });
                 }
             },
@@ -96,8 +75,7 @@ irisControllers.classes.g_Myinvoice = IrisGridController.extend({
     },
 
     payInvoice: function(invoiceId) {
-        Dialog.info("идет оплата счета...", {
-            className: "iris_win",
+        IrisDialog.info("идет оплата счета...", {
             width: 250,
             height: 100,
             showProgress: true
@@ -113,7 +91,7 @@ irisControllers.classes.g_Myinvoice = IrisGridController.extend({
                 var result = transport.responseText.evalJSON();
                 var data;
 
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
 
                 if (!result.data) {
                     return;
@@ -121,12 +99,9 @@ irisControllers.classes.g_Myinvoice = IrisGridController.extend({
 
                 data = result.data;
 
-                Dialog.alert(data.message, {
+                IrisDialog.alert(data.message, {
                     width: 350,
                     height: null,
-                    okLabel: "ОК",
-                    className: "iris_win",
-                    buttonClass: "button",
                     ok: function(win) {
                         return true;
                     }

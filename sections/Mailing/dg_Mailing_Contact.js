@@ -220,11 +220,11 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
     openCreateEmailsDialog: function() {
         var self = this;
 
-        Dialog.confirm("Сейчас для каждого получателя, у которого еще создано письмо будет сформировано индивидуально письмо рассылки. Продолжить?", {
+        IrisDialog.confirm("Сейчас для каждого получателя, у которого еще создано письмо будет сформировано индивидуально письмо рассылки. Продолжить?", {
             onOk: function() {
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
                 self.createEmails(null);
-            }, className: "iris_win", width: 300, height: null, buttonClass: "button", okLabel: "Да", cancelLabel: "Нет"
+            }
         });
     },
 
@@ -234,9 +234,9 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
         var mailingId = this.getMailingId();
 
         if (leftCount == null) {
-            Dialog.info('Создаются письма рассылки...', {width:250, height:60, className: "iris_win", showProgress: true});
+            IrisDialog.info('Создаются письма рассылки...', {showProgress: true});
         } else {
-            Dialog.setInfoMessage('Создаются письма рассылки...' + '<br>осталось '+leftCount+' '+getNumberCaption(parseInt(leftCount, 10), ['письмо', 'письма', 'писем']));
+            IrisDialog.setInfoMessage('Создаются письма рассылки...' + '<br>осталось '+leftCount+' '+getNumberCaption(parseInt(leftCount, 10), ['письмо', 'письма', 'писем']));
         }
 
         Transport.request({
@@ -252,7 +252,7 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
                 var data;
 
                 if (!result.data) {
-                    Dialog.closeInfo();
+                    IrisDialog.closeInfo();
                     return;
                 }
 
@@ -263,7 +263,7 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
                     return;
                 }
 
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
 
                 if (data.message != '') {
                     wnd_alert(data.message);
@@ -274,7 +274,7 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
                 }
             },
             onFail: function(transport) {
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
             }
         });
     },
@@ -282,15 +282,11 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
     openDeleteEmailsDialog: function() {
         var self = this;
 
-        Dialog.confirm("Сейчас будут удалены все неотправленные письма данной рассылки. Продолжить?", {
+        IrisDialog.confirm("Сейчас будут удалены все неотправленные письма данной рассылки. Продолжить?", {
             onOk: function() {
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
                 self.deleteEmails();
             },
-            className: "iris_win",
-            width: 300,
-            height: null,
-            buttonClass: "button",
             okLabel: "Удалить",
             cancelLabel: "Отмена"
         });
@@ -299,7 +295,7 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
     deleteEmails: function() {
         var gridId = this.el.id;
 
-        Dialog.info('Удаляются письма рассылки...', { width:250, height:60, className: "iris_win", showProgress: true });
+        IrisDialog.info('Удаляются письма рассылки...', { showProgress: true });
 
         Transport.request({
             section: 'Mailing',
@@ -313,7 +309,7 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
                 var result = transport.responseText.evalJSON();
                 var data;
 
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
 
                 if (!result.data) {
                     return;
@@ -330,7 +326,7 @@ irisControllers.classes.dg_Mailing_Contact = IrisGridController.extend({
                 }
             },
             onFail: function(transport) {
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
             }
         });
     }

@@ -267,17 +267,12 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         }
 
         if ((!isReplace) && ((!isFillSubject) || (!isFillBody))) {
-            Dialog.confirm(
+            IrisDialog.confirm(
                 T.t('Сформировать содержание письма заново из шаблона?'), {
                 onOk:function() {
-                    Dialog.closeInfo();
+                    IrisDialog.closeInfo();
                     self.fillTemplate(form, start, true);
-                },
-                className: "iris_win",
-                width: 300,
-                buttonClass:"button",
-                okLabel: T.t("Да"),
-                cancelLabel: T.t("Нет")
+                }
             });
             return;
         } else {

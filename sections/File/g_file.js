@@ -30,10 +30,9 @@ irisControllers.classes.g_File = IrisGridController.extend({
           number + " " + T.t("из") + " " + count + "&hellip;";
       }
 
-      Dialog.info(getMsg(loaded, files.length), {
+      IrisDialog.info(getMsg(loaded, files.length), {
         width: 250,
-        showProgress: true,
-        className: "iris_win"
+        showProgress: true
       });
 
       _.each(files, function(file) {
@@ -61,9 +60,9 @@ irisControllers.classes.g_File = IrisGridController.extend({
             try {
               self.onFileUploadSuccess(
                   JSON.parse(transport.responseText).data, loaded >= files.length);
-              Dialog.setInfoMessage(getMsg(loaded, files.length));
+              IrisDialog.setInfoMessage(getMsg(loaded, files.length));
               if (loaded >= files.length) {
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
               }
             }
             catch (e) {
@@ -88,11 +87,8 @@ irisControllers.classes.g_File = IrisGridController.extend({
 
   onFileUploadError: function() {
     //alert('Ошибка при загрузке файла!');
-    Dialog.closeInfo();
-    Dialog.alert(T.t('Ошибка при загрузке файла'), {
-      width: 250,
-      className: "iris_win"
-    });
+    IrisDialog.closeInfo();
+    IrisDialog.alert(T.t('Ошибка при загрузке файла'), {});
     this.onDropFinished();
   },
 

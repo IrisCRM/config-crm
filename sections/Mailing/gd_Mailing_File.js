@@ -74,16 +74,11 @@ irisControllers.classes.dg_Mailing_File = IrisGridController.extend({
         var parentRecordId = this.$el.attr('detail_parent_record_id');
         var recordId = getGridSelectedID(gridId);
 
-        Dialog.confirm("Открепить данный файл от письма?<br>(сам файл удален не будет)",{
+        IrisDialog.confirm("Открепить данный файл от письма?<br>(сам файл удален не будет)",{
             onOk:function() {
-                Dialog.closeInfo();
+                IrisDialog.closeInfo();
                 self.deAttachFile(recordId, parentRecordId);
-            }, className: "iris_win",
-            width: 300,
-            height: null,
-            buttonClass: "button",
-            okLabel:"Да",
-            cancelLabel: "Нет"
+            }
         });
     },
 

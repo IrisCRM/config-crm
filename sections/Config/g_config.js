@@ -21,8 +21,7 @@ irisControllers.classes.g_Config = IrisGridController.extend({
       id: wnd_id,
       className: "iris_win",
       title: "Добавление описания конфигурации из файла",
-      width: 450,
-      height: 250
+      width: 450
     });
     $(win).setConstraint(true, {
       left: 5,
@@ -72,17 +71,11 @@ irisControllers.classes.g_Config = IrisGridController.extend({
     var filename = c_Common_GetElementValue(form.filenamexml);
     var self = this;
     if (!IsEmptyValue(filename)) {
-      Dialog.confirm('Вы уверены, что хотите загрузить конфигурацию из данного файла?', {
+      IrisDialog.confirm('Вы уверены, что хотите загрузить конфигурацию из данного файла?', {
         onOk: function () {
           self.loadFromFileStart(filename);
-          Dialog.closeInfo();
-        },
-        className: "iris_win",
-        width: 300,
-        height: null,
-        buttonClass: "button",
-        okLabel: "Да",
-        cancelLabel: "Нет"
+          IrisDialog.closeInfo();
+        }
       });
       return;
     }
