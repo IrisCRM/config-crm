@@ -189,14 +189,14 @@ irisControllers.classes.dc_Interview_Response = IrisCardController.extend({
                 '</td>'+
                 '<td class="form_table" colspan="1" width="75%">'+
                 '<div class="radiobtn-cont">'+
-                '<div class="radiobtn-values" have_null="no" onclick="selectRadioButton(event)">'+
+                '<div class="radiobtn-values" have_null="no">'+
                 '<table class="rb-table"><tbody><tr>'+
                 '<td>'+
-                '<span class="rbelem-f '+class_yes+'" pos="f" value="1" selected="'+sel_yes+'">'+
+                '<span class="rbelem-f '+class_yes+'" pos="f" value="1" selected="'+sel_yes+'" onclick="selectRadioButton(this)">'+
                 '<span class="rb-caption">Да</span></span>'+
                 '</td>'+
                 '<td>'+
-                '<span class="rbelem-l '+class_no+'" pos="l" value="0" selected="'+sel_no+'">'+
+                '<span class="rbelem-l '+class_no+'" pos="l" value="0" selected="'+sel_no+'" onclick="selectRadioButton(this)">'+
                 '<span class="rb-caption">Нет</span></span>'+
                 '</td>'+
                 '</tr></tbody></table>'+
