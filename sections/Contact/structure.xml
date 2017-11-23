@@ -73,7 +73,7 @@
          </COLUMNS>
       </GRID_WND>
       <EDITCARD name="c_Contact" caption="Контакт" width="870" height="480" 
-        layout="1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1,   1, 1, 1, 1, 1, 1, 1, 1,   2, 2, 2, 2">
+        layout="1, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1,   1, 1, 1, 1, 1, 1, 1, 1,   1, 1, 1, 1">
          <TABS>
             <TAB caption="Основная информация" rows="15"/>
             <TAB caption="Адрес" rows="6"/>
@@ -133,17 +133,12 @@
 
 			<!-- Уведомления -->
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Разрешить использовать информацию" db_field="ispersonalinfoagree" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Разрешить использовать указанную информацию только внутри компании"/>
-			<FIELD elem_type="spacer"/>
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по email" db_field="isnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления для не будут отправляться на email, указанный в карточке"/>
-			<FIELD elem_type="spacer"/>
             <!--
 			<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по icq" db_field="isicqnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
-			<FIELD elem_type="spacer"/>
 			-->
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по GTalk" db_field="isgtalknotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться по Jabber на указанный в карточке Google account"/>
-			<FIELD elem_type="spacer"/>
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по SMS" db_field="issmsnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться на мобильный телефон, указанный в карточке"/>
-			<FIELD elem_type="spacer"/>
 			
          </ELEMENTS>
       </EDITCARD>
