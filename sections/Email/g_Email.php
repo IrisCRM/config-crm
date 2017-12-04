@@ -10,6 +10,7 @@ use Iris\Iris;
 use Iris\Queue\DispatchesJobs;
 use PDO;
 use Iris\Config\CRM\sections\Email\Imap as Imap;
+use IrisDomain;
 
 include_once Iris::$app->getCoreDir() . 'core/engine/emaillib.php';
 
@@ -167,6 +168,31 @@ class g_Email extends Config
         $fetcher->deleteMail($emailInfo["emailaccountid"], $emailInfo["mailboxname"], $emailInfo["uid"]);
     }
 
+    function testConnection($params) {
+        $emailAccountId = $params["emailAccountId"];
+        $imapTypeCode = IrisDomain::getDomain('d_fetch_protocol')->
+            get('imap', 'code', 'db_value');
+
+        if ($this->getEmailAccountType($emailAccountId) != $imapTypeCode) {
+            return [
+                "isSuccess" => false,
+                "message" => "Доступно только для протокола IMAP"
+            ];
+        }
+
+        $fetcher = new Imap\Fetcher();
+        $result = $fetcher->getEmailAccountStatus($emailAccountId);
+
+        if (!$result) {
+            return [
+                "isSuccess" => false,
+                "message" => "Не удалось установить соединение"
+            ];
+        }
+
+        return $result;
+    }
+
     protected function getEmailInfo($emailId)
     {
         $sql = "select T0.uid, T0.has_readed, MB.name as mailboxname, MB.emailaccountid, EA.ownerid,
@@ -180,5 +206,18 @@ class g_Email extends Config
         $cmd = $this->connection->prepare($sql);
         $cmd->execute(array(":id" => $emailId));
         return current($cmd->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    protected function getEmailAccountType($emailAccountId)
+    {
+        $sql = "select fetch_protocol 
+            from iris_emailaccount 
+            where id = :email_account_id";
+        $cmd = $this->connection->prepare($sql);
+        $cmd->execute([
+            ':email_account_id' => $emailAccountId
+        ]);
+
+        return $cmd->fetch(PDO::FETCH_COLUMN);
     }
 }

@@ -84,6 +84,15 @@ class Fetcher extends Config implements FetcherInterface
         return $adapter->deleteMail($uid);
     }
 
+    public function getEmailAccountStatus($emailAccountId) {
+        $result = [];
+        $emailAccounts = $this->getEmailAccounts($emailAccountId, true);
+
+        $imapAdapter = $this->getImapAdapter($emailAccounts[0]);
+
+        return $imapAdapter->getMailboxesStatus();
+    }
+
     public function syncFlags($emailAccountId = null)
     {
         $emailAccounts = $this->getEmailAccounts($emailAccountId);
@@ -234,17 +243,18 @@ class Fetcher extends Config implements FetcherInterface
         return $result;
     }
 
-    protected function getEmailAccounts($emailAccountId = null)
+    protected function getEmailAccounts($emailAccountId = null, $isGetAll = false)
     {
         $con = $this->connection;
 
         $sql = "select id, address as server, port,
                 case when encryption <> 'no' then encryption else null end as protocol, login, password
                 from iris_emailaccount 
-                where isactive='Y' and fetch_protocol = 2 and (id = :emailaccountid or :emailaccountid is null)";
+                where (isactive='Y' or :getall = 1) and fetch_protocol = 2 and (id = :emailaccountid or :emailaccountid is null)";
 
         $cmd = $con->prepare($sql);
-        $cmd->execute(array(":emailaccountid" => $emailAccountId));
+        $cmd->execute(array(":getall" => $isGetAll ? 1 : 0,
+            ":emailaccountid" => $emailAccountId));
 
         return $cmd->fetchAll(PDO::FETCH_ASSOC);
     }
