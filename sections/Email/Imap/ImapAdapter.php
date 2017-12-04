@@ -13,6 +13,7 @@ class ImapAdapter
     protected $tempDir;
     protected $mailbox;
     protected $mailboxNextUid;
+    protected $mailboxName = "INBOX";
     protected $logger;
 
     function __construct($server, $port, $protocol, $login, $password)
@@ -236,7 +237,7 @@ class ImapAdapter
 
         foreach ($email->getAttachments() as $attachment) {
             $result["attachments"][] = array(
-                "attachmentId" => $attachment->id,
+                "contentId" => $attachment->contentId,
                 "fileName" => $attachment->name,
                 "filePath" => $attachment->filePath,
             );
@@ -254,8 +255,8 @@ class ImapAdapter
 
     protected function getDirForUid($uid)
     {
-        $result = $this->tempDir . "/" . $uid;
-        mkdir($result);
+        $result = $this->tempDir . "/" . $this->mailboxName . "/" . $uid;
+        mkdir($result, 0777, true);
 
         return $result;
     }
