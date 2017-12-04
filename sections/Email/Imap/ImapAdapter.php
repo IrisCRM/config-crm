@@ -6,10 +6,6 @@ use Config;
 use Iris\Iris;
 use PDO;
 
-use PhpImap\Mailbox;
-use PhpImap\IncomingMail;
-use PhpImap\IncomingMailAttachment;
-use PhpImap\ConnectionException;
 
 class ImapAdapter
 {
@@ -26,7 +22,7 @@ class ImapAdapter
         $this->tempDir = $this->createTempDir();
         $this->connectionString = $this->getConnectionString($server, $port, $protocol);
         $this->debug("ImapAdapter __construct", $this->tempDir .', ' . $this->connectionString . ', ' . $login);
-        $this->mailbox = new Mailbox($this->connectionString, $login, $password, $this->tempDir);
+        $this->mailbox = new MailboxPached($this->connectionString, $login, $password, $this->tempDir);
         $this->debug("ImapAdapter __construct ok");
     }
 
@@ -49,28 +45,11 @@ class ImapAdapter
         return "{" . $server . ":" . $port . "/imap" . ($protocol ? "/" . $protocol . "/novalidate-cert" : "") . "}";
     }
 
-    // from UTF-8 to ISO_8859-1
-    // protected function stringToISO8859($mailboxName)
-    // {
-    //     return mb_convert_encoding($mailboxName, 'ISO-8859-1', 'UTF-8');
-    // }
-
-   protected function StringToImapString($mailboxName)
-    {
-        return mb_convert_encoding($mailboxName, "UTF7-IMAP", "UTF-8");
-    }
-
-    // from UTF7-IMAP to UTF-8
-    protected function ImapStringToString($mailboxName)
-    {
-        return mb_convert_encoding($mailboxName, "UTF-8", "UTF7-IMAP");
-    }
-
     public function addMimeMessageToMailbox($mailboxName, $MimeMessage)
     {
         return imap_append(
             $this->mailbox->getImapStream(),
-            $this->getMailboxFullName($this->StringToImapString($mailboxName)),
+            $this->getMailboxFullName($mailboxName),
             $MimeMessage,
             "\\Seen");
     }
@@ -106,21 +85,19 @@ class ImapAdapter
     }
 
     protected function switchMailbox($mailboxName) {
-        $imapPath = $this->getMailboxFullName(
-            $this->StringToImapString($mailboxName));
-        $this->mailbox->switchMailbox($imapPath);
-
-        return $imapPath;
+        $this->mailboxName = $mailboxName;
+        $this->mailbox->switchMailbox(
+            $this->getMailboxFullName($this->mailboxName));
     }
 
     protected function getMailboxStatus($mailboxName) {
-        // Replacement for mailbox.statusMailbox method
-        // bacause mailbox.imap function coverts arguments via imap_utf7_encode
-        // PHP imap_* functions works with UTF7-IMAP,
-        // so cyrillic strings is broken
-        $imapPath = $this->switchMailbox($mailboxName);
-
-        return imap_status($this->mailbox->getImapStream(), $imapPath, SA_ALL);
+        try {
+            $this->mailbox->switchMailbox(
+                $this->getMailboxFullName($mailboxName));
+            return $this->mailbox->statusMailbox();
+        } catch (Throwable $exception) {
+            return null;
+        }
     }
 
     public function getMailboxesStatus() {
@@ -155,7 +132,7 @@ class ImapAdapter
         $result = [];
 
         foreach($items as $item) {
-            array_push($result, $this->ImapStringToString($item["shortpath"]));
+            array_push($result, $item["shortpath"]);
         }
 
         return $result;     
