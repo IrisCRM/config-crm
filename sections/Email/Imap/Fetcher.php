@@ -117,6 +117,9 @@ class Fetcher extends Config implements FetcherInterface
         $serverOverviews = $this->getEmailsOverviewFromServer($imapAdapter, $mailbox["name"]);
 
         foreach($serverOverviews as $serverOverview) {
+            if (!array_key_exists($serverOverview["uid"], $dbOverviewLookup)) {
+                continue; // email not exists in DB (deleted)
+            }
             $dbOverview = $dbOverviewLookup[$serverOverview["uid"]];
             if ($this->isFlagsEqual($dbOverview, $serverOverview)) {
                 continue;
@@ -218,7 +221,7 @@ class Fetcher extends Config implements FetcherInterface
         $this->debug("fetch emailAccountId", $emailAccountId);
         $emailAccounts = $this->getEmailAccounts($emailAccountId);
         foreach ($emailAccounts as $emailAccount) {
-            $this->debug("emailAccount",$emailAccount);
+            $this->debug("emailAccount", $emailAccount["login"]);
 
             $mailboxes = $this->getMailboxes($emailAccount);
             if (count($mailboxes) === 0) {
@@ -284,7 +287,7 @@ class Fetcher extends Config implements FetcherInterface
     protected function fetchMailbox(ImapAdapter $imapAdapter, $mailbox, $fetchFromUid, $batchSize)
     {
         $imapAdapter->selectMailbox($mailbox["name"]);
-        $this->debug("fetchMailbox selectMailbox", "OK");
+        $this->debug("fetchMailbox selectMailbox", $mailbox["name"]);
         $emails = $imapAdapter->getEmailsFromUid($fetchFromUid, $batchSize);
         $this->debug("getEmailsFromUid count", count($emails));
         $messagesCount = 0;

@@ -163,6 +163,7 @@ class ImapAdapter
         $result = array();
 
         foreach ($emailOverviews as $emailOverview) {
+            $this->debug("getEmailsFromUid mailbox", [$this->mailboxName]);
             $this->debug("getEmailsFromUid emailOverview", $emailOverview);
             // set unique attachments dir for each email to avoid possible name coincidence
             $this->mailbox->setAttachmentsDir($this->getDirForUid($emailOverview->uid));
