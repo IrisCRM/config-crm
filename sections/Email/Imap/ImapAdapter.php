@@ -9,6 +9,7 @@ use PDO;
 use PhpImap\Mailbox;
 use PhpImap\IncomingMail;
 use PhpImap\IncomingMailAttachment;
+use PhpImap\ConnectionException;
 
 class ImapAdapter
 {
@@ -48,18 +49,34 @@ class ImapAdapter
         return "{" . $server . ":" . $port . "/imap" . ($protocol ? "/" . $protocol . "/novalidate-cert" : "") . "}";
     }
 
-    protected function convertMailboxName($mailboxName)
+    // from UTF-8 to ISO_8859-1
+    // protected function stringToISO8859($mailboxName)
+    // {
+    //     return mb_convert_encoding($mailboxName, 'ISO-8859-1', 'UTF-8');
+    // }
+
+   protected function StringToImapString($mailboxName)
     {
         return mb_convert_encoding($mailboxName, "UTF7-IMAP", "UTF-8");
+    }
+
+    // from UTF7-IMAP to UTF-8
+    protected function ImapStringToString($mailboxName)
+    {
+        return mb_convert_encoding($mailboxName, "UTF-8", "UTF7-IMAP");
     }
 
     public function addMimeMessageToMailbox($mailboxName, $MimeMessage)
     {
         return imap_append(
             $this->mailbox->getImapStream(),
-            $this->connectionString . $this->convertMailboxName($mailboxName),
+            $this->getMailboxFullName($this->StringToImapString($mailboxName)),
             $MimeMessage,
             "\\Seen");
+    }
+
+    protected function getMailboxFullName($mailboxName) {
+        return $this->connectionString . $mailboxName;
     }
 
     public function markMailAsRead($uid)
@@ -83,10 +100,66 @@ class ImapAdapter
 
     public function selectMailbox($mailboxName)
     {
-        $this->mailbox->switchMailbox(
-            $this->connectionString . $this->convertMailboxName($mailboxName));
-        $status = $this->mailbox->statusMailbox();
+        $this->switchMailbox($mailboxName);
+        $status = $this->getMailboxStatus($mailboxName);
         $this->mailboxNextUid = $status->uidnext;
+    }
+
+    protected function switchMailbox($mailboxName) {
+        $imapPath = $this->getMailboxFullName(
+            $this->StringToImapString($mailboxName));
+        $this->mailbox->switchMailbox($imapPath);
+
+        return $imapPath;
+    }
+
+    protected function getMailboxStatus($mailboxName) {
+        // Replacement for mailbox.statusMailbox method
+        // bacause mailbox.imap function coverts arguments via imap_utf7_encode
+        // PHP imap_* functions works with UTF7-IMAP,
+        // so cyrillic strings is broken
+        $imapPath = $this->switchMailbox($mailboxName);
+
+        return imap_status($this->mailbox->getImapStream(), $imapPath, SA_ALL);
+    }
+
+    public function getMailboxesStatus() {
+        if (!$this->isConnected()) {
+            return null;
+        }
+
+        $mailboxNames = $this->getMailboxNames();
+        $result = [];
+
+        foreach($mailboxNames as $mailboxName) {
+            $result[] = array(
+                "name" => $mailboxName,
+                "status" => $this->getMailboxStatus($mailboxName),
+            );
+        }
+
+        return $result;
+    }
+
+    public function isConnected() {
+        try {
+            $stream = $this->mailbox->getImapStream();
+            return true;
+        } catch (ConnectionException $e) {
+            return false;
+        }
+    }
+
+    public function getMailboxNames() {
+        $items = $this->mailbox->getMailboxes();
+        $result = [];
+
+        foreach($items as $item) {
+            array_push($result, $this->ImapStringToString($item["shortpath"]));
+        }
+
+        return $result;     
+
     }
 
     public function getEmailsOverview($mailboxName)
