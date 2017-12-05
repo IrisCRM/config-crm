@@ -64,7 +64,7 @@
                   <ELEMENTS>
                       <FIELD elem_type="lookup" caption="Аккаунт" db_field="EmailAccountID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Emailaccount" row_type_parent_display_column="description"/>
                       <FIELD elem_type="text" caption="Имя" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
-                      <FIELD elem_type="text" caption="LastUID" db_field="LastUID" mandatory="yes" datatype="int" row_type="common" title="UID последнего загруженного с сервера письма"/>
+                      <FIELD elem_type="text" caption="LastUID" db_field="LastUID" mandatory="no" datatype="int" row_type="common" title="UID последнего загруженного с сервера письма. Уменьшение значения приведет к повторной загрузке писем. Увеличение значения приведет к пропуску писем. Если установить значение, равное последнему uid (кнопка 'Проверка соединения'), то будут в систему будут загружаться только новые письма"/>
                       <FIELD elem_type="text" caption="Имя для отображения" db_field="DisplayName" mandatory="yes" datatype="string" row_type="common"/>
                   </ELEMENTS>
               </EDITCARD>
