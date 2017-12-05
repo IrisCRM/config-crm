@@ -3,7 +3,7 @@
     "description": "Standard CRM config for Iris",
     "require": {
         "malkusch/lock": "^1.0",
-        "php-imap/php-imap": "^2.0"
+        "php-imap/php-imap": "^3.0"
     },
     "autoload": {
         "psr-4": {

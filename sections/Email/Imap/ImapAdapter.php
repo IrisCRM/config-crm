@@ -6,9 +6,6 @@ use Config;
 use Iris\Iris;
 use PDO;
 
-use PhpImap\Mailbox;
-use PhpImap\IncomingMail;
-use PhpImap\IncomingMailAttachment;
 
 class ImapAdapter
 {
@@ -16,6 +13,7 @@ class ImapAdapter
     protected $tempDir;
     protected $mailbox;
     protected $mailboxNextUid;
+    protected $mailboxName = "INBOX";
     protected $logger;
 
     function __construct($server, $port, $protocol, $login, $password)
@@ -25,7 +23,7 @@ class ImapAdapter
         $this->tempDir = $this->createTempDir();
         $this->connectionString = $this->getConnectionString($server, $port, $protocol);
         $this->debug("ImapAdapter __construct", $this->tempDir .', ' . $this->connectionString . ', ' . $login);
-        $this->mailbox = new Mailbox($this->connectionString, $login, $password, $this->tempDir);
+        $this->mailbox = new MailboxPached($this->connectionString, $login, $password, $this->tempDir);
         $this->debug("ImapAdapter __construct ok");
     }
 
@@ -48,18 +46,17 @@ class ImapAdapter
         return "{" . $server . ":" . $port . "/imap" . ($protocol ? "/" . $protocol . "/novalidate-cert" : "") . "}";
     }
 
-    protected function convertMailboxName($mailboxName)
-    {
-        return mb_convert_encoding($mailboxName, "UTF7-IMAP", "UTF-8");
-    }
-
     public function addMimeMessageToMailbox($mailboxName, $MimeMessage)
     {
         return imap_append(
             $this->mailbox->getImapStream(),
-            $this->connectionString . $this->convertMailboxName($mailboxName),
+            $this->getMailboxFullName($mailboxName),
             $MimeMessage,
             "\\Seen");
+    }
+
+    protected function getMailboxFullName($mailboxName) {
+        return $this->connectionString . $mailboxName;
     }
 
     public function markMailAsRead($uid)
@@ -83,10 +80,64 @@ class ImapAdapter
 
     public function selectMailbox($mailboxName)
     {
-        $this->mailbox->switchMailbox(
-            $this->connectionString . $this->convertMailboxName($mailboxName));
-        $status = $this->mailbox->statusMailbox();
+        $this->switchMailbox($mailboxName);
+        $status = $this->getMailboxStatus($mailboxName);
         $this->mailboxNextUid = $status->uidnext;
+    }
+
+    protected function switchMailbox($mailboxName) {
+        $this->mailboxName = $mailboxName;
+        $this->mailbox->switchMailbox(
+            $this->getMailboxFullName($this->mailboxName));
+    }
+
+    protected function getMailboxStatus($mailboxName) {
+        try {
+            $this->mailbox->switchMailbox(
+                $this->getMailboxFullName($mailboxName));
+            return $this->mailbox->statusMailbox();
+        } catch (Throwable $exception) {
+            return null;
+        }
+    }
+
+    public function getMailboxesStatus() {
+        if (!$this->isConnected()) {
+            return null;
+        }
+
+        $mailboxNames = $this->getMailboxNames();
+        $result = [];
+
+        foreach($mailboxNames as $mailboxName) {
+            $result[] = array(
+                "name" => $mailboxName,
+                "status" => $this->getMailboxStatus($mailboxName),
+            );
+        }
+
+        return $result;
+    }
+
+    public function isConnected() {
+        try {
+            $stream = $this->mailbox->getImapStream();
+            return true;
+        } catch (ConnectionException $e) {
+            return false;
+        }
+    }
+
+    public function getMailboxNames() {
+        $items = $this->mailbox->getMailboxes();
+        $result = [];
+
+        foreach($items as $item) {
+            array_push($result, $item["shortpath"]);
+        }
+
+        return $result;     
+
     }
 
     public function getEmailsOverview($mailboxName)
@@ -112,6 +163,7 @@ class ImapAdapter
         $result = array();
 
         foreach ($emailOverviews as $emailOverview) {
+            $this->debug("getEmailsFromUid mailbox", [$this->mailboxName]);
             $this->debug("getEmailsFromUid emailOverview", $emailOverview);
             // set unique attachments dir for each email to avoid possible name coincidence
             $this->mailbox->setAttachmentsDir($this->getDirForUid($emailOverview->uid));
@@ -186,7 +238,7 @@ class ImapAdapter
 
         foreach ($email->getAttachments() as $attachment) {
             $result["attachments"][] = array(
-                "attachmentId" => $attachment->id,
+                "contentId" => $attachment->contentId,
                 "fileName" => $attachment->name,
                 "filePath" => $attachment->filePath,
             );
@@ -204,8 +256,8 @@ class ImapAdapter
 
     protected function getDirForUid($uid)
     {
-        $result = $this->tempDir . "/" . $uid;
-        mkdir($result);
+        $result = $this->tempDir . "/" . $this->mailboxName . "/" . $uid;
+        mkdir($result, 0777, true);
 
         return $result;
     }

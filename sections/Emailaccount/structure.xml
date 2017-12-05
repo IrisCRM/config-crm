@@ -14,10 +14,10 @@
             <ITEM caption="Описание" db_field="description" width="30%" row_type="common"/>
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="800" height="360" layout="2,1, 1,2,2,2,2, 1,2,2,2,   2,2,2">
+      <EDITCARD name="c_EmailAccount" caption="Почтовый аккаунт" width="800" height="360" layout="2,1, 1,2,2,2,2, 1,2,2,2,   2,2,2,2">
           <TABS>
               <TAB caption="Общее" rows="11"/>
-              <TAB caption="Для IMAP" rows="3"/>
+              <TAB caption="Для IMAP" rows="4"/>
           </TABS>
          <ELEMENTS>
             <FIELD elem_type="text" caption="Email адрес" db_field="email" mandatory="yes" datatype="string" row_type="common"/>
@@ -48,6 +48,8 @@
              <FIELD elem_type="spacer"/>
              <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Удалять с сервера при удалении?" db_field="IsDeleteFromServer" mandatory="no" datatype="string" row_type="domain" row_type_domain_name="d_yn_binary"/>
              <FIELD elem_type="spacer"/>
+             <FIELD elem_type="button" code="test_connection" caption="Проверка соединения" align="left" width="180px" method="testConnection"/>
+             <FIELD elem_type="spacer"/>
          </ELEMENTS>
       </EDITCARD>
       <DETAILS>
@@ -58,10 +60,11 @@
                       <ITEM caption="Имя для отображения" db_field="displayname" width="50%" row_type="common"/>
                   </COLUMNS>
               </GRID>
-              <EDITCARD name="dc_EmailAccount_mailbox" caption="Папка для синхронизации (IMAP)" width="600" height="180" layout="1, 1, 1">
+              <EDITCARD name="dc_EmailAccount_mailbox" caption="Папка для синхронизации (IMAP)" width="600" height="180" layout="1, 2, 1">
                   <ELEMENTS>
                       <FIELD elem_type="lookup" caption="Аккаунт" db_field="EmailAccountID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Emailaccount" row_type_parent_display_column="description"/>
                       <FIELD elem_type="text" caption="Имя" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
+                      <FIELD elem_type="text" caption="LastUID" db_field="LastUID" mandatory="no" datatype="int" row_type="common" title="UID последнего загруженного с сервера письма. Уменьшение значения приведет к повторной загрузке писем. Увеличение значения приведет к пропуску писем. Если установить значение, равное последнему uid (кнопка 'Проверка соединения'), то будут в систему будут загружаться только новые письма"/>
                       <FIELD elem_type="text" caption="Имя для отображения" db_field="DisplayName" mandatory="yes" datatype="string" row_type="common"/>
                   </ELEMENTS>
               </EDITCARD>

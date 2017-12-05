@@ -84,6 +84,15 @@ class Fetcher extends Config implements FetcherInterface
         return $adapter->deleteMail($uid);
     }
 
+    public function getEmailAccountStatus($emailAccountId) {
+        $result = [];
+        $emailAccounts = $this->getEmailAccounts($emailAccountId, true);
+
+        $imapAdapter = $this->getImapAdapter($emailAccounts[0]);
+
+        return $imapAdapter->getMailboxesStatus();
+    }
+
     public function syncFlags($emailAccountId = null)
     {
         $emailAccounts = $this->getEmailAccounts($emailAccountId);
@@ -108,6 +117,9 @@ class Fetcher extends Config implements FetcherInterface
         $serverOverviews = $this->getEmailsOverviewFromServer($imapAdapter, $mailbox["name"]);
 
         foreach($serverOverviews as $serverOverview) {
+            if (!array_key_exists($serverOverview["uid"], $dbOverviewLookup)) {
+                continue; // email not exists in DB (deleted)
+            }
             $dbOverview = $dbOverviewLookup[$serverOverview["uid"]];
             if ($this->isFlagsEqual($dbOverview, $serverOverview)) {
                 continue;
@@ -209,15 +221,17 @@ class Fetcher extends Config implements FetcherInterface
         $this->debug("fetch emailAccountId", $emailAccountId);
         $emailAccounts = $this->getEmailAccounts($emailAccountId);
         foreach ($emailAccounts as $emailAccount) {
-            $this->debug("emailAccount",$emailAccount);
+            $this->debug("emailAccount", $emailAccount["login"]);
 
             $mailboxes = $this->getMailboxes($emailAccount);
             if (count($mailboxes) === 0) {
                 continue;
             }
 
-            $imapAdapter = $this->getImapAdapter($emailAccount);
+            // $imapAdapter = $this->getImapAdapter($emailAccount);
             foreach ($mailboxes as $mailbox) {
+                // init imapAdapter in loop for correct work if mailboxes length > 1
+                $imapAdapter = $this->getImapAdapter($emailAccount);
                 $this->debug("mailbox", $mailbox);
                 $this->debug("mailbox lastuid (DB)", $mailbox["lastuid"]);
 
@@ -234,17 +248,18 @@ class Fetcher extends Config implements FetcherInterface
         return $result;
     }
 
-    protected function getEmailAccounts($emailAccountId = null)
+    protected function getEmailAccounts($emailAccountId = null, $isGetAll = false)
     {
         $con = $this->connection;
 
         $sql = "select id, address as server, port,
                 case when encryption <> 'no' then encryption else null end as protocol, login, password
                 from iris_emailaccount 
-                where isactive='Y' and fetch_protocol = 2 and (id = :emailaccountid or :emailaccountid is null)";
+                where (isactive='Y' or :getall = 1) and fetch_protocol = 2 and (id = :emailaccountid or :emailaccountid is null)";
 
         $cmd = $con->prepare($sql);
-        $cmd->execute(array(":emailaccountid" => $emailAccountId));
+        $cmd->execute(array(":getall" => $isGetAll ? 1 : 0,
+            ":emailaccountid" => $emailAccountId));
 
         return $cmd->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -274,7 +289,7 @@ class Fetcher extends Config implements FetcherInterface
     protected function fetchMailbox(ImapAdapter $imapAdapter, $mailbox, $fetchFromUid, $batchSize)
     {
         $imapAdapter->selectMailbox($mailbox["name"]);
-        $this->debug("fetchMailbox selectMailbox", "OK");
+        $this->debug("fetchMailbox selectMailbox", $mailbox["name"]);
         $emails = $imapAdapter->getEmailsFromUid($fetchFromUid, $batchSize);
         $this->debug("getEmailsFromUid count", count($emails));
         $messagesCount = 0;
@@ -442,11 +457,11 @@ class Fetcher extends Config implements FetcherInterface
         $result = $body;
 
         foreach ($attachments as $attachment) {
-            if (!array_key_exists($attachment["attachmentId"], $cidPlaceholders)) {
+            if (!array_key_exists($attachment["contentId"], $cidPlaceholders)) {
                 continue;
             }
 
-            $placeholder = $cidPlaceholders[$attachment["attachmentId"]];
+            $placeholder = $cidPlaceholders[$attachment["contentId"]];
             $replaceTo = "web.php?_func=DownloadFile&table=iris_File&id=".$attachment["fileId"]."&column=file_file";
             $result = str_replace($placeholder, $replaceTo, $result);
         }
