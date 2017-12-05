@@ -46,11 +46,16 @@ class ImapAdapter
         return "{" . $server . ":" . $port . "/imap" . ($protocol ? "/" . $protocol . "/novalidate-cert" : "") . "}";
     }
 
+    protected function stringToImapString($mailboxName) 
+    { 
+        return mb_convert_encoding($mailboxName, "UTF7-IMAP", "UTF-8"); 
+    } 
+
     public function addMimeMessageToMailbox($mailboxName, $MimeMessage)
     {
         return imap_append(
             $this->mailbox->getImapStream(),
-            $this->getMailboxFullName($mailboxName),
+            $this->getMailboxFullName($this->stringToImapString($mailboxName)),
             $MimeMessage,
             "\\Seen");
     }
