@@ -27,7 +27,7 @@ class MailboxPached extends Mailbox {
      * @param string $imapPath
      * @throws Exception
      */
-    public function switchMailbox($imapPath) {
+    public function switchMailbox($imapPath = "") {
         $this->imapPath = $imapPath;
         // use extended method
         $this->imap('reopen', $this->imapPath,false);
