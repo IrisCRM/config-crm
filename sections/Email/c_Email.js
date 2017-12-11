@@ -106,9 +106,8 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         }
 
         if ((form._mode.value == 'update') && (emailType == 'Inbox')) {
-            // если редактируем входящее письмо, то нарисуем кнопку "создать инцидент"
-            var button_cont = $(form.btn_cancel).up('table.form_table_buttons_panel').rows[0].cells[0];
-            button_cont.innerHTML += '<input type="button" onclick="'+this.instanceName()+'.createIncident(this)" value="'+T.t('Создать инцидент')+'" style="width: 180px;" class="button" id="_createincident">';
+            // нарисуем кнопку "создать инцидент"
+            addCardFooterButton(windowId, 'top', T.t('Создать инцидент'), this.instanceName()+'.createIncident()');
 
             // нарисуем кнопку ответить
             addCardFooterButton(windowId, 'top', T.t('Ответить'), this.instanceName()+'.replyMessage()', T.t('Ответить на письмо'));
@@ -422,14 +421,13 @@ irisControllers.classes.c_Email = IrisCardController.extend({
     },
 
     createIncident: function(element) {
-        var form = $(this.el.id).down('form');
         var params = {
             mode: 'incident_from_email',
             emailid: this.parameter('id')
         };
 
-        form._hash.value = 'close';
-        CloseCardWindow(element);
+        this.parameter('hash', 'close');
+        CloseCardWindow(jQuery("#" + this.el.id).find('form').get(0));
 
         openCard({
             source_name: 'Incident',

@@ -134,6 +134,8 @@ function addCardHeaderButton(p_wnd_id, p_position, p_caption, p_onclick_event, p
 // 25.08.2010: добавляет кнопку в панель кнопок карточки
 function addCardFooterButton(p_wnd_id, p_position, p_caption, p_onclick_event, p_title, p_functions) {
 	var form = $(p_wnd_id).getElementsByTagName("form")[0];
+	var buttonClass = g_vars.template !== "bootstrap" ?
+  	"button" : "btn btn-default btn-sm";
 
 	var captions_json = '';
 	var actions_json = '';
@@ -146,7 +148,7 @@ function addCardFooterButton(p_wnd_id, p_position, p_caption, p_onclick_event, p
 	}	
 
 	var btn_id = '_'+'btn'+(Math.random()+'').slice(3);
-	var btn_html = '<input type="button" '+captions_json+' '+actions_json+' onclick="'+p_onclick_event.gsub('"', '&quot;')+'" value="'+p_caption+'"'+(p_title != '' ? 'title="'+p_title+'"' : '')+' class="button" id="'+btn_id+'">';
+	var btn_html = '<input type="button" '+captions_json+' '+actions_json+' onclick="'+p_onclick_event.gsub('"', '&quot;')+'" value="'+p_caption+'"'+(p_title != '' ? 'title="'+p_title+'"' : '')+' class="' + buttonClass + '" id="'+btn_id+'">';
 	var button_cont = $($(form.btn_cancel).up('table.form_table_buttons_panel').rows[0].cells[0]);
 	if (p_position == 'top')
 		button_cont.insert({'top': btn_html});
