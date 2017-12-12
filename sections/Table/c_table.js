@@ -7,12 +7,15 @@ irisControllers.classes.c_Table = IrisCardController.extend({
   onOpen: function () {
     // при нажатии на название поля "Справочник (код)" откроем справочник
     var card_form = document.getElementById(this.el.id).getElementsByTagName("form")[0];
-    var dict_cap_elem = $(card_form.Dictionary).up('td.form_table').previous().down();
-    dict_cap_elem.setStyle({"cursor": 'pointer', "color": "#3E569C"}).observe('click', function() {
-      if (card_form.Dictionary.value != '') {
-        opengridwindow("", "", "dict", card_form.Dictionary.value);
-      }
-    });
+    var dictionaryLabel = this.getFieldLabel("Dictionary");
+    var dictionaryCode = this.fieldValue("Dictionary");
+
+    dictionaryLabel.css({"cursor": 'pointer', "color": "#3E569C"}).
+      on('click', function() {
+        if (dictionaryCode != '') {
+          opengridwindow("", "", "dict", dictionaryCode);
+        }
+      });
 
     if (this.parameter('mode') === 'insert') {
       this.getField('ShowColumnID').attr('readonly', true);
@@ -42,18 +45,13 @@ irisControllers.classes.c_Table = IrisCardController.extend({
   
     var div_id = (Math.random()+"").slice(3);
     var self = this;
-    Dialog.confirm("Права доступа по умолчанию от таблицы <br><b> " + this.getField('Code').val() + "</b>" +
+    IrisDialog.confirm("Права доступа по умолчанию от таблицы <br><b> " + this.getField('Code').val() + "</b>" +
         "<br> будут установлены для <b><span id='" + div_id + "'>**</span></b> таблиц," +
         "<br> у которых включен доступ по записям. Продолжить?", {
       onOk: function() {
-        Dialog.closeInfo();
+        IrisDialog.closeInfo();
         self.copyAccess(self.getField('_id').val());
-      },
-      className: "iris_win",
-      width: 300,
-      buttonClass: "button",
-      okLabel: "Да",
-      cancelLabel: "Нет"
+      }
     });
 
     this.request({
@@ -75,11 +73,9 @@ irisControllers.classes.c_Table = IrisCardController.extend({
   },
 
   copyAccess: function(p_table_id) {
-    console.log(p_table_id);
-    Dialog.info('Идет копирование...', {
+    IrisDialog.info('Идет копирование...', {
       width: 250,
       height: 60,
-      className: "iris_win",
       showProgress: true
     });
 
@@ -89,7 +85,7 @@ irisControllers.classes.c_Table = IrisCardController.extend({
         'table_id': p_table_id
       },
       onSuccess: function(transport) {
-        Dialog.closeInfo();
+        IrisDialog.closeInfo();
         try {
           var result = transport.responseText.evalJSON();
           wnd_alert(result.data.message, 350);
@@ -127,14 +123,11 @@ irisControllers.classes.c_Table = IrisCardController.extend({
           return;
         }
   
-        Dialog.confirm("Будет создан справочник <b>" + dict_code + "</b> для таблицы <b>" + table_code + "</b>", {
+        IrisDialog.confirm("Будет создан справочник <b>" + dict_code + "</b> для таблицы <b>" + table_code + "</b>", {
           onOk: function() {
-            Dialog.closeInfo();
+            IrisDialog.closeInfo();
             self.createDictXml(table_code, table_name, dict_code);
           },
-          className: "iris_win",
-          width: 300,
-          buttonClass: "button",
           okLabel: "Продолжить",
           cancelLabel: "Отмена"
         });

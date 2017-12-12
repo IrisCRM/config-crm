@@ -4,7 +4,7 @@
 
 irisControllers.classes.g_Email = IrisGridController.extend({
     events: {
-        'click .grid_row_js td:nth-child(4)': 'onOpenMail',
+        'click [rec_id] td:nth-child(4)': 'onOpenMail',
         'click .mail_header_title_js': 'onCloseMail'
     },
 
@@ -12,7 +12,7 @@ irisControllers.classes.g_Email = IrisGridController.extend({
         if (e.ctrlKey || e.shiftKey) {
             return;
         }
-        var el = jQuery(e.currentTarget).parents('.grid_row_js');
+        var el = jQuery(e.currentTarget).parents('[rec_id]');
         var recordId = el.attr('rec_id');
         var wrapper = el.parents('.grid');
         wrapper.find('.grid_row_js').show();
@@ -62,7 +62,7 @@ irisControllers.classes.g_Email = IrisGridController.extend({
     onCloseMail: function(e) {
         var wrapper = jQuery(e.currentTarget).parents('.grid');
         wrapper.find('.record_wrapper_js').hide();
-        wrapper.find('.grid_row_js').show();
+        wrapper.find('[rec_id]').show();
     },
 
     isEmailFetching: 0,

@@ -154,7 +154,11 @@ function g_InsertUserButtons(p_grid_id, p_buttons_html, p_table_name, p_buttons_
 	}
 
 	// Кнопки будут лежать в новой колонке
-	var buttons_html = '<td class="grid_footer" id="'+p_buttons_id+'"'+p_style+'>' + p_buttons_html + '</td>'; 
+	var buttons_html = p_buttons_html;
+	if (g_vars.template !== "bootstrap") {
+		buttons_html = '<td class="grid_footer" id="' + p_buttons_id + '"' +
+			p_style + '>' + p_buttons_html + '</td>';
+	}
 
 	// Вставляем кнопки
 	jQuery(elem).find('.grid_footer_spacer').append(buttons_html);

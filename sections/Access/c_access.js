@@ -21,9 +21,9 @@ irisControllers.classes.c_Access = IrisCardController.extend({
         }
 
         // устанавливаем значение RecordID
-        form.RecordID.value = this.parameter('detail_column_value');
+        this.fieldValue('RecordID', this.parameter('detail_column_value'));
         // скрываем первый столбец, который содержит ID родительской записи
-        $(form.RecordID).up('tr[class="form_row"]').setStyle({'display': "none"});
+        this.hideField('RecordID');
         // UpdateCardHeight(windowId);
 
         this.parameter('hash', GetCardMD5(windowId));
@@ -73,7 +73,7 @@ irisControllers.classes.c_Access = IrisCardController.extend({
                     if (result.success === 0)
                         wnd_alert(result.message, 350);
                     else {
-                        Dialog.confirm(result.message,{onOk:function() {Dialog.closeInfo(); form._hash.value = 'close'; form.btn_cancel.onclick()}, className: "iris_win", width: 300, height:null, buttonClass:"button", okLabel:"Ок", cancelLabel:"Продолжить"});
+                        IrisDialog.confirm(result.message,{onOk:function() {IrisDialog.closeInfo(); form._hash.value = 'close'; form.btn_cancel.onclick()}, okLabel:"OK", cancelLabel:"Продолжить"});
                     }
                 } catch (e) {
                     wnd_alert('Внимание! Не удалось изменить доступ у выбранных записей', 350);

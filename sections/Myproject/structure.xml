@@ -37,7 +37,7 @@
          </COLUMNS>
       </GRID_WND>
 
-      <EDITCARD name="c_Project" caption="Заказ" width="700" height="360"
+      <EDITCARD name="c_Project" caption="Заказ" width="900" height="360"
       	layout="2, 1, 1, 2, 2, 2, 1, 2, 1, 2">
       	<ELEMENTS>
       		<FIELD elem_type="text" caption="Номер" db_field="Number"

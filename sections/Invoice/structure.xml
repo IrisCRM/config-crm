@@ -79,7 +79,7 @@
       		<ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none" />
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_Invoice" caption="Счет" width="780" height="525" 
+      <EDITCARD name="c_Invoice" caption="Счет" width="900" height="525" 
          layout="2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 1, 1,   2, 2, 2, 2, 2, 2">
          <TABS>
             <TAB caption="Основная информация" rows="18"/>

@@ -19,7 +19,7 @@ irisControllers.classes.c_Mailing = IrisCardController.extend({
         var self = this;
         var mailingId = this.parameter('id');
         var endHandler = function(message) {
-            Dialog.closeInfo();
+            IrisDialog.closeInfo();
             wnd_alert(message || 'Возникла ошибка при отправке рассылки');
         };
 
@@ -69,15 +69,11 @@ irisControllers.classes.c_Mailing = IrisCardController.extend({
     showSendMailingDialog: function() {
         var self = this;
 
-        Dialog.alert(
+        IrisDialog.alert(
             'Рассылка отправляется<div id="mailing_operation" type="mailing_operation" style="color: #3E569C">Подготовка...</div>' +
                 '<div type="progrssbar" style="width: 250px; height: 15px; margin: 10px 20px 0px; border: 1px solid #3E569C">' +
                 '<div type="pb_scale" style="width: 0; height: 100%; background-color: #3E569C;"></div></div>',
             {
-                width:300,
-                height:100,
-                className: "iris_win",
-                buttonClass: "button",
                 okLabel: "Отмена",
                 onOk: function() {
                     self.cancelMailing();
@@ -124,7 +120,7 @@ irisControllers.classes.c_Mailing = IrisCardController.extend({
                             operationMessageBox.setStyle({'color': '#37be0e'});
                             messageBox.down('input.button').hide_().insert({
                                 'after': '<input id="mailing_operation_closebtn" type="button" class="button" ' +
-                                         'value="Закрыть" onclick="Dialog.closeInfo()">'
+                                         'value="Закрыть" onclick="IrisDialog.closeInfo()">'
                             });
                         }
                     }

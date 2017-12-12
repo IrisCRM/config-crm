@@ -46,16 +46,11 @@ irisControllers.classes.g_Import = IrisGridController.extend({
 
          // miv 19.08.2010: если не нужно сопоставлять справочники, то сразу предложим выполнить импорт
         if (!data.length) {
-            Dialog.confirm("Все готово для выполнения импорта. Выполнить импорт данных из этого файла?", {
+            IrisDialog.confirm("Все готово для выполнения импорта. Выполнить импорт данных из этого файла?", {
                 onOk: function() {
                     self.startImportNow(recordId);
-                    Dialog.closeInfo();
-                },
-                className: "iris_win",
-                width: 300,
-                buttonClass: "button",
-                okLabel: "Да",
-                cancelLabel: "Нет"
+                    IrisDialog.closeInfo();
+                }
             });
             return;
         }

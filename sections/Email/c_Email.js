@@ -106,9 +106,8 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         }
 
         if ((form._mode.value == 'update') && (emailType == 'Inbox')) {
-            // если редактируем входящее письмо, то нарисуем кнопку "создать инцидент"
-            var button_cont = $(form.btn_cancel).up('table.form_table_buttons_panel').rows[0].cells[0];
-            button_cont.innerHTML += '<input type="button" onclick="'+this.instanceName()+'.createIncident(this)" value="'+T.t('Создать инцидент')+'" style="width: 180px;" class="button" id="_createincident">';
+            // нарисуем кнопку "создать инцидент"
+            addCardFooterButton(windowId, 'top', T.t('Создать инцидент'), this.instanceName()+'.createIncident()');
 
             // нарисуем кнопку ответить
             addCardFooterButton(windowId, 'top', T.t('Ответить'), this.instanceName()+'.replyMessage()', T.t('Ответить на письмо'));
@@ -267,17 +266,12 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         }
 
         if ((!isReplace) && ((!isFillSubject) || (!isFillBody))) {
-            Dialog.confirm(
+            IrisDialog.confirm(
                 T.t('Сформировать содержание письма заново из шаблона?'), {
                 onOk:function() {
-                    Dialog.closeInfo();
+                    IrisDialog.closeInfo();
                     self.fillTemplate(form, start, true);
-                },
-                className: "iris_win",
-                width: 300,
-                buttonClass:"button",
-                okLabel: T.t("Да"),
-                cancelLabel: T.t("Нет")
+                }
             });
             return;
         } else {
@@ -387,7 +381,9 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         //1 столбец - текстовое поле "кому"
         new_html += "<td>"+e_to_html+"</td>";
         //2 столбец - выпадающий список компания / контакт
-        var select_html  = "<select id='_to_mode' class='edttext' elem_type='select' onblur= \"this.className = 'edtText';\" onfocus=\"this.className = 'edtText_selected';\" style='width: 100%; margin-left: 2px;' mandatory='no'>";
+        var select_html  = "<select id='_to_mode' " +
+            this.getElementProps("select") +
+            " elem_type='select' style='width: 100%; margin-left: 2px;' mandatory='no'>";
         select_html += "<option value='Contact'>"+T.t('Контакт')+"</option>";
         select_html += "<option value='Account'>"+T.t('Компания')+"</option>";
         select_html += "</select>";
@@ -395,7 +391,8 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         //3 столбец - скрытое поле lookup и кнопка выбора адреса "..."
 
         var hidden_elem_html = '<input type="text" elem_type="lookup" original_value="" value="" lookup_value="null" lookup_column="Email" lookup_grid_source_name="Contact" lookup_grid_source_type="grid" is_lookup="Y" style="display: none"  mandatory="no" id="_emailaddress"/>';
-        var button_html = '<input type="button" onclick="openlookupwindow(this)" value="+" id="_emailaddress_btn" style="margin: 0px 0px 0px 4px; width: 20px;" class="button"/>';
+        var button_html = '<input ' + this.getElementProps("input") +
+            ' type="button" onclick="openlookupwindow(this)" value="+" id="_emailaddress_btn"/>';
         new_html += "<td style='width: 20px'>"+hidden_elem_html+button_html+"</td>";
         new_html += "</tr></tbody></table>";
         e_to_cell.innerHTML = new_html;
@@ -426,15 +423,30 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         });
     },
 
+    // TODO: вынести в view
+    getElementProps(type) {
+        var isBootstrap = g_vars.template == 'bootstrap';
+        var classicProps = {
+            "input": "class=\"button\" style=\"margin: 0 0 0 4px; width: 20px;\"",
+            "select": "class=\"edttext\" onblur= \"this.className = 'edtText';\" onfocus=\"this.className = 'edtText_selected';\"",
+        };
+
+        var bootstrapProps = {
+            "input": "class=\"form-control input-sm edtText\" style=\"margin: 0 0 0 4px; width: 33px;\"",
+            "select": "class=\"form-control input-sm edtText\"",
+        };
+
+        return isBootstrap ? bootstrapProps[type] : classicProps[type];
+    },
+
     createIncident: function(element) {
-        var form = $(this.el.id).down('form');
         var params = {
             mode: 'incident_from_email',
             emailid: this.parameter('id')
         };
 
-        form._hash.value = 'close';
-        CloseCardWindow(element);
+        this.parameter('hash', 'close');
+        CloseCardWindow(jQuery("#" + this.el.id).find('form').get(0));
 
         openCard({
             source_name: 'Incident',

@@ -36,17 +36,11 @@ irisControllers.classes.g_Report = IrisGridController.extend({
     }
 
     if (p_confirm_flag != 1) {
-      Dialog.confirm(T.t('Вы уверены, что хотите скопировать данный отчет?'), {
+      IrisDialog.confirm(T.t('Вы уверены, что хотите скопировать данный отчет?'), {
         onOk: function() {
           self.copyReport(1); 
-          Dialog.closeInfo();
-        }, 
-        className: "iris_win", 
-        width: 300, 
-        height: null, 
-        buttonClass: "button", 
-        okLabel: "Да", 
-        cancelLabel: "Нет"
+          IrisDialog.closeInfo();
+        }
       });
       return;
     }
