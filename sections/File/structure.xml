@@ -89,7 +89,7 @@
 -->
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_File" caption="Файл" width="750" height="470" 
+      <EDITCARD name="c_File" caption="Файл" width="900" height="470" 
             layout="1, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2">
          <ELEMENTS>
             <FIELD elem_type="text" caption="Файл" db_field="file_file" mandatory="yes" datatype="file" row_type="file"/>

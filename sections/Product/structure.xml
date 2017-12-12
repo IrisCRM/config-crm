@@ -44,7 +44,7 @@
             <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_Product" caption="Продукт" width="780" height="440" 
+      <EDITCARD name="c_Product" caption="Продукт" width="900" height="440" 
          layout="1, 2, 2, 1,  1, 2, 2, 2,  1, 2, 2,  1, 2, 1,   1, 2" 
          draw_extra_button="yes">
 		 <TABS>

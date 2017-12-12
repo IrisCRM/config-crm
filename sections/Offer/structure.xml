@@ -66,7 +66,7 @@
       		<ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_Offer" caption="КП" width="750" height="420" 
+      <EDITCARD name="c_Offer" caption="КП" width="900" height="420" 
          layout="2, 1, 2, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 1">
          <ELEMENTS>
             <FIELD elem_type="text" caption="Номер" db_field="Number" mandatory="yes" datatype="string" row_type="common"/>

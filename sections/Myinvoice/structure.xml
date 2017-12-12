@@ -58,7 +58,7 @@
             <ITEM db_field="Amount" caption="Сумма" width="25%" row_type="common" row_datatype="decimal"/>
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_Myinvoice" caption="Счет" width="700" height="440" layout="2, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 1">
+      <EDITCARD name="c_Myinvoice" caption="Счет" width="900" height="440" layout="2, 1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 1">
          <ELEMENTS>
             <FIELD elem_type="text" caption="Номер" db_field="Number" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="spacer"/>

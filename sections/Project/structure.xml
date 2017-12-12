@@ -54,7 +54,7 @@
 
       <EDITCARD name="c_Project" 
         caption="Заказ" 
-        width="800" height="530"
+        width="900" height="530"
         layout="2, 1, 2, 2, 2, 2, 1, 2, 2, 1, 2, 1, 2, 2, 2, 2, 1, 1">
       	
       	<ELEMENTS>
