@@ -424,7 +424,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
     },
 
     // TODO: вынести в view
-    getElementProps(type) {
+    getElementProps: function(type) {
         var isBootstrap = g_vars.template == 'bootstrap';
         var classicProps = {
             "input": "class=\"button\" style=\"margin: 0 0 0 4px; width: 20px;\"",
