@@ -2,9 +2,9 @@
 <DOMAINS>
 	<DOMAIN name="d_logic_condition">
 		<VALUES>
-			<ITEM db_value="0" caption=""/>
-			<ITEM db_value="1" caption="И"/>
-			<ITEM db_value="2" caption="ИЛИ"/>
+			<ITEM db_value="0" caption="" sql=""/>
+			<ITEM db_value="1" caption="И" sql="and"/>
+			<ITEM db_value="2" caption="ИЛИ" sql="or"/>
 		</VALUES>
 	</DOMAIN>
 </DOMAINS>

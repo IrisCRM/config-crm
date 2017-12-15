@@ -735,7 +735,7 @@ function BuildReportSQL($p_reportid, $p_filters)
                     $filters_array[ $row['id'] ]['condition'] = $d_compare_condition->get($filter->Condition);
                     $filters_array[ $row['id'] ]['value'] = $param_value;
                     $filters_array[ $row['id'] ]['parentfilterid'] = $row['parentfilterid'];
-                    $filters_array[ $row['id'] ]['logiccondition'] = $d_logic_condition->get($row['logiccondition']);
+                    $filters_array[ $row['id'] ]['logiccondition'] = $d_logic_condition->get($row['logiccondition'], 'db_value', 'sql');
                     $filters_array[ $row['id'] ]['field'] = $row['tablealias'] . '.' . $row['columncode'];
                     $filters_array[ $row['id'] ]['sql'] = $row['sql'];
 
@@ -801,7 +801,7 @@ function BuildReportSQL($p_reportid, $p_filters)
             $filters_array[ $row['id'] ]['condition'] = $d_compare_condition->get($row['condition']);
             $filters_array[ $row['id'] ]['value'] = $param_value;
             $filters_array[ $row['id'] ]['parentfilterid'] = $row['parentfilterid'];
-            $filters_array[ $row['id'] ]['logiccondition'] = $d_logic_condition->get($row['logiccondition']);
+            $filters_array[ $row['id'] ]['logiccondition'] = $d_logic_condition->get($row['logiccondition'], 'db_value', 'sql');
             $filters_array[ $row['id'] ]['field'] = $row['tablealias'] . '.' . $row['columncode'];
             $filters_array[ $row['id'] ]['sql'] = $row['sql'];
         }
