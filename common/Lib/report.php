@@ -865,7 +865,7 @@ function Report_GetWhereConditions($p_filters_array, $p_parent_id)
                         }
                     }
                     else {
-                        $where1 .= Report_GetWhereConditions($p_filters_array, $key);
+                        $where1 = Report_GetWhereConditions($p_filters_array, $key);
                         $where = ('' != $where1) && ('' != $where) ? $where . ' ' . $logiccondition . ' ' . $where1 : $where . $where1;
                     }
                 }
