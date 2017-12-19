@@ -100,35 +100,35 @@ function addCardHeaderButton(p_wnd_id, p_position, p_caption, p_onclick_event, p
 		addCardHeaderButton_new(elem, p_position, p_caption);
 		return;
 	}
-	
-	if (p_onclick_event != '') {
-		p_onclick_event = 'onclick="'+p_onclick_event.gsub('"', '&quot;')+'"';
-	}
-	if (p_title != '') {
-		p_title = 'title="'+p_title.gsub('"', '&quot;')+'"';
+
+	addCardHeaderButton_new(elem, p_position,
+		getCardHeaderParams(p_caption, p_onclick_event, p_title, p_functions));
+}
+
+function getCardHeaderParams(p_caption, p_onclick_event, p_title, p_functions) {
+	var params = {
+		name: p_caption
+	};
+
+	if (!p_functions) {
+		params.title = p_title;
+		params.onclick = p_onclick_event;
+
+		return [params];
 	}
 
-	var captions_json = '';
-	var actions_json = '';
-	if (p_functions != undefined) {
-		var elems = g_GetButtonMenuHTMLElements(p_caption, p_functions, 0);
-		p_onclick_event = 'onclick="' + elems.onclickhandler + '"';
-//		captions_json = '';
-//		actions_json = '';
-//		captions_json = 'captions_json="' + elems.captions_json + '"';
-//		actions_json = 'actions_json="' + elems.actions_json + '"';
-		captions_json = 'captions_json="' + elems.captions_json + '"';
-		actions_json = 'actions_json="' + elems.actions_json + '"';
-		p_caption = elems.name;
+	params.buttons = [];
+	for (var name in p_functions) {
+		if (!p_functions.hasOwnProperty(name)) {
+			continue;
+		}
+		buttons.push({
+			name: name,
+			onclick: p_functions[name],
+		});
 	}
-		
-	btn_container.insert({'bottom': '<span class="card_top_panel_button" '+p_title+' '+p_onclick_event+' '+captions_json+' '+actions_json+' onmouseover="$(this).addClassName(\'card_top_panel_button_hover\')" onmouseout="$(this).removeClassName(\'card_top_panel_button_hover\')">'+p_caption+'</span>'});
-	var btn = btn_container.children[btn_container.children.length-1];
-//	btn.setAttribute('captions_json', elems.captions_json);
-//	btn.setAttribute('actions_json', elems.actions_json);
-//	btn.setAttribute('captions_json', Object.toJSON(elems.captions_json).replace(/"/g, '&quot;'));
-//	btn.setAttribute('actions_json', Object.toJSON(elems.actions_json).replace(/"/g, '&quot;'));
-	return btn_container.children[btn_container.children.length-1];
+
+	return params;
 }
 
 // 25.08.2010: добавляет кнопку в панель кнопок карточки
