@@ -67,17 +67,17 @@ function printform_showbycode(rec_id, code) {
 }
 
 function printform_createCardHeaderButton(p_wnd_id, p_position, p_caption) {
-	if (p_caption == undefined)
+	if (p_caption == undefined) {
 		p_caption = T.t('Печать')+'&hellip;';
+  }
 		
-	if ($(p_wnd_id).down('div.card_header_div') == null)
+	if ($(p_wnd_id).down('div.card_header_div') == null) {
 		return; // если верхней панели нету, то выйдем
+  }
 	var btn_container = $(p_wnd_id).down('div.card_header_div').down('div.card_'+p_position+'_buttons_div');
 	if (btn_container == null) {
 		return; // если неверно указана позиция кнопки (top|bottom), то выйдем
 	}
-	if (btn_container.innerHTML != '')
-		btn_container.insert({'bottom': '<span class="card_header_separator">|</span>'})
 	
 	var form = $(p_wnd_id).getElementsByTagName("form")[0];
     var filter_where = "displayinsection='1' and ( T0.sectionid in (select sectionid from iris_table where code=lower('" + form._table.value + "')) )";
@@ -87,8 +87,18 @@ function printform_createCardHeaderButton(p_wnd_id, p_position, p_caption) {
     button_html += '<div id="fake_wnd_'+btn_id+'" class="dialog">';
 	button_html += '<span style="display: none"> <table><tbody><tr><td><input type="text" style="display: none" elem_type="lookup" original_value="" value="" lookup_value="" filter_where="' + filter_where + '" filter_null="no" lookup_column="Name" lookup_grid_source_name="Printform" lookup_grid_source_type="grid" is_lookup="Y" mandatory="no" id="'+btn_id+'"/></td><td width="20"><input type="button" class="button" onclick="openlookupwindow(this)" value="Печатная форма..." id="'+btn_id+'_btn"/></td></tr></tbody></table></span>';
 	button_html += '</div>';
-	button_html += '<span class="card_top_panel_button" onclick="if (common_cardIsSaved(\''+p_wnd_id+'\', 1) == 1) { $(\''+btn_id+'_btn\').click(); $(\''+btn_id+'\').stopObserving(\'lookup:changed\'); $(\''+btn_id+'\').observe(\'lookup:changed\', function() {printform_showbyid(\'' + form._id.value + '\', $(\''+btn_id+'\'));}); }">'+p_caption+'</input>';
-		
+
+  // insert fake autocomplete
+  // TODO: use view or customgrid
 	btn_container.insert({'bottom': button_html});
-	return btn_container.children[btn_container.children.length-1];
+
+  addCardHeaderButton(p_wnd_id, p_position, [{
+    name: p_caption,
+    onclick: "if (common_cardIsSaved('" + p_wnd_id + "', 1) == 1) {" +
+      "$('" + btn_id + "_btn').click();" +
+      "$('"+btn_id+"').stopObserving(\'lookup:changed\');" +
+      "$('"+btn_id+"').observe('lookup:changed', function() {" +
+        "printform_showbyid('" + form._id.value + "', $('"+btn_id+"')); " +
+      "}); }"
+  }]);
 }
