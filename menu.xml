@@ -56,7 +56,7 @@
    </GROUP>
 
    <GROUP name="Администрирование">
-      <ITEM name="users"/>
+      <ITEM name="User"/>
       <ITEM name="dictionaryes"/>
       <ITEM name="Emailaccount"/>
       <ITEM name="Printform"/>

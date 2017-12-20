@@ -1,12 +1,12 @@
 /**
  * Раздел "Пользователи". Таблица.
  */
-irisControllers.classes.g_users = IrisGridController.extend({
+irisControllers.classes.g_User = IrisGridController.extend({
   onOpen: function () {
     g_InsertUserButtons(this.el.id, [
       {
         name: T.t('Принудительный выход'), 
-        onclick: "irisControllers.objects.g_users" + this.el.id + ".forcedLogout();"
+        onclick: "irisControllers.objects.g_User" + this.el.id + ".forcedLogout();"
       }
     ], 'iris_Contact');
   },
@@ -20,8 +20,8 @@ irisControllers.classes.g_users = IrisGridController.extend({
     }
 
     Transport.request({
-      section: 'users', 
-      'class': 'g_users', 
+      section: 'User', 
+      'class': 'g_User', 
       method: 'forcedLogout', 
       parameters: {
         userId: userId
