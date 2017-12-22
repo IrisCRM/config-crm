@@ -9,8 +9,12 @@ use PhpImap\IncomingMailAttachment;
 // use PhpImap\ConnectionException;
 
 class MailboxPached extends Mailbox {
+    // http://www.fileformat.info/info/unicode/char/fffd/index.htm
+    const REPLACEMENT_CHARACTER_CHAR = 0xFFFD;
+    const REPLACEMENT_CHARACTER_STRING = "\xef\xbf\xbd";
 
-   protected function stringToImapString($string)
+
+    protected function stringToImapString($string)
     {
         return $this->convertStringEncoding($string, "UTF-8", "UTF7-IMAP");
     }
@@ -72,6 +76,28 @@ class MailboxPached extends Mailbox {
             $folder = $this->imapStringToString($folder);
         }
         return $folders;
+    }
+
+    /**
+     * Replace chars that not presented in current charset with special replacement character symbol
+     *
+     */
+    public function replaceInvalidByteSequence($string)
+    {
+        $encoding = $this->serverEncoding;
+        $result = "";
+        $currentCharacter = mb_substitute_character();
+
+        mb_substitute_character(self::REPLACEMENT_CHARACTER_CHAR);
+        $result = mb_convert_encoding($string, $encoding, $encoding);
+        mb_substitute_character($currentCharacter); // restore current value
+
+        return $result;
+    }
+
+    public function convertLineEndingsToBR($string)
+    {
+        return nl2br($string);
     }
 
     /**

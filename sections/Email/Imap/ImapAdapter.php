@@ -16,9 +16,6 @@ class ImapAdapter
     protected $mailboxName = "INBOX";
     protected $logger;
 
-    // http://www.fileformat.info/info/unicode/char/fffd/index.htm
-    const REPLACEMENT_CHARACTER = 0xFFFD;
-
     function __construct($server, $port, $protocol, $login, $password)
     {
         $this->logger = Iris::$app->getContainer()->get('logger.factory')->get('imap');
@@ -241,8 +238,8 @@ class ImapAdapter
             "flagged" => $emailOverview->flagged,
             "seen" => $emailOverview->seen,
             "body" => !empty($email->textHtml) ?
-                $this->replaceInvalidByteSequence($email->textHtml, "UTF-8") :
-                $this->convertLineEndingsToBR($email->textPlain),
+                $this->mailbox->replaceInvalidByteSequence($email->textHtml, "UTF-8") :
+                $this->mailbox->convertLineEndingsToBR($email->textPlain),
             "attachments" => array(),
         );
 
@@ -255,23 +252,6 @@ class ImapAdapter
         }
 
         $result["cidPlaceholders"] = $email->getInternalLinksPlaceholders();
-
-        return $result;
-    }
-
-    protected function convertLineEndingsToBR($string)
-    {
-        return nl2br($string);
-    }
-
-    protected function replaceInvalidByteSequence($string, $encoding)
-    {
-        $result = "";
-        $currentCharacter = mb_substitute_character();
-
-        mb_substitute_character(self::REPLACEMENT_CHARACTER);
-        $result = mb_convert_encoding($string, $encoding, $encoding);
-        mb_substitute_character($currentCharacter); // restore current value
 
         return $result;
     }
