@@ -234,7 +234,7 @@ class ImapAdapter
             "date" => date_format(date_create_from_format('Y-m-d H:i:s', $email->date), 'd.m.Y H:i:s'),
             "from" => $email->fromAddress,
             "to" => $email->toString,
-            "subject" => $email->subject,
+            "subject" => $this->mailbox->decodeMimeStrSafe($emailOverview->subject),
             "flagged" => $emailOverview->flagged,
             "seen" => $emailOverview->seen,
             "body" => !empty($email->textHtml) ?

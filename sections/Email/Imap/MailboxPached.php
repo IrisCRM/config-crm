@@ -101,6 +101,68 @@ class MailboxPached extends Mailbox {
     }
 
     /**
+     * Safe decode mime string
+     *
+     * Some mime strings consisting of several parts
+     * ("=?utf-8?B?0JLQ...L3Q?= =?utf-8?B?uN..") after decode has invalid
+     * character on mime string "split" position. If after decode we have
+     * unsupported chars then glue mime string and decode again.
+     * Always glue mime string before decoding is NOT silver bullet solution
+     * and breaks decode for some strings, so we glue only then default decode
+     * has unsupported chars. See more:
+     * See https://github.com/mailwatch/MailWatch/issues/630#issuecomment-285952732
+     */
+    public function decodeMimeStrSafe($string) {
+        $toCharset = $this->serverEncoding;
+        $result = "";
+
+        $orig_character = mb_substitute_character();
+        mb_substitute_character(self::REPLACEMENT_CHARACTER_CHAR);
+        $result = $this->decodeMimeStr($string, $toCharset);
+        mb_substitute_character($orig_character);
+
+        if ($this->isStringHasInvalidCharacters($result)) {
+            $result = $this->decodeMimeStr(
+                $this->MimeStrToSingleLine($string), $toCharset);
+        }
+
+        return $result;
+    }
+
+    protected function isStringHasInvalidCharacters($string) {
+        return strpos($string, self::REPLACEMENT_CHARACTER_STRING) !== false;
+    }
+
+    protected function MimeStrToSingleLine($string) {
+        if (!$this->isAllMimePartsHaveSameCharset($string)) {
+            return $string;
+        }
+
+        $items = explode("?", $string);
+        // =?utf-8?B?0JLQsN... -> =?utf-8?B?
+        $mimeStart = "?= ".implode("?", [$items[0], $items[1], $items[2]])."?";
+
+        // "..3Q?= =?utf-8?B?uN.." -> "..3QuN.."
+        return str_replace($mimeStart, "", $string);
+    }
+
+    protected function isAllMimePartsHaveSameCharset($string) {
+        $parts = imap_mime_header_decode($string);
+        if ($parts === 1) {
+            return false;
+        }
+
+        $firstPartCharset = $parts[0]->charset;
+        foreach ($parts as $part) {
+            if ($part->charset !== $firstPartCharset) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Call IMAP extension function call wrapped with utf7 args conversion & errors handling
      *
      * @param $methodShortName
