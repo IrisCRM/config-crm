@@ -35,7 +35,7 @@
 				<ITEM caption="Шаблоны" where_clause="ET.Code='Template'"/>
 			</ITEM>
 			<ITEM caption="Почтовый ящик" item_style="font-weight: bold;" auto_table="iris_EmailAccount" auto_filter_column="id" auto_display_column="email" auto_sort_column="email" auto_where_clause="T0.emailaccountid='#VALUE#'"
-            values_where_clause="ID in (select tt.EmailAccountID from iris_emailaccount_defaultaccess tt where tt.ContactID = _iris_user_id[] and tt.r = '1') or ID in (select tt.EmailAccountID from iris_emailaccount_outboxaccess tt where tt.ContactID = _iris_user_id[] and tt.r = '1')"/>
+            values_where_clause="isactive='Y' and (ID in (select tt.EmailAccountID from iris_emailaccount_defaultaccess tt where tt.ContactID = _iris_user_id[] and tt.r = '1') or ID in (select tt.EmailAccountID from iris_emailaccount_outboxaccess tt where tt.ContactID = _iris_user_id[] and tt.r = '1'))"/>
          </FILTERS>
       </GRID>
       <GRID_WND name="g_Email" lines_count="1" caption="Письма" width="700" height="280">
