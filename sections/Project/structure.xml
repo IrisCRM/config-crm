@@ -164,7 +164,7 @@
          <DETAIL caption="Продукты" name="d_Project_Product" detail_fk_column="ProjectID" detail_table="iris_Project_Product">
             <GRID name="dg_Project_Product" lines_count="1" display_search="no" is_editable="yes" is_have_pages="no">
                <COLUMNS>
-                  <ITEM db_field="Number" caption="№" width="5%" row_type="common" row_datatype="int" total="count"/>
+                  <ITEM db_field="Number" caption="№" width="50px" row_type="common" row_datatype="int" total="count"/>
                   <ITEM db_field="ProductID" caption="Продукт" width="20%" row_type="fk_column" row_type_parent_table="iris_Product" row_type_parent_display_column="Name"/>
                   <ITEM db_field="UnitID" caption="Единица" width="10%" row_type="fk_column" row_type_parent_table="iris_Unit" row_type_parent_display_column="Name"/>
                   <ITEM db_field="Count" caption="Количество" width="10%" row_type="common" row_datatype="decimal" total="sum"/>
