@@ -60,9 +60,12 @@ irisControllers.classes.g_File = IrisGridController.extend({
             try {
               self.onFileUploadSuccess(
                   JSON.parse(transport.responseText).data, loaded >= files.length);
-              IrisDialog.setInfoMessage(getMsg(loaded, files.length));
               if (loaded >= files.length) {
-                IrisDialog.closeInfo();
+                setTimeout(function() {
+                  IrisDialog.closeInfo();
+                }, 0);
+              } else {
+                IrisDialog.setInfoMessage(getMsg(loaded, files.length));
               }
             }
             catch (e) {

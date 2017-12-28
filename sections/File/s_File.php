@@ -17,7 +17,6 @@ class s_File extends Config
             'common/Lib/lib.php',
             'common/Lib/access.php',
         ));
-        $this->_section_name = substr(__CLASS__, 2);
     }
 
     public function onPrepare($params) 
