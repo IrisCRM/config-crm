@@ -11,25 +11,23 @@ irisControllers.classes.dc_Table_Column = IrisCardController.extend({
 	onOpen: function () {
 		var card_form = document.getElementById(this.el.id).getElementsByTagName("form")[0];
 		var self = this;
+		var fkNameLabel = this.getFieldLabel("fkName");
+		var pkNameLabel = this.getFieldLabel("pkName");
+		var IndexNameLabel = this.getFieldLabel("IndexName");
+		var labelCss = { "cursor": 'pointer', "color": "#3E569C" };
 
 		// Автозаполнение ключей и индексов
-		$(card_form.fkName).up('td.form_table').previous().down().setStyle({"cursor": 'pointer', "color": "#3E569C"}).observe('click', function() {
-			if (self.fieldValue('fkName') == '') {
-				self.fieldValue('fkName', 'fk_' + self.fieldDisplayValue('TableID') + '_' + self.fieldValue('Code'));
-				self.fieldValue('OnDeleteID', '9f8bccc8-923a-3e15-6484-f7f4168294b2');
-				self.fieldValue('OnUpdateID', '9f8bccc8-923a-3e15-6484-f7f4168294b2');
-			}
-		});
-		$(card_form.pkName).up('td.form_table').previous().down().setStyle({"cursor": 'pointer', "color": "#3E569C"}).observe('click', function() {
-			if (self.fieldValue('pkName') == '') {
-				self.fieldValue('pkName', 'pk_' + self.fieldDisplayValue('TableID') + '_' + self.fieldValue('Code'));
-			}
-		});
-		$(card_form.IndexName).up('td.form_table').previous().down().setStyle({"cursor": 'pointer', "color": "#3E569C"}).observe('click', function() {
-			if (self.fieldValue('IndexName') == '') {
-				self.fieldValue('IndexName', self.fieldDisplayValue('TableID') + '_' + self.fieldValue('Code') + '_i');
-			}
-		});
+    fkNameLabel.css(labelCss).on('click', function() {
+      self.fillForeignKeys();
+    });
+
+    pkNameLabel.css(labelCss).on('click', function() {
+      self.fillPrimaryKey();
+    });
+
+    IndexNameLabel.css(labelCss).on('click', function() {
+      self.fillIndex();
+    });
 	},
 
 	onChangeCode: function() {
@@ -38,6 +36,31 @@ irisControllers.classes.dc_Table_Column = IrisCardController.extend({
 			this.fieldValue('Code', newValue);
 			showNotify('В поле "Код (название в БД)" можно использовать только незаглавные латинские символы и цифры');
 		}
-	}
+	},
 
+	fillForeignKeys: function() {
+		if (this.fieldValue('fkName')) {
+			return;
+		}
+		this.fieldValue('fkName', 'fk_' + 
+			this.fieldDisplayValue('TableID') + '_' + this.fieldValue('Code'));
+		this.fieldValue('OnDeleteID', '9f8bccc8-923a-3e15-6484-f7f4168294b2');
+		this.fieldValue('OnUpdateID', '9f8bccc8-923a-3e15-6484-f7f4168294b2');
+	},
+
+	fillPrimaryKey: function() {
+		if (this.fieldValue('pkName')) {
+			return;
+		}
+		this.fieldValue('pkName', 'pk_' +
+			this.fieldDisplayValue('TableID') + '_' + this.fieldValue('Code'));
+	},
+
+	fillIndex: function() {
+		if (this.fieldValue('IndexName')) {
+			return;
+		}
+		this.fieldValue('IndexName',
+			this.fieldDisplayValue('TableID') + '_' + this.fieldValue('Code') + '_i');
+	}
 });
