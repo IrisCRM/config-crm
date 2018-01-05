@@ -42,6 +42,7 @@ function BuildReportParameters($p_parameters)
 //Получить фильтры, которые отмечены для отображения (для окна с фильтрами)
 function Report_GetFilters($p_reportid, $p_report_code, $in_report = false, $p_filters = [])
 {
+    $props = GetCssProperties();
     $html_params = '';
 
     $con = GetConnection();
@@ -93,7 +94,7 @@ function Report_GetFilters($p_reportid, $p_report_code, $in_report = false, $p_f
 
     //Пройдемся по каждому фильтру и нарисуем его
     $result = '<form parameters=[#parameters#] reportid="' . $p_reportid . '">' .
-        '<div style="max-height: 200px; overflow-y: auto"><table class="form_table"><tbody>';
+        '<div><table class="form_table"><tbody>';
     $parameters = [];
     $param_number = 0; //для нумерации параметров
 //print_r($p_filters);echo '<br>';
@@ -162,8 +163,7 @@ function Report_GetFilters($p_reportid, $p_report_code, $in_report = false, $p_f
             '<select filterid="' . (1 == $row['num1'] ? $row['id'] : '') . '" ' .
             'parameterid="' . (2 == $row['num1'] ? $row['id'] : '') . '" mandatory="no" ' .
             ($isMultiple ? 'disabled="disabled"' : '') .
-            'class="edtText_selected" style="width: 100%;' . $display . '" id="c_' . $param_name . '" ' .
-            'onfocus="this.className=\'edtText_selected\';" onblur="this.className=\'edtText\';" ' .
+            'class="'.$props["elementClass"].'" style="width: 100%;' . $display . '" id="c_' . $param_name . '" ' .
             'elem_type="select">' .
             '<option  value="0"></option>' .
             '<option ' . (1 == $condition ? 'selected=""' : '') . ' value="1">=</option>' .
@@ -279,11 +279,11 @@ function Report_GetFilters($p_reportid, $p_report_code, $in_report = false, $p_f
     //Кнопки
     $result .=
         '<table class="form_table_buttons_panel"><tbody><tr><td style="vertical-align: middle;"/>' .
-        ($in_report ? '<td><input type="button" onclick="jQuery(\'#window_filter_report\').hide(); jQuery(\'#filters\').hide();" value="' . json_encode_str('Скрыть') . '" style="width: 90px;" class="button" id="btn_hide"/></td>' : '') .
+        ($in_report ? '<td><input type="button" onclick="jQuery(\'#window_filter_report\').hide(); jQuery(\'#filters\').hide();" value="' . json_encode_str('Скрыть') . '" style="width: 90px;" class="'.$props["buttonClass"].'" id="btn_hide"/></td>' : '') .
         '<td align="right">' .
-        ($in_report ? '<input type="button" value="' . json_encode_str('*.csv') . '" style="width: 90px;" class="button" id="btn_csv" ' . ($in_report ? 'onclick="redraw_report(\'csv\');"' : '') . '/>' : '') .
-        '<input type="button" value="' . json_encode_str($in_report ? 'Обновить' : 'Запуск') . '" style="width: 90px;" class="button" id="btn_ok" ' . ($in_report ? 'onclick="redraw_report();"' : '') . '/>' .
-        ($in_report ? '' : '<input type="button" onclick="Windows.close(get_window_id(this));" value="' . json_encode_str('Отмена') . '" style="width: 90px;" class="button" id="btn_cancel"/>') .
+        ($in_report ? '<input type="button" value="' . json_encode_str('*.csv') . '" style="width: 90px;" class="'.$props["buttonClass"].'" id="btn_csv" ' . ($in_report ? 'onclick="redraw_report(\'csv\');"' : '') . '/>' : '') .
+        '<input type="button" value="' . json_encode_str($in_report ? 'Обновить' : 'Запуск') . '" style="width: 90px;" class="'.$props["buttonClass"].'" id="btn_ok" ' . ($in_report ? 'onclick="redraw_report();"' : '') . '/>' .
+        ($in_report ? '' : '<input type="button" onclick="Windows.close(get_window_id(this));" value="' . json_encode_str('Отмена') . '" style="width: 90px;" class="'.$props["buttonClass"].'" id="btn_cancel"/>') .
         '</td></tr></tbody></table>';
 
     $result .= '</form>';
@@ -310,35 +310,37 @@ function GetElementHTML($p_name, $p_type = 'string', $p_value = null, $p_caption
     $p_value = htmlspecialchars($p_value);
     $p_type = htmlspecialchars($p_type);
     $p_caption = htmlspecialchars($p_caption);
+    $props = GetCssProperties();
+
     switch ($p_type) {
 
         case 'string':
         case 'int':
             $result .= '<table style="width: 100%; table-layout: fixed;"><tbody><tr><td>';
-            $result .= '<input id="' . $p_name . '" class="edtText" type="text" autocomplete="off" elem_type="' . $p_elem_type . '" onblur="this.className=\'edtText\';" onfocus="this.className=\'edtText_selected\';" value="' . $p_value . '" mandatory="' . $p_mandatory . '" style="width: 100%;"/>';
+            $result .= '<input id="' . $p_name . '" class="'.$props["elementClass"].'" type="text" autocomplete="off" elem_type="' . $p_elem_type . '" value="' . $p_value . '" mandatory="' . $p_mandatory . '" style="width: 100%;"/>';
             $result .= '</td></tr></tbody></table>';
             $result .= '<input id="#' . $p_name . '" type="hidden" value="' . $p_type . '"/>';
             break;
 
         case 'float':
             $result .= '<table style="width: 100%; table-layout: fixed;"><tbody><tr><td>';
-            $result .= '<input id="' . $p_name . '" class="edtText" type="text" autocomplete="off" elem_type="' . $p_elem_type . '" onblur="this.className=\'edtText\';" onfocus="this.className=\'edtText_selected\';" value="' . $p_value . '" mandatory="' . $p_mandatory . '" style="width: 100%;"/>';
+            $result .= '<input id="' . $p_name . '" class="'.$props["elementClass"].'" type="text" autocomplete="off" elem_type="' . $p_elem_type . '"  value="' . $p_value . '" mandatory="' . $p_mandatory . '" style="width: 100%;"/>';
             $result .= '</td></tr></tbody></table>';
             $result .= '<input id="#' . $p_name . '" type="hidden" value="decimal"/>';
             break;
 
         case 'date':
             $result .= '<table cellspacing="0" width="100%"><tbody><tr><td>';
-            $result .= '<input id="' . $p_name . '" class="edtText" type="text" autocomplete="off" elem_type="' . $p_elem_type . '" onblur="this.className=\'edtText\';" onfocus="this.className=\'edtText_selected\';" value="' . $p_value . '" mandatory="' . $p_mandatory . '" maxlength="16" style="width: 100%;"/>';
-            $result .= '</td><td width="20">';
+            $result .= '<input id="' . $p_name . '" class="'.$props["elementClass"].'" type="text" autocomplete="off" elem_type="' . $p_elem_type . '" value="' . $p_value . '" mandatory="' . $p_mandatory . '" maxlength="16" style="width: 100%;"/>';
+            $result .= '</td><td width="'.$props["tdWidth"].'">';
             $result .= '<div class="calendar_img" onclick="new CalendarDateSelect($(this).parentNode.parentNode.getElementsByTagName(\'input\')[0], {time: false, buttons: true, embedded: false, year_range: 10} );" />';
             $result .= '</td></tr></tbody></table>';
             $result .= '<input id="#' . $p_name . '" type="hidden" value="datetime"/>';
             break;
         case 'datetime':
             $result .= '<table cellspacing="0" width="100%"><tbody><tr><td>';
-            $result .= '<input id="' . $p_name . '" class="edtText" type="text" autocomplete="off" elem_type="' . $p_elem_type . '" onblur="this.className=\'edtText\';" onfocus="this.className=\'edtText_selected\';" value="' . $p_value . '" mandatory="' . $p_mandatory . '" maxlength="16" style="width: 100%;"/>';
-            $result .= '</td><td width="20">';
+            $result .= '<input id="' . $p_name . '" class="'.$props["elementClass"].'" type="text" autocomplete="off" elem_type="' . $p_elem_type . '" value="' . $p_value . '" mandatory="' . $p_mandatory . '" maxlength="16" style="width: 100%;"/>';
+            $result .= '</td><td width="'.$props["tdWidth"].'">';
             $result .= '<div class="calendar_img" onclick="new CalendarDateSelect($(this).parentNode.parentNode.getElementsByTagName(\'input\')[0], {time: true, buttons: true, embedded: false, year_range: 10} );" />';
             $result .= '</td></tr></tbody></table>';
             $result .= '<input id="#' . $p_name . '" type="hidden" value="datetime"/>';
@@ -347,13 +349,12 @@ function GetElementHTML($p_name, $p_type = 'string', $p_value = null, $p_caption
         case 'guid':
             if ('lookup' == $p_elem_type) {
                 $result .= '<table cellspacing="0" width="100%"><tbody><tr><td>';
-                $result .= '<input id="' . $p_name . '" class="edtText" type="text" elem_type="' . $p_elem_type . '" onblur="this.className=\'edtText\'; ' .
-                    'TryToCloseAutoCompleteElem(this);" onfocus="this.className=\'edtText_selected\';" ' .
+                $result .= '<input id="' . $p_name . '" class="'.$props["elementClass"].'" type="text" elem_type="' . $p_elem_type . '" onblur="TryToCloseAutoCompleteElem(this);" ' .
                     'onkeyup="DrawAutoComplete(this, event);" original_value="' . $p_caption . '" value="' . $p_caption . '" lookup_value="' . $p_value . '" ' .
                     'lookup_column="' . $displaycolumnname . '" lookup_grid_source_name="' . $p_sourcename . '" lookup_grid_source_type="' . $p_sourcetype . '" ' .
                     'autocomplete="off" is_lookup="Y" style="width: 100%;" mandatory="' . $p_mandatory . '"/>';
                 $result .= '</td><td width="20">';
-                $result .= '<input id="' . $p_name . '_btn" class="button" type="button" onclick="openlookupwindow(this);" value="..." style="margin: 0px 0px 0px 1px; width: 20px;" />';
+                $result .= '<input id="' . $p_name . '_btn" class="'.$props["buttonClass"].'" type="button" onclick="openlookupwindow(this);" value="..." style="margin: 0px 0px 0px 1px; width: '.$props["tdWidth"].'px;" />';
                 $result .= '</td></tr></tbody></table>';
                 $result .= '<input id="#' . $p_name . '" type="hidden" value="id"/>';
             }
@@ -367,10 +368,10 @@ function GetElementHTML($p_name, $p_type = 'string', $p_value = null, $p_caption
     // если указано условие для выпадающего списка, то данный элемент, вне зависимости от типа, будет выпадающим списком
     if (($p_elem_type == 'select') and ($p_addl_params['droplistsql'] != '')) {
         $result = '<table cellspacing="0" width="100%"><tbody><tr><td>';
-        $result .= '<select mandatory="no" class="edtText" ';
+        $result .= '<select mandatory="no" class="'.$props["elementClass"].'" ';
         $result .= 'style="width:100%;' . ($p_addl_params['isMultiple'] ? ' display:none' : '') . '" id="' . $p_name . '" ';
         $result .= ($p_addl_params['isMultiple'] ? ' multiple="multiple" ' : '');
-        $result .= 'onfocus="this.className = \'edtText_selected\';" onblur="this.className = \'edtText\';" elem_type="select">';
+        $result .= ' elem_type="select">';
         $result .= '<option value=""></option>';
         // $selectedValues = $p_addl_params['isMultiple'] ?
         $selectedValues = isJSON(htmlspecialchars_decode($p_value)) ?
@@ -392,6 +393,24 @@ function GetElementHTML($p_name, $p_type = 'string', $p_value = null, $p_caption
         $result .= '</select>';
         $result .= '</td></tr></tbody></table>';
         $result .= '<input id="#' . $p_name . '" type="hidden" value="datetime"/>';
+    }
+
+    return $result;
+}
+
+function GetCssProperties() {
+    $result = [
+        "elementClass" => "edtText",
+        "buttonClass" => "button",
+        "tdWidth" => 20,
+    ];
+
+    if ($_SESSION['style_name'] == "bootstrap") {
+        $result = [
+            "elementClass" => "form-control input-sm",
+            "buttonClass" => "btn btn-default btn-sm",
+            "tdWidth" => 30,
+        ];        
     }
 
     return $result;
