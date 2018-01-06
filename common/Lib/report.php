@@ -157,7 +157,7 @@ function Report_GetFilters($p_reportid, $p_report_code, $in_report = false, $p_f
 
 
         //Условие
-        $result .= '<td class="form_table" width="80">';
+        $result .= '<td class="form_table" width="100">';
         $display = $row['columntypecode'] && $row['showcondition'] ? '' : 'display: none;';
         $result .=
             '<select filterid="' . (1 == $row['num1'] ? $row['id'] : '') . '" ' .
