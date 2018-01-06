@@ -128,7 +128,7 @@ class ReportRender
                 $this->report_info['id'], null, true, $this->filters);
 
         $filter_fields = 
-            '<div id="window_filter_report" class="dialog">'.
+            '<div id="window_filter_report" class="report-filters">'.
             json_decode_str($filtters_all['Card']).
             '</div>';
 

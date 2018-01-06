@@ -1,3 +1,5 @@
-#window_filter_report {
-  display: none;
+@media print {
+  #window_filter_report {
+    display: none;
+  }
 }
