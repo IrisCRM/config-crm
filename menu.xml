@@ -32,8 +32,8 @@
       <ITEM name="Marketing"/>
       <ITEM name="Space"/>
       <ITEM name="Mailing"/>
-      <ITEM name="Poll"/>
-      <ITEM name="Interview" quicknew="1"/>
+      <!-- <ITEM name="Poll"/> -->
+      <!-- <ITEM name="Interview" quicknew="1"/> -->
    </GROUP>
 
    <GROUP name="Сервис">
@@ -63,7 +63,7 @@
       <ITEM name="Remind"/>
       <ITEM name="RemindLog"/>
       <ITEM name="Import"/>
-      <ITEM name="Config"/>
+      <!-- <ITEM name="Config"/> -->
       <ITEM name="sectionroles"/>
       <ITEM name="tablegroups"/>
       <ITEM name="Table"/>
