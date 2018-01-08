@@ -84,7 +84,7 @@ function printform_createCardHeaderButton(p_wnd_id, p_position, p_caption) {
 	
 	var btn_id = 'el'+(Math.random()+"").slice(3);	
 	var button_html = '';
-    button_html += '<div id="fake_wnd_'+btn_id+'" class="dialog">';
+    button_html += '<div style="display: none" id="fake_wnd_'+btn_id+'" class="dialog">';
 	button_html += '<span style="display: none"> <table><tbody><tr><td><input type="text" style="display: none" elem_type="lookup" original_value="" value="" lookup_value="" filter_where="' + filter_where + '" filter_null="no" lookup_column="Name" lookup_grid_source_name="Printform" lookup_grid_source_type="grid" is_lookup="Y" mandatory="no" id="'+btn_id+'"/></td><td width="20"><input type="button" class="button" onclick="openlookupwindow(this)" value="Печатная форма..." id="'+btn_id+'_btn"/></td></tr></tbody></table></span>';
 	button_html += '</div>';
 
