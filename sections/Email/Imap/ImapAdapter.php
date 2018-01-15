@@ -53,15 +53,68 @@ class ImapAdapter
 
     public function addMimeMessageToMailbox($mailboxName, $MimeMessage)
     {
-        return imap_append(
+        $this->switchMailbox($mailboxName);
+        $uids = [];
+        $uids[] = $this->getMailboxNextUid($mailboxName); // forecasted uid before append
+        $result = imap_append(
             $this->mailbox->getImapStream(),
             $this->getMailboxFullName($this->stringToImapString($mailboxName)),
             $MimeMessage,
             "\\Seen");
+        $uids[] = $this->getMailboxNextUid($mailboxName) - 1; // forecasted uid after append
+
+        $this->debug("findEmailUid forecasted uids", var_export($uids, true));
+        return $this->findEmailUid($mailboxName, $uids, $MimeMessage);
     }
 
     protected function getMailboxFullName($mailboxName) {
         return $this->connectionString . $mailboxName;
+    }
+
+    protected function getMimeMessageID($MimeMessage) {
+        $rows = explode("\n", $MimeMessage);
+        $rowParts = [];
+
+        foreach($rows as $row) {
+            $rowParts = explode(": ", $row);
+            if ($rowParts[0] === "Message-ID") {
+                return $rowParts[1];
+            }
+        }
+
+        return "";
+    }
+
+    protected function getMailboxNextUid($mailboxName) {
+        return $this->getMailboxStatus($mailboxName)->uidnext;
+    }
+
+    protected function findEmailUid($mailboxName, $uids, $MimeMessage) {
+        if ($uids[1] - $uids[0] === 0) {
+            $this->debug("findEmailUid ", "no race condition");
+            return $uids[1];
+        }
+
+        $sentMessageID = $this->getMimeMessageID($MimeMessage);
+        $this->debug("findEmailUid sentMessageID ", $sentMessageID);
+
+        // race condition case: find message uid by messageId
+        for ($i = 0; $i <= $uids[1] - $uids[0]; $i++) {
+            $currentMessageId = str_replace(
+                array("\r\n", "\n", "\r",
+                chr(10)),
+                '',
+                $this->getMimeMessageID(
+                    $this->mailbox->
+                        getMail($uids[0] + $i, false)->headersRaw)
+                );
+            if ($sentMessageID === $currentMessageId) {
+                $this->debug("findEmailUid ", "find by MessageID");
+                return $uids[0] + $i;
+            }
+        }
+
+        return $uids[1]; // fallback
     }
 
     public function markMailAsRead($uid)
@@ -96,7 +149,7 @@ class ImapAdapter
             $this->getMailboxFullName($this->mailboxName));
     }
 
-    protected function getMailboxStatus($mailboxName) {
+    public function getMailboxStatus($mailboxName) {
         try {
             $this->mailbox->switchMailbox(
                 $this->getMailboxFullName($mailboxName));
