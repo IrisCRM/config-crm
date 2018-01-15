@@ -272,7 +272,7 @@ class Fetcher extends Config implements FetcherInterface
           T0.emailaccountid as emailaccountid
           from iris_emailaccount_mailbox T0
           left join iris_emailaccount T1 on T0.emailaccountid = T1.id
-          where emailaccountid = :emailaccountid";
+          where emailaccountid = :emailaccountid and issync = 1";
 
         $cmd = $con->prepare($sql);
         $cmd->execute(array(":emailaccountid" => $emailAccount["id"]));
