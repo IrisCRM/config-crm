@@ -56,16 +56,20 @@
           <DETAIL caption="Папки для синхронизации" name="d_EmailAccount_mailbox" detail_table="iris_emailaccount_mailbox" detail_fk_column="EmailAccountID">
               <GRID display_search="no">
                   <COLUMNS>
-                      <ITEM caption="Имя" db_field="name" width="50%" row_type="common"/>
-                      <ITEM caption="Имя для отображения" db_field="displayname" width="50%" row_type="common"/>
+                      <ITEM caption="Имя" db_field="name" width="40%" row_type="common"/>
+                      <ITEM caption="Имя для отображения" db_field="displayname" width="40%" row_type="common"/>
+                      <ITEM caption="Синхронизировать" db_field="IsSync" width="20%" row_type="domain" row_type_domain_name="d_yn_binary"/>
                   </COLUMNS>
               </GRID>
-              <EDITCARD name="dc_EmailAccount_mailbox" caption="Папка для синхронизации (IMAP)" width="600" height="180" layout="1, 2, 1">
+              <EDITCARD name="dc_EmailAccount_mailbox" caption="Папка для синхронизации (IMAP)" width="680" height="180" layout="1, 2, 2, 2">
                   <ELEMENTS>
                       <FIELD elem_type="lookup" caption="Аккаунт" db_field="EmailAccountID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Emailaccount" row_type_parent_display_column="description"/>
                       <FIELD elem_type="text" caption="Имя" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
                       <FIELD elem_type="text" caption="LastUID" db_field="LastUID" mandatory="no" datatype="int" row_type="common" title="UID последнего загруженного с сервера письма. Уменьшение значения приведет к повторной загрузке писем. Увеличение значения приведет к пропуску писем. Если установить значение, равное последнему uid (кнопка 'Проверка соединения'), то будут в систему будут загружаться только новые письма"/>
                       <FIELD elem_type="text" caption="Имя для отображения" db_field="DisplayName" mandatory="yes" datatype="string" row_type="common"/>
+                      <FIELD elem_type="checkbox" caption="Синхронизировать" db_field="IsSync" row_type_checked_index="1" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Синхронизировать данную папку с сервером?" />
+                      <FIELD elem_type="select" caption="Тип письма" db_field="EmailTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_EmailType" row_type_parent_display_column="Name" title="Тип, который будет присвоен письму при загрузке с сервера"/>
+                      <FIELD elem_type="spacer"/>
                   </ELEMENTS>
               </EDITCARD>
           </DETAIL>
