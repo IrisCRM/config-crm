@@ -70,6 +70,227 @@ class s_File extends Config
         return $result;
     }
 
+    public function onBeforePostContactID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'ContactID');
+        return GetLinkedValues('Contact', $value, 
+                array('Account', 'Object'), $this->connection);
+    }
+
+    public function onBeforePostObjectID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'ObjectID');
+        return GetLinkedValues('Object', $value, 
+                array('Account', 'Contact'), $this->connection);
+    }
+
+    public function onBeforePostProjectID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'ProjectID');
+        return GetLinkedValues('Project', $value, 
+                array('Account', 'Object', 'Contact'), $this->connection);
+    }
+
+    public function onBeforePostIssueID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'IssueID');
+        return GetLinkedValues('Issue', $value, 
+                array('Product'), $this->connection);
+    }
+
+    public function onBeforePostBugID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'BugID');
+        $result = GetLinkedValues('Bug', $value, 
+                array('Project', 'Issue'), $this->connection);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'ProjectID', 'Value');
+        $result = GetLinkedValues('Project', $id, 
+                array('Account', 'Contact', 'Object'), $this->connection, 
+                $result);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'IssueID', 'Value');
+        $result = GetLinkedValues('Issue', $id, 
+                array('Product'), $this->connection, $result);
+
+        return $result;
+    }
+
+    public function onBeforePostIncidentID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'IncidentID');
+        return GetLinkedValues('Incident', $Value, 
+                array('Account', 'Contact', 'Object', 'Product', 'Issue', 
+                    'Marketing', 'Space', 'Project', 'Offer', 'Pact', 
+                    'Invoice', 'Payment', 'FactInvoice', 'Document'), 
+                $this->connection);
+    }
+
+    public function onBeforePostOfferID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'OfferID');
+
+        $result = GetLinkedValues('Offer', $value, 
+                array('Project', 'Account', 'Contact'), $this->connection);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'ProjectID', 'Value');
+        $result = GetLinkedValues('Project', $id, 
+                array('Account', 'Contact', 'Object'), $this->connection, 
+                $result);
+
+        return $result;
+    }
+
+    public function onBeforePostPactID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'PactID');
+        $result = GetLinkedValues('Pact', $value, 
+                array('Account', 'Contact', 'Project'), $this->connection);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'ProjectID', 'Value');
+        $result = GetLinkedValues('Project', $id, 
+                array('Account', 'Contact', 'Object'), $this->connection, 
+                $result);
+
+        return $result;
+    }
+
+    public function onBeforePostInvoiceID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'InvoiceID');
+        $result = GetLinkedValues('Invoice', $value, 
+                array('Account', 'Contact', 'Project', 'Pact', 'Offer'), 
+                $this->connection);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'PactID', 'Value');
+        $result = GetLinkedValues('Pact', $id, 
+                array('Account', 'Contact', 'Project'), $this->connection, 
+                $result);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'ProjectID', 'Value');
+        $result = GetLinkedValues('Project', $id, 
+                array('Account', 'Contact', 'Object'), $this->connection, 
+                $result);
+
+        return $result;
+    }
+
+    public function onBeforePostPaymentID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'PaymentID');
+        $result = GetLinkedValues('Payment', $value, 
+                array('Account', 'Contact', 'Project', 'Pact', 'Invoice'), 
+                $this->connection);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'InvoiceID', 'Value');
+        $result = GetLinkedValues('Invoice', $id, 
+                array('Account', 'Contact', 'Project', 'Pact'), 
+                $this->connection, $result);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'PactID', 'Value');
+        $result = GetLinkedValues('Pact', $id, 
+                array('Account', 'Contact', 'Project'), $this->connection, 
+                $result);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'ProjectID', 'Value');
+        $result = GetLinkedValues('Project', $id, 
+                array('Account', 'Contact', 'Object'), $this->connection, 
+                $result);
+
+        return $result;
+    }
+
+    public function onBeforePostFactInvoiceID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'FactInvoiceID');
+        $result = GetLinkedValues('FactInvoice', $value, 
+            array('Account', 'Contact', 'Project', 'Pact', 'Invoice'), 
+            $this->connection);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'InvoiceID', 'Value');
+        $result = GetLinkedValues('Invoice', $id, 
+                array('Account', 'Contact', 'Project', 'Pact'), 
+                $this->connection, $result);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'PactID', 'Value');
+        $result = GetLinkedValues('Pact', $id, 
+                array('Account', 'Contact', 'Project'), $this->connection, 
+                $result);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'ProjectID', 'Value');
+        $result = GetLinkedValues('Project', $id, 
+                array('Account', 'Contact', 'Object'), $this->connection, 
+                $result);
+
+        return $result;
+    }
+
+    public function onBeforePostDocumentID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'DocumentID');
+        $result = GetLinkedValues('Document', $value, 
+                array('Account', 'Contact', 'Project', 'Pact'), 
+                $this->connection);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'PactID', 'Value');
+        $result = GetLinkedValues('Pact', $id, 
+                array('Account', 'Contact', 'Project'), $this->connection, 
+                $result);
+
+        $id = GetArrayValueByParameter(
+                $result['FieldValues'], 'Name', 'ProjectID', 'Value');
+        $result = GetLinkedValues('Project', $id, 
+                array('Account', 'Contact', 'Object'), $this->connection, 
+                $result);
+
+        return $result;
+    }
+
+    public function onBeforePostTaskID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'TaskID');
+        return GetLinkedValues('Task', $value, 
+                array('Account', 'Contact', 'Object', 'Product', 'Project', 
+                    'Issue', 'Bug', 'Marketing', 'Space', 'Offer', 'Pact', 
+                    'Invoice', 'Payment', 'FactInvoice', 'Document', 
+                    'Incident'), 
+                $this->connection);
+    }
+
+    public function onBeforePostEmailID($parameters)
+    {
+        $value = $this->getActualValue($parameters['old_data'], 
+                $parameters['new_data'], 'EmailID');
+        return GetLinkedValues('Email', $value, 
+                array('Account', 'Contact'), $this->connection);
+    }
+
     /**
      * Этот обработчик не используется. Он есть в Myfile
      */

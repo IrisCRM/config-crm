@@ -13,7 +13,11 @@ irisControllers.classes.c_File = IrisCardController.extend({
   },
 
   onChangeLookup: function(event) {
-    c_Common_LinkedField_OnChange($(this.el).down('form'), event.target.id);
+    this.onChangeEvent(event, {
+      disableEvents: true,
+      rewriteValues: false,
+      letClearValues: false
+    });
   },
 
   onOpen: function () {
@@ -42,7 +46,7 @@ irisControllers.classes.c_File = IrisCardController.extend({
         var tr = $(form).down('input[type=file]').hide_().up('tr');
         $(tr.cells[0]).down('span').addClassName('card_elem_title').
             setAttribute('title', 
-            'Этот файл прикреплен к письму, поэтому его нельзя изменинять');
+            'Этот файл прикреплен к письму, поэтому его нельзя изменять');
         if ($(form.btn_ok)) {
           $(form.btn_ok).hide_();      
         }
