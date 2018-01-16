@@ -38,7 +38,12 @@ class SendJob extends AbstractJob
             $logger->info(sprintf('Sending mail %s...', $message->emailId));
 
             $sql = <<<SQL
-    select e_from as from, e_to as to, subject, body, emailaccountid, T1.code as code, T2.sentmailboxname
+    select
+        e_from as from, e_to as to, subject, body, emailaccountid,
+        T1.code as code, T2.sentmailboxname,
+        (select id from iris_emailaccount_mailbox
+            where emailaccountid = T2.id
+              and name = T2.sentmailboxname) as sentmailboxid
     from iris_email T0
     left join iris_emailtype T1 on T0.emailtypeid=T1.id
     left join iris_emailaccount T2 on T0.emailaccountid = T2.id
@@ -100,7 +105,18 @@ SQL;
             // сохранение письма в папку "Папка для отправленных" (для imap)
             if ($mimeMessage and $email["sentmailboxname"]) {
                 $fetcher = new Imap\Fetcher();
-                $fetcher->addMimeMessageToMailbox($email["emailaccountid"], $email["sentmailboxname"], $mimeMessage);
+                $uid = $fetcher->addMimeMessageToMailbox($email["emailaccountid"], $email["sentmailboxname"], $mimeMessage);
+            }
+
+            // сохранение uid письма для будущей синхронизации
+            if ($uid) {
+                $sql = "update iris_email set uid = :uid, mailboxid=:mailboxid where id=:id";
+                $cmd = $db->connection->prepare($sql);
+                $cmd->execute([
+                    ":id" => $message->emailId,
+                    ":uid" => $uid,
+                    ":mailboxid" => $email["sentmailboxid"]
+                ]);
             }
 
             $logger->info(sprintf('Mail %s sent', $message->emailId));
