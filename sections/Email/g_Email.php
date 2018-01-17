@@ -97,9 +97,11 @@ class g_Email extends Config
         $accountName = $this->_DB->getRecord($accountId, '{account}', ['name'])['name'];
         $emailTypeCode = $this->_DB->getRecord($emailTypeId, '{emailtype}', ['code'])['code'];
 
-        $stmt = $this->connection->prepare("select id, file_file, file_filename 
-            from iris_file 
-            where emailid = :email_id");
+        $stmt = $this->connection->prepare("select
+            T0.id as id, T0.file_file as file_file, T0.file_filename as file_filename
+            from iris_file T0
+            where T0.emailid = :email_id
+              or T0.id in (select T1.fileid from iris_email_file T1 where T1.emailid=:email_id)");
         $stmt->execute([
             ':email_id' => $params['id'],
         ]);
