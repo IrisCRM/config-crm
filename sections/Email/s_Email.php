@@ -101,6 +101,10 @@ class s_Email extends Config
         // _reply_email_id 3a79d78c-9072-4317-1a80-2fb1c6b25784
         // _params {"replyEmailId":"3a79d78c-9072-4317-1a80-2fb1c6b25784"}
         $this->setParentEmailID($recordId, isset($_POST['_reply_email_id']) ? $_POST['_reply_email_id'] : null);
+
+        if (isset($_POST['_forward_email_id'])) {
+            $this->copyAttachments($recordId, $_POST['_forward_email_id']);
+        }
     }
 
     /**
@@ -115,6 +119,20 @@ class s_Email extends Config
 
         $cmd = $con->prepare("update iris_email set parentemailid = :parentid where id=:id");
         $cmd->execute(array(":parentid" => $parentEmailID, ":id" => $recordId));
+    }
+
+    protected function copyAttachments($recordId,  $forwardEmailID)
+    {
+        $cmd = $this->connection->prepare("
+            insert into iris_email_file (id, createid, createdate, fileid, emailid)
+            (select iris_genguid() as id, :userid as createid,  now() as createdate, id as fileid, :emailid as emailid from iris_file where emailid = :forwardemailid
+            union
+            select iris_genguid() as id, :userid as createid,  now() as createdate, fileid as fileid, :emailid as emailid from iris_email_file where emailid = :forwardemailid);");
+        $cmd->execute([
+            ':userid' => $this->_User->property('id'),
+            ':emailid' => $recordId,
+            ':forwardemailid' => $forwardEmailID,
+        ]);
     }
 
     /**

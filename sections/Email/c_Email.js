@@ -364,6 +364,8 @@ irisControllers.classes.c_Email = IrisCardController.extend({
 
                 this.isDefaultValuesLoading = false;
 
+                $(form._params).insert({'after': '<input id="_forward_email_id" type="hidden" value="'+forwardEmailId+'">'});
+
                 form.setAttribute('parent_body', GetFieldValueByFieldName(data.FieldValues, '_parent_body'));
                 form._hash.value = GetCardMD5(get_window_id(form));
             }
