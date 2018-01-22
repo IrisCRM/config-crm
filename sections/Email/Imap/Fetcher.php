@@ -476,9 +476,9 @@ class Fetcher extends Config implements FetcherInterface
         $emailId = create_guid();
         $readedStr = $email["seen"] ? json_encode(array($emailAccountOwnerId)) : null;
 
-        $sql = "insert into iris_email(id, createid, createdate, uid, e_from, e_to, subject, body, emailtypeid,
+        $sql = "insert into iris_email(id, createid, createdate, uid, e_from, e_to, e_cc, e_bcc, subject, body, emailtypeid,
             emailaccountid, mailboxid, accountid, contactid, ownerid, messagedate, incidentid, isimportant, has_readed) 
-            values (:id, :createid, now(), :uid, :e_from, :e_to, :subject, :body,
+            values (:id, :createid, now(), :uid, :e_from, :e_to, :e_cc, :e_bcc, :subject, :body,
             :emailtypeid, :emailaccountid, :mailboxid,
             :accountid, :contactid, :ownerid, to_timestamp(:messagedate, 'DD.MM.YYYY HH24:MI:SS'), :incidentid,
             :isimportant, :readedstr)";
@@ -490,6 +490,8 @@ class Fetcher extends Config implements FetcherInterface
             ":uid" => $email["uid"],
             ":e_from" => $email["from"],
             ":e_to" => $email["to"],
+            ":e_cc" => $email["cc"],
+            ":e_bcc" => $email["bcc"],
             ":subject" => $email["subject"],
             ":body" => $body,
             ":emailtypeid" => $emailTypeID,
