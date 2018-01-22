@@ -125,6 +125,8 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         else {
             // Скрываем поле От[почтовый аккаунт]
             this.hideField('EmailAccountID');
+            // Скрываем поле Скрытая копия
+            this.hideField('e_bcc');
         }
 
         // miv 25.08.2010: добавлена кнопка отправить
