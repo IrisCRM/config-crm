@@ -39,7 +39,8 @@ class SendJob extends AbstractJob
 
             $sql = <<<SQL
     select
-        e_from as from, e_to as to, subject, body, emailaccountid,
+        e_from as from, e_to as to, e_cc as cc, e_bcc as bcc,
+        subject, body, emailaccountid,
         T1.code as code, T2.sentmailboxname,
         (select id from iris_emailaccount_mailbox
             where emailaccountid = T2.id
@@ -85,7 +86,8 @@ SQL;
             }
 
             // отправка письма
-            $errm = email_send_message($email['to'], $email['subject'], $email['body'], $email['from'], $attachments, $mimeMessage);
+            $errm = email_send_message($email['to'], $email['subject'], $email['body'], $email['from'],
+                $attachments, $mimeMessage, $email['cc'], $email['bcc']);
             if ($errm != '') {
                 $logger->error(strip_tags($errm));
                 throw new IrisException(strip_tags($errm));
