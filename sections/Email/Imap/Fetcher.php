@@ -386,10 +386,18 @@ class Fetcher extends Config implements FetcherInterface
         return $data["id"];
     }
 
-    protected function isSupportEmail($email)
+    protected function isSupportEmail($address)
     {
-        $this->debug("isSupportEmail match", array($this->supportEmails, $email));
-        return in_array($email, $this->supportEmails) === true;
+        // address: John Doe <john@example.com>, support@example.com
+        // supportEmails: array(support@example.com, help@example.com)
+        $this->debug("isSupportEmail match", array($this->supportEmails, $address));
+        foreach ($this->supportEmails as $supportEmail) {
+            if (strpos($address, $supportEmail) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // TODO: use method in EmailFetcher
