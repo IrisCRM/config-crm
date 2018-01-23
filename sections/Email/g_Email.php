@@ -89,9 +89,9 @@ class g_Email extends Config
 
     public function getMailData($params)
     {
-        list($subject, $from, $to, $contactId, $accountId, $hasReaded, $emailTypeId) =
+        list($subject, $from, $to, $cc, $bcc, $contactId, $accountId, $hasReaded, $emailTypeId) =
             GetFieldValuesByID('Email', $params['id'], [
-                'subject', 'e_from', 'e_to', 'contactid', 'accountid', 'has_readed', 'emailtypeid',
+                'subject', 'e_from', 'e_to', 'e_cc', 'e_bcc', 'contactid', 'accountid', 'has_readed', 'emailtypeid',
             ]);
         $contactName = $this->_DB->getRecord($contactId, '{contact}', ['name'])['name'];
         $accountName = $this->_DB->getRecord($accountId, '{account}', ['name'])['name'];
@@ -121,6 +121,8 @@ class g_Email extends Config
             'subject' => $subject,
             'from' => $from,
             'to' => $to,
+            'cc' => $cc,
+            'bcc' => $bcc,
             'contactName' => $contactName,
             'accountName' => $accountName,
             'emailTypeCode' => $emailTypeCode,
