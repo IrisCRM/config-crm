@@ -54,29 +54,38 @@ class c_Email extends Config
         $replyEmailId = $params['replyEmailId'];
         $replyToAll = isset($params['replyToAll']) ? $params['replyToAll'] : false;
         $con = $this->connection;
+        $matches = [];
 
-        $result = GetFormatedFieldValuesByFieldValue('Email', 'ID', $replyEmailId, array('e_from', 'Subject', 'body'), $con);
+        $currentEmailAccountID = GetFieldValueByID("Email", $replyEmailId, "EmailAccountID");
+        $currentEmailAddress = GetFieldValueByID("Emailaccount", $currentEmailAccountID, "email");
+
+        $result = GetFormatedFieldValuesByFieldValue('Email', 'ID', $replyEmailId, array('e_from', 'e_cc', 'Subject', 'body'), $con);
         $result['FieldValues'][0]['Name'] = 'e_to';
 
         if ($replyToAll) {
             $to = GetFieldValueByID('Email', $replyEmailId, 'e_to', $con);
             $addresses = $result['FieldValues'][0]['Value'] . ', ' . $to;
-            $result['FieldValues'][0]['Value'] = $addresses;
+            $result['FieldValues'][0]['Value'] = $this->filterAddress(
+                $addresses, $currentEmailAddress);
+            $result['FieldValues'][1]['Value'] = $this->filterAddress(
+                $result['FieldValues'][1]['Value'], $currentEmailAddress);
+        } else {
+            $result['FieldValues'][1]['Value'] = "";
         }
 
         // miv 02.08.2010: если письмо привязано к инциденту, то в теме письма долен быть его номер
-        $subject = $result['FieldValues'][1]['Value'];
+        $subject = $result['FieldValues'][2]['Value'];
         list($incident_id) = GetFieldValuesByFieldValue('email', 'id', $replyEmailId, array('incidentid'), $con);
         if ($incident_id != '') {
             list($incident_number) = GetFieldValuesByFieldValue('incident', 'id', $incident_id, array('number'), $con);
             $result = FieldValueFormat('IncidentID', $incident_id, $incident_number, $result);
             if (iris_preg_match("/\\[\\d{6}-\\d+\\]/", $subject, $matches, PREG_OFFSET_CAPTURE) == 0) {
                 // если в теме письма не обнаружили инцидента
-                $result['FieldValues'][1]['Value'] = 'Re: ['.$incident_number.'] '.$result['FieldValues'][1]['Value'];
+                $result['FieldValues'][2]['Value'] = 'Re: ['.$incident_number.'] '.$result['FieldValues'][2]['Value'];
             }
         } else {
             if (iris_substr($subject, 0, 3) != 'Re:')
-                $result['FieldValues'][1]['Value'] = 'Re: '.$subject;
+                $result['FieldValues'][2]['Value'] = 'Re: '.$subject;
         }
 
         // подставим текст письма как шаблон ответа + текст старого письма
@@ -86,12 +95,25 @@ class c_Email extends Config
         $templatebody = FillFormFromText($templatebody, 'Contact', $contactid);
 
         $parentbody = '<br><br>Вы писали:<br><BLOCKQUOTE style="margin: 5px 0 0 5px; padding: 0 0 0 5px; border-left: 2px solid #484F9E">'.GetFieldValueByFieldValue('email', 'id', $replyEmailId, 'body', $con).'</BLOCKQUOTE>';
-        $result['FieldValues'][2]['Value'] = json_convert($templatebody).json_convert($parentbody);
+        $result['FieldValues'][3]['Value'] = json_convert($templatebody).json_convert($parentbody);
         $result['FieldValues'][] = array("Name" => '_parent_body', "Value" => json_convert($parentbody));
 
         $result = GetLinkedValues('Email', $replyEmailId, array('Account', 'Contact'), $con, $result);
 
         return $result;
+    }
+
+    function filterAddress($address, $filterEmail) {
+        $addresses = explode(",", $address);
+        $result = [];
+        $isExists = false;
+
+        $result = array_filter($addresses, function($item) use ($filterEmail) {
+            $isNotExists = strpos($item, $filterEmail) === false;
+            return $isNotExists;
+        });
+
+        return implode(",", $result);
     }
 
     function getForwardFields($params) {
