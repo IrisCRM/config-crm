@@ -125,6 +125,9 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         else {
             // Скрываем поле От[почтовый аккаунт]
             this.hideField('EmailAccountID');
+        }
+
+        if (emailType == 'Inbox') {
             // Скрываем поле Скрытая копия
             this.hideField('e_bcc');
         }
