@@ -120,7 +120,9 @@ irisControllers.classes.c_Email = IrisCardController.extend({
             // Делаем поле От[учетная запись] обязательным
             this.fieldProperty('EmailAccountID', 'mandatory', 'yes');
             // Изменяем интерфейс для поля "кому"
-            this.changeToField(form);
+            this.changeToField(form, "e_to");
+            this.changeToField(form, "e_cc");
+            this.changeToField(form, "e_bcc");
         }
         else {
             // Скрываем поле От[почтовый аккаунт]
@@ -377,18 +379,18 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         });
     },
 
-    changeToField: function(form) {
+    changeToField: function(form, fieldName) {
         //Ячейка таблицы, в которой находится поле "кому"
-        var e_to_cell = form.e_to.parentNode;
+        var e_to_cell = form[fieldName].parentNode;
         //html текст элемента "кому"
         var e_to_html = e_to_cell.innerHTML;
-        var e_to_value = form.e_to.value;  //mnv
+        var e_to_value = form[fieldName].value;  //mnv
 
         var new_html  = "<table style='width: 100%'><tbody><tr>";
         //1 столбец - текстовое поле "кому"
         new_html += "<td>"+e_to_html+"</td>";
         //2 столбец - выпадающий список компания / контакт
-        var select_html  = "<select id='_to_mode' " +
+        var select_html  = "<select id='_" + fieldName + "_mode' " +
             this.getElementProps("select") +
             " elem_type='select' style='width: 100%; margin-left: 2px;' mandatory='no'>";
         select_html += "<option value='Contact'>"+T.t('Контакт')+"</option>";
@@ -397,36 +399,39 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         new_html += "<td style='width: 120px'>"+select_html+"</td>";
         //3 столбец - скрытое поле lookup и кнопка выбора адреса "..."
 
-        var hidden_elem_html = '<input type="text" elem_type="lookup" original_value="" value="" lookup_value="null" lookup_column="Email" lookup_grid_source_name="Contact" lookup_grid_source_type="grid" is_lookup="Y" style="display: none"  mandatory="no" id="_emailaddress"/>';
+        var hidden_elem_html = '<input type="text" elem_type="lookup" original_value="" value="" lookup_value="null" lookup_column="Email" lookup_grid_source_name="Contact" lookup_grid_source_type="grid" is_lookup="Y" style="display: none"  mandatory="no" id="_' + fieldName + '_emailaddress"/>';
         var button_html = '<input ' + this.getElementProps("input") +
-            ' type="button" onclick="openlookupwindow(this)" value="+" id="_emailaddress_btn"/>';
+            ' type="button" onclick="openlookupwindow(this)" value="+" id="_' + fieldName + '_emailaddress_btn"/>';
         new_html += "<td style='width: 20px'>"+hidden_elem_html+button_html+"</td>";
         new_html += "</tr></tbody></table>";
         e_to_cell.innerHTML = new_html;
         form.e_to.value = e_to_value;  //mnv
 
         // при смене select изменить параметры lookup
-        $(form._to_mode).observe('change', function() {
-            $(form._emailaddress).setAttribute('lookup_grid_source_name', p_form._to_mode.options[p_form._to_mode.selectedIndex].value);
+        $(form["_" + fieldName + "_mode"]).observe('change', function() {
+            $(form["_" + fieldName + "_emailaddress"]).setAttribute(
+                'lookup_grid_source_name',
+                // p_form["_" + fieldName + "_mode"].options[p_form._to_mode.selectedIndex].value);
+                jQuery(form["_" + fieldName + "_mode"]).val());
         });
 
         // TODO: повесить событие на изменение lookup - ++ к основному и тут же очистить
-        $(form._emailaddress).observe('lookup:changed', function() {
-            if (form.e_to.value == '') {
-                form.e_to.value = form._emailaddress.value;
+        $(form["_" + fieldName + "_emailaddress"]).observe('lookup:changed', function() {
+            if (form[fieldName].value == '') {
+                form[fieldName].value = form["_" + fieldName + "_emailaddress"].value;
             }
             else
-            if (form.e_to.value.include(form._emailaddress.value) == false) {
-                form.e_to.value += ', '+form._emailaddress.value;
+            if (form[fieldName].value.include(form["_" + fieldName + "_emailaddress"].value) == false) {
+                form[fieldName].value += ', '+form["_" + fieldName + "_emailaddress"].value;
             }
 
             // TODO: реализовать логику без использования c_Common_LinkedField_OnChange
             //Событие на добавление email (выбор контакта, компании...)
             // c_Common_LinkedField_OnChange(form, '_emailaddress', c_Email_ScriptFileName, false, function() {});
 
-            form._emailaddress.value = '';
-            form._emailaddress.setAttribute('lookup_value', 'null');
-            form._emailaddress.setAttribute('original_value', '');
+            form["_" + fieldName + "_emailaddress"].value = '';
+            form["_" + fieldName + "_emailaddress"].setAttribute('lookup_value', 'null');
+            form["_" + fieldName + "_emailaddress"].setAttribute('original_value', '');
         });
     },
 
