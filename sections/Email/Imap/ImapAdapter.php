@@ -286,7 +286,10 @@ class ImapAdapter
             "messageId" => $email->messageId,
             "date" => date_format(date_create_from_format('Y-m-d H:i:s', $email->date), 'd.m.Y H:i:s'),
             "from" => $email->fromAddress,
-            "to" => $email->toString,
+            // "to" => $email->toString,
+            "to" => $this->getAddresses($email->to),
+            "cc" => $this->getAddresses($email->cc),
+            "bcc" => $this->getAddresses($email->bcc),
             "subject" => $this->mailbox->decodeMimeStrSafe($emailOverview->subject),
             "flagged" => $emailOverview->flagged,
             "seen" => $emailOverview->seen,
@@ -307,6 +310,21 @@ class ImapAdapter
         $result["cidPlaceholders"] = $email->getInternalLinksPlaceholders();
 
         return $result;
+    }
+
+    protected function getAddresses($addresses)
+    {
+        $result = [];
+
+        if (!isset($addresses)) {
+            return null;
+        }
+
+        foreach($addresses as $email => $name) {
+            $result[] = $name ? "$name <$email>" : $email;
+        }
+
+        return implode(', ', $result);
     }
 
     protected function getDirForUid($uid)

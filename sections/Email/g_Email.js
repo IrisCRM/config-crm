@@ -48,6 +48,8 @@ irisControllers.classes.g_Email = IrisGridController.extend({
                     subject: data.subject,
                     from: data.from,
                     to: data.to,
+                    cc: data.cc,
+                    bcc: data.bcc,
                     contactName: data.contactName,
                     accountName: data.accountName,
                     emailTypeCode: data.emailTypeCode,
