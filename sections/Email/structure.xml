@@ -53,30 +53,28 @@
             <ITEM db_field="OwnerID" caption="Ответственный" width="15%" row_type="fk_column" row_type_parent_table="iris_Contact" row_type_parent_display_column="Name" display_format="none"/>			
          </COLUMNS>
       </GRID_WND>
-      <EDITCARD name="c_Email" caption="Письмо" width="860" height="530" layout="1, 1, 1, 1, 1, 2, 2, 2, 1, 1">
+      <EDITCARD name="c_Email" caption="Письмо" width="860" height="480" layout="1,1,1,1,2,1,1, 2,2,1">
+         <TABS>
+            <TAB caption="Основная информация" rows="7"/>
+            <TAB caption="Дополнительно" rows="3"/>
+         </TABS>
          <ELEMENTS>
-<!--		 
-            <FIELD elem_type="select" caption="От" db_field="emailaccountid" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_emailaccount" row_type_parent_display_column="email"/>
--->
 <!-- Для исходящих -->
             <FIELD elem_type="select" caption="От" db_field="EmailAccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_sql="select T0.id, T0.email, T1.r, T1.is_primary from iris_emailaccount T0 left join iris_emailaccount_outboxaccess T1 on (T0.id = T1.emailaccountid and t1.contactid=_iris_user_id[]) where T1.is_send='1'"/>
 <!-- Для входящих -->
             <FIELD elem_type="text" caption="От" db_field="e_from" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="text" caption="Кому" db_field="e_to" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="text" caption="Копия" db_field="e_cc" mandatory="no" datatype="string" row_type="common"/>
-            <FIELD elem_type="text" caption="Скрытая копия" db_field="e_bcc" mandatory="no" datatype="string" row_type="common"/>
-			<FIELD elem_type="lookup" caption="Компания" db_field="AccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="name"/>
-			<FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="name"/>
-			<FIELD elem_type="select" caption="Тип" db_field="EmailTypeID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_EmailType" row_type_parent_display_column="name" db_field_ext="Code"/>
-			<FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="name"/>
-			<FIELD elem_type="lookup" caption="Шаблон" db_field="EmailTemplateID" mandatory="no" filter_where="T0.emailtypeid in (select id from iris_emailtype where code='Template')" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Email" row_type_parent_display_column="subject"/>
-			<FIELD elem_type="lookup" caption="Инцидент" db_field="IncidentID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Incident" row_type_parent_display_column="Number"/>
+            <FIELD elem_type="lookup" caption="Компания" db_field="AccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="name"/>
+            <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="name"/>
             <FIELD elem_type="text" caption="Тема" db_field="Subject" mandatory="yes" datatype="string" row_type="common"/>
             <FIELD elem_type="textarea" is_rich_control="yes" textarea_rows="20" caption="Сообщение" db_field="body" mandatory="no" datatype="string" row_type="common"/>
 
-<!--
-			<FIELD elem_type="select" caption="тип" db_field="emailtypeid" mandatory="yes" datatype="id" row_type="fk_column" row_type_sql="select id, name from iris_emailtype order by 1"/>
--->
+            <FIELD elem_type="select" caption="Тип" db_field="EmailTypeID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_table="iris_EmailType" row_type_parent_display_column="name" db_field_ext="Code"/>
+            <FIELD elem_type="lookup" caption="Ответственный" db_field="OwnerID" mandatory="no" filter_where="T0.id in (select id from iris_getowners())" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="name"/>
+            <FIELD elem_type="lookup" caption="Шаблон" db_field="EmailTemplateID" mandatory="no" filter_where="T0.emailtypeid in (select id from iris_emailtype where code='Template')" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Email" row_type_parent_display_column="subject"/>
+            <FIELD elem_type="lookup" caption="Инцидент" db_field="IncidentID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Incident" row_type_parent_display_column="Number"/>
+            <FIELD elem_type="text" caption="Скрытая копия" db_field="e_bcc" mandatory="no" datatype="string" row_type="common"/>
          </ELEMENTS>
       </EDITCARD>
       <DETAILS>
