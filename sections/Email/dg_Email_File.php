@@ -59,6 +59,7 @@ class dg_Email_File extends Config
                 "where (T0.emailid<>:emailid or T0.emailid is null) 
                   and T0.id not in (select EF.fileid from iris_email_file EF where EF.emailid = :emailid)")
             . "order by t0.file_filename";
+        $sql = $this->_DB->addPagination($sql, $params["pageNumber"], 100);
         $filter = array(
             ':emailid' => $params['emailId'],
         );
@@ -67,6 +68,8 @@ class dg_Email_File extends Config
         // Выбранная по умолчанию запись - либо следующая либо текущая цель
         $parameters = array(
             'grid_id' => 'custom_grid_'. md5(time() . rand(0, 10000)),
+            'page_number' => $params["pageNumber"],
+            'rows_on_page' => 100,
         );
 
         // Подготовка данных для представления таблицы
