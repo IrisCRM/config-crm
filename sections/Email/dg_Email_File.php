@@ -57,17 +57,22 @@ class dg_Email_File extends Config
                 left join " . $this->_DB->tableName('{filestate}') . " t2 
                   on t2.id = t0.filestateid",
                 "where (T0.emailid<>:emailid or T0.emailid is null) 
-                  and T0.id not in (select EF.fileid from iris_email_file EF where EF.emailid = :emailid)")
-            . "order by t0.file_filename";
+                  and T0.id not in (select EF.fileid from iris_email_file EF where EF.emailid = :emailid)
+                  and (t0.file_filename like '%' || :search || '%' or :search is null)")
+            . "order by t0.createdate desc";
         $sql = $this->_DB->addPagination($sql, $params["pageNumber"], 100);
         $filter = array(
             ':emailid' => $params['emailId'],
+            ':search' => $params["searchValue"],
         );
         $values = $this->_DB->exec($sql, $filter);
 
         // Выбранная по умолчанию запись - либо следующая либо текущая цель
         $parameters = array(
             'grid_id' => 'custom_grid_'. md5(time() . rand(0, 10000)),
+            'search_caption' => "Имя файла",
+            'search_title' => "Имя файла или его часть",
+            'search_value' => $params["searchValue"],
             'page_number' => $params["pageNumber"],
             'rows_on_page' => 100,
         );
