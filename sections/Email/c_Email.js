@@ -405,7 +405,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         new_html += "<td style='width: 20px'>"+hidden_elem_html+button_html+"</td>";
         new_html += "</tr></tbody></table>";
         e_to_cell.innerHTML = new_html;
-        form.e_to.value = e_to_value;  //mnv
+        form[fieldName].value = e_to_value;  //mnv
 
         // при смене select изменить параметры lookup
         $(form["_" + fieldName + "_mode"]).observe('change', function() {
