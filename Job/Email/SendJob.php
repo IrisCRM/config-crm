@@ -89,8 +89,8 @@ SQL;
             $errm = email_send_message($email['to'], $email['subject'], $email['body'], $email['from'],
                 $attachments, $mimeMessage, $email['cc'], $email['bcc']);
             if ($errm != '') {
-                $logger->error(strip_tags($errm));
-                throw new IrisException(strip_tags($errm));
+                $logger->error($errm);
+                throw new IrisException($errm);
             }
 
             // проставление статуса "Отправленое" (или "Рассылка - отправленное")
