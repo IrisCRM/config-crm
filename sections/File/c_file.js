@@ -21,35 +21,26 @@ irisControllers.classes.c_File = IrisCardController.extend({
   },
 
   onOpen: function () {
-    var form = $(this.el).down('form');    
-    var parent_grid = $(form._parent_id.value);
+    var parentGrid = jQuery("#" + this.parameter("parent_id"));
 
     // Если родительского грида нет, то выйдем
-    if (parent_grid == null) {
+    if (!parentGrid.length) {
       return;
     }
 
     // Если это не закладка d_Email_File, товыйдем
-    if (parent_grid.getAttribute('detail_name') != 'd_Email_File') {
+    if (parentGrid.attr("detail_name") != 'd_Email_File') {
       return;
     }
 
-    if (form._mode.value != 'insert') {
-      form.EmailID.setAttribute('readonly', 'readonly');
-      form.EmailID_btn.setAttribute('disabled', 'disabled');
+    if (this.parameter("mode") != 'insert') {
+
+      this.fieldProperty('EmailID', 'readonly', true);
       
       // Если письмо не указано, значит это прикрепленный файл. 
-      // Сделаем изменение самого файла в этом случае недоступным
-      if (form.EmailID.value == '') {
-        form.down('div.fileinput_caption').down('div.fileinput_clearButton').hide_();
-        form.down('div.fileinput_blocker').hide_();
-        var tr = $(form).down('input[type=file]').hide_().up('tr');
-        $(tr.cells[0]).down('span').addClassName('card_elem_title').
-            setAttribute('title', 
-            'Этот файл прикреплен к письму, поэтому его нельзя изменять');
-        if ($(form.btn_ok)) {
-          $(form.btn_ok).hide_();      
-        }
+      // Скроем кнопку "ОК"
+      if (!this.fieldValue("EmailID")) {
+        this.$el.find("#btn_ok").hide();
       }
     }
   }
