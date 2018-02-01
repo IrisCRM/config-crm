@@ -22,12 +22,12 @@
 			</COLUMNS>
 		</GRID_WND>
 
-		<EDITCARD name="c_Remind" caption="Напоминание" width="750" height="390" 
+		<EDITCARD name="c_Remind" caption="Напоминание" width="800" height="390" 
 			layout="1, 2, 2, 1, 2, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1">
 			<TABS>
 				<TAB caption="Основная информация" rows="11"/>
 				<TAB caption="Текст email уведомления" rows="2"/>
-				<TAB caption="Тексты gtalk и sms уведомлений" rows="3"/>
+				<TAB caption="Тексты telegram и sms уведомлений" rows="3"/>
 			</TABS>
 		 <ELEMENTS row_type="fk_column">
 				<FIELD elem_type="text" caption="Название" db_field="Name" mandatory="yes" datatype="string" row_type="common"/>
@@ -46,7 +46,7 @@
 				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Email" db_field="IsEmail" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании по email. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по email', то уведомление не будет отправлено"/>
 				<FIELD elem_type="spacer"/>
 				<!--<FIELD elem_type="checkbox" row_type_checked_index="1" caption="ICQ" db_field="IsICQ" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании по icq. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по icq', то уведомление не будет отправлено"/>-->
-				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Google talk" db_field="IsGtalk" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании в Google talk. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по gtalk', то уведомление не будет отправлено"/>
+				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Telegram" db_field="IsTelegram" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании в Telegram. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по telegram', то уведомление не будет отправлено"/>
 				<FIELD elem_type="spacer"/>
 				<FIELD elem_type="checkbox" row_type_checked_index="1" caption="SMS" db_field="IsSMS" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Отправлять уведомление о напоминании по sms. Уведомление отправится пользователю, на которого ссылается поле userid в отчете. Если на карточке этого пользователя не установлен признак 'Получать уведомления по sms', то уведомление не будет отправлено"/>
 				<FIELD elem_type="spacer"/>
@@ -61,7 +61,7 @@
 
 				<!-- вторая страница -->
 				<!--<FIELD elem_type="textarea" textarea_rows="6" caption="Текст icq &lt;br&gt; уведомления" db_field="ICQtext" mandatory="no" datatype="string" row_type="common" title="В тексте icq уведомления можно указывать шаблоны на основе печатных форм"/>-->
-				<FIELD elem_type="textarea" textarea_rows="6" caption="Текст gtalk &lt;br&gt; уведомления" db_field="Gtalktext" mandatory="no" datatype="string" row_type="common" title="В тексте google talk уведомления можно указывать шаблоны на основе печатных форм"/>
+				<FIELD elem_type="textarea" textarea_rows="6" caption="Текст telegram &lt;br&gt; уведомления" db_field="TelegramText" mandatory="no" datatype="string" row_type="common" title="В тексте telegram уведомления можно указывать шаблоны на основе печатных форм"/>
 				<FIELD elem_type="spacer"/>
 				<FIELD elem_type="textarea" textarea_rows="6" caption="Текст sms &lt;br&gt; уведомления" db_field="SMStext" mandatory="no" datatype="string" row_type="common" title="В тексте sms уведомления можно указывать шаблоны на основе печатных форм"/>
 			</ELEMENTS>
