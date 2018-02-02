@@ -103,7 +103,7 @@
             <FIELD elem_type="email" caption="E-mail" db_field="Email" mandatory="no" datatype="string" row_type="common"/>
             <FIELD elem_type="text" caption="ICQ" db_field="ICQ" mandatory="no" datatype="string" row_type="common"/>
             <FIELD elem_type="text" caption="Skype" db_field="Skype" mandatory="no" datatype="string" row_type="common"/>
-            <FIELD elem_type="text" caption="Google account" db_field="Google" mandatory="no" datatype="string" row_type="common" title="Формат: login@gmail.com. Используется для Google Talk уведомлений"/>
+            <FIELD elem_type="spacer"/>
             <FIELD elem_type="text" caption="Дополнительные E-mail" db_field="ExtraEmails" mandatory="no" datatype="string" row_type="common" title="Укажите через запятую дополнительные E-mail адреса контакта. Они будут использоваться для идентификации отправителя при получении почты."/>
 
             <FIELD elem_type="splitter" caption="Дополнительно"/>
@@ -137,7 +137,7 @@
             <!--
 			<FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по icq" db_field="isicqnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
 			-->
-            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по GTalk" db_field="isgtalknotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться по Jabber на указанный в карточке Google account"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по telegram" db_field="istelegramnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться пользователю в telegram"/>
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по SMS" db_field="issmsnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться на мобильный телефон, указанный в карточке"/>
 			
          </ELEMENTS>

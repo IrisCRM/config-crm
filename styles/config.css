@@ -31,9 +31,9 @@ div.email_reply_logo {
 }
 
 
-div.skype_img {
+div.skype_img,
+div.wrench {
 	background-color	: none;
-	background-image	: url(images/skype.png);
 	background-position	: center;
 	background-repeat	: no-repeat;	
 
@@ -42,6 +42,15 @@ div.skype_img {
 	padding-left		: 1px;
 	width				: 20px;
 	height				: 17px;
+}
+
+div.skype_img {
+	background-image	: url(images/skype.png);
+}
+
+div.wrench {
+	background-image	: url(images/wrench.png);
+	background-size   : 17px auto;
 }
 
 select.menu-fastcreate-select {

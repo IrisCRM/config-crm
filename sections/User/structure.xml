@@ -45,7 +45,7 @@
 			
             <FIELD elem_type="splitter" caption="Для сотрудников"/>
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Распределять новых клиентов" db_field="isClientDistribution" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="При самостоятельной регистрации пользователя в системе ему будет назначаться отвественный из тех пользователей, у корых установлен этот признак"/>
-            <FIELD elem_type="spacer"/>
+            <FIELD elem_type="text" caption="Telegram (id чата)" db_field="TelegramChatId" mandatory="no" datatype="int" row_type="common" title="Чтобы узнать id чата напишите что-нибудь боту. Используется для отправки уведомлений"/>
             <FIELD elem_type="splitter" caption="О контакте"/>
             <FIELD elem_type="select" caption="Тип" db_field="ContactTypeID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_table="iris_ContactType" row_type_parent_display_column="Name"/>
             <FIELD elem_type="lookup" caption="Компания" db_field="AccountID" mandatory="no" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Account" row_type_parent_display_column="Name"/>
@@ -56,7 +56,7 @@
 			<!-- Уведомления -->
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Разрешить использовать информацию" db_field="ispersonalinfoagree" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Разрешить использовать указанную информацию только внутри компании"/>
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по email" db_field="isnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления для не будут отправляться на email, указанный в карточке"/>
-            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по GTalk" db_field="isgtalknotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться по Jabber на указанный в карточке Google account"/>
+            <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по telegram" db_field="istelegramnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться пользователю в telegram"/>
             <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Получать уведомления по SMS" db_field="issmsnotify" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary" title="Если галочка не установлена, то автоматические уведомления не будут отправляться на мобильный телефон, указанный в карточке"/>
          </ELEMENTS>
       </EDITCARD>
