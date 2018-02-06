@@ -209,6 +209,7 @@ irisControllers.classes.c_Email = IrisCardController.extend({
         this.fieldProperty("EmailTypeID", "readonly", true);
         this.fieldProperty("e_from", "readonly", true);
         this.fieldProperty("e_to", "readonly", true);
+        this.fieldProperty("e_cc", "readonly", true);
         this.fieldProperty("Subject", "readonly", true);
         this.fieldProperty("Subject", "required", false);
     },
