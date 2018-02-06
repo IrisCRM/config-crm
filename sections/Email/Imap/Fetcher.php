@@ -358,8 +358,21 @@ class Fetcher extends Config implements FetcherInterface
 
     protected function getEmailLinks($from, $subject)
     {
-        $cmd = $this->connection->prepare("select id as contactid, accountid, ownerid from iris_contact
-            where email=:email or id in (select contactid from iris_contact_email where email = :email)");
+        // iris_contact_email, iris_account_email has lowered emails (see trigger function)
+        $sql = "select id as contactid, accountid, ownerid
+        from iris_contact
+        where lower(email)=lower(:email)
+          or id in (
+            select contactid from iris_contact_email
+                where email = lower(:email))
+        union
+        select null as contactid, id as accountid, ownerid
+        from iris_account
+        where lower(email)=lower(:email)
+          or id in (
+            select accountid from iris_account_email
+                where email = lower(:email))";
+        $cmd = $this->connection->prepare($sql);
         $cmd->execute(array(
             ":email" => $from,
         ));
