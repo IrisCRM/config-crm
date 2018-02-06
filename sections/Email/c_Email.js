@@ -206,10 +206,11 @@ irisControllers.classes.c_Email = IrisCardController.extend({
 
     disableInboxMessageFields: function(form) {
         this.disableBodyField(form);
-        form.EmailTypeID.setAttribute('disabled', 'disabled');
-        form.e_from.setAttribute('disabled', 'disabled');
-        form.e_to.setAttribute('disabled', 'disabled');
-        form.Subject.setAttribute('disabled', 'disabled');
+        this.fieldProperty("EmailTypeID", "readonly", true);
+        this.fieldProperty("e_from", "readonly", true);
+        this.fieldProperty("e_to", "readonly", true);
+        this.fieldProperty("Subject", "readonly", true);
+        this.fieldProperty("Subject", "required", false);
     },
 
     disableBodyField: function(form) {
