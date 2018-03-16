@@ -48,17 +48,30 @@ class dg_Email_File extends Config
         $sql = $this->_DB->considerAccess('{file}',
                 "select t0.id as id, 
                 t0.file_filename as name,
-                t1.name as type,
-                t2.name as state,
+                ftp.name as type,
+                fst.name as state,
                 _iris_datetime_to_string[t0.createdate] as created
                 from " . $this->_DB->tableName('{file}') . " t0
-                left join " . $this->_DB->tableName('{filetype}') . " t1 
-                  on t1.id = t0.filetypeid
-                left join " . $this->_DB->tableName('{filestate}') . " t2 
-                  on t2.id = t0.filestateid",
+                left join " . $this->_DB->tableName('{filetype}') . " ftp 
+                  on ftp.id = t0.filetypeid
+                left join " . $this->_DB->tableName('{filestate}') . " fst 
+                  on fst.id = t0.filestateid
+                left join " . $this->_DB->tableName('{project}') . " prj 
+                  on prj.id = t0.projectid
+                left join " . $this->_DB->tableName('{account}') . " acc 
+                  on acc.id = t0.accountid
+                left join " . $this->_DB->tableName('{contact}') . " con 
+                  on con.id = t0.contactid",
                 "where (T0.emailid<>:emailid or T0.emailid is null) 
                   and T0.id not in (select EF.fileid from iris_email_file EF where EF.emailid = :emailid)
-                  and (t0.file_filename like '%' || :search || '%' or :search is null)")
+                  and (
+                    (lower(t0.file_filename) like '%' || lower(:search) || '%') or
+                    (lower(t0.description) like '%' || lower(:search) || '%') or
+                    (lower(prj.number) like '%' || lower(:search) || '%') or
+                    (lower(acc.name) like '%' || lower(:search) || '%') or
+                    (lower(con.name) like '%' || lower(:search) || '%') or
+                    :search is null
+                )")
             . "order by t0.createdate desc";
         $sql = $this->_DB->addPagination($sql, $params["pageNumber"], 100);
         $filter = array(
@@ -70,8 +83,8 @@ class dg_Email_File extends Config
         // Выбранная по умолчанию запись - либо следующая либо текущая цель
         $parameters = array(
             'grid_id' => 'custom_grid_'. md5(time() . rand(0, 10000)),
-            'search_caption' => "Имя файла",
-            'search_title' => "Имя файла или его часть",
+            'search_caption' => "Поиск",
+            'search_title' => "Поиск по названию, описанию, компании, контакту, заказу",
             'search_value' => $params["searchValue"],
             'page_number' => $params["pageNumber"],
             'rows_on_page' => 100,
