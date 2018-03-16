@@ -50,20 +50,20 @@ class ds_Table_Column extends Config
 
 
         //Составим запрос добавления колонки
-        $sql = 'alter table "' . $table_code . '" add "' . $col_code . '" ' . $col_type . ';';
+        $sql = 'alter table "' . $table_code . '" add "' . $col_code . '" ' . $col_type;
         $statement = $con->prepare($sql);
         $statement->execute();
         log_sql($sql, '', 'write');
 
         //Комментарий
-        $sql = 'comment on column "' . $table_code . '"."' . $col_code . '" is \'' . $col_name . '\';';
+        $sql = 'comment on column "' . $table_code . '"."' . $col_code . '" is \'' . $col_name . '\'';
         $statement = $con->prepare($sql);
         $statement->execute();
         log_sql($sql, '', 'write');
 
         //Обязательная
         if ($notnull) {
-            $sql = 'alter table "' . $table_code . '" alter column "' . $col_code . '" set not null;';
+            $sql = 'alter table "' . $table_code . '" alter column "' . $col_code . '" set not null';
             $statement = $con->prepare($sql);
             $statement->execute();
             log_sql($sql, '', 'write');
@@ -79,7 +79,7 @@ class ds_Table_Column extends Config
             }
             $statement = $con->prepare($sql);
             $statement->execute();
-            log_sql($sql . ';', '', 'write');
+            log_sql($sql, '', 'write');
         }
 
         //Внешний ключ
@@ -91,7 +91,7 @@ class ds_Table_Column extends Config
             $sql .= 'on update ' . $key_update_code . ' on delete ' . $key_delete_code;
             $statement = $con->prepare($sql);
             $statement->execute();
-            log_sql($sql . ';', '', 'write');
+            log_sql($sql, '', 'write');
             if ($statement->errorCode() != '00000') {
                 $result['Error'] .= json_encode_str('Ошибка при создании внешнего ключа в физической структуре БД<br/>');
             }
@@ -102,7 +102,7 @@ class ds_Table_Column extends Config
             $sql = 'alter table "' . $table_code . '" add constraint ' . $pk_code . ' primary key (' . $col_code . ') ';
             $statement = $con->prepare($sql);
             $statement->execute();
-            log_sql($sql . ';', '', 'write');
+            log_sql($sql, '', 'write');
             if ($statement->errorCode() != '00000') {
                 $result['Error'] .= json_encode_str('Ошибка при создании первичного ключа в физической структуре БД<br/>');
             }
@@ -113,7 +113,7 @@ class ds_Table_Column extends Config
             $sql = 'create index "' . $idx_code . '" on "' . $table_code . '" using btree (' . $col_code . ')';
             $statement = $con->prepare($sql);
             $statement->execute();
-            log_sql($sql . ';', '', 'write');
+            log_sql($sql, '', 'write');
             if ($statement->errorCode() != '00000') {
                 $result['Error'] .= json_encode_str('Ошибка при создании индекса в физической структуре БД<br/>');
             }
@@ -167,10 +167,10 @@ class ds_Table_Column extends Config
         //Если изменили название (комментарий)
         if ($new_column_comment != $old_column_comment) {
             $sql = "COMMENT ON COLUMN " . $table_name . "." . $new_column_name . " IS '" .
-                json_decode_str($new_column_comment) . "';";
+                json_decode_str($new_column_comment) . "'";
             $statement = $con->prepare($sql);
             $statement->execute();
-            log_sql($sql . ';', '', 'write');
+            log_sql($sql, '', 'write');
             //Если ошибка
             if ($statement->errorCode() != '00000') {
                 $result['Error'] .= json_encode_str('Ошибка при изменении комментария колонки в БД. ');
@@ -179,13 +179,15 @@ class ds_Table_Column extends Config
 
         //Если изменили тип
         if ($new_column_type != $old_column_type) {
-            $sql = "alter table " . $table_name . " alter column " . $new_column_name . " type " . $new_column_type_name . ";";
+            $sql = "alter table " . $table_name . " alter column " . $new_column_name . " type " . $new_column_type_name;
             $statement = $con->prepare($sql);
             $statement->execute();
             log_sql($sql, '', 'write');
             //Если ошибка
             if ($statement->errorCode() != '00000') {
-                $result['Error'] .= json_encode_str("Ошибка при изменении типа колонки в БД. ");
+                $errorInfo = $statement->errorInfo();
+                $result['Error'] .= json_encode_str("Ошибка при изменении типа колонки в БД: " .
+                    $errorInfo[2]);
             }
         }
 
@@ -193,13 +195,15 @@ class ds_Table_Column extends Config
         if ($new_column_null != $old_column_null) {
             $sql = "alter table " . $table_name . " alter column " . $new_column_name;
             $sql .= 1 == $new_column_null ? " set " : " drop ";
-            $sql .= "not null;";
+            $sql .= "not null";
             $statement = $con->prepare($sql);
             $statement->execute();
-            log_sql($sql . ';', '', 'write');
+            log_sql($sql, '', 'write');
             //Если ошибка
             if ($statement->errorCode() != '00000') {
-                $result['Error'] .= json_encode_str("Ошибка при изменении свойства NOT NULL колонки в БД. ");
+                $errorInfo = $statement->errorInfo();
+                $result['Error'] .= json_encode_str("Ошибка при изменении свойства NOT NULL колонки в БД: " .
+                        $errorInfo[2]);
             }
         }
 
@@ -207,7 +211,7 @@ class ds_Table_Column extends Config
         if ($new_default != $old_default) {
             //TODO: сделать анализ на тип и делать кавычки или нет в зависимости от типа
             $sql = "alter table " . $table_name . " alter column " . $new_column_name;
-            $sql .= '' != $new_default ? " set default '" . $new_default . "';" : " drop default;";
+            $sql .= '' != $new_default ? " set default '" . $new_default . "'" : " drop default";
             $statement = $con->prepare($sql);
             $statement->execute();
             log_sql($sql, '', 'write');
@@ -226,7 +230,7 @@ class ds_Table_Column extends Config
             $sql = "alter table " . $table_name . " drop constraint " . GetArrayValueByName($old_values, 'fkname');
             $statement = $con->prepare($sql);
             $statement->execute();
-            log_sql($sql . ';', '', 'write');
+            log_sql($sql, '', 'write');
             //Если ошибка
             if ($statement->errorCode() != '00000') {
                 $result['Error'] .= json_encode_str("Ошибка при удалении внешнего ключа в БД. ");
@@ -236,7 +240,7 @@ class ds_Table_Column extends Config
                 $sql = "alter table " . $table_name . " add constraint " . GetArrayValueByName($new_values, 'fkname') .
                     " foreign key (" . $new_column_name . ") " .
                     "references " . $new_fktable_name . "(id) match simple " .
-                    "on update " . $new_onupdate_code . " on delete " . $new_ondelete_code . ";";
+                    "on update " . $new_onupdate_code . " on delete " . $new_ondelete_code;
                 $statement = $con->prepare($sql);
                 $statement->execute();
                 log_sql($sql, '', 'write');
@@ -249,7 +253,7 @@ class ds_Table_Column extends Config
 
         //Если изменили первичный ключ, то удалим его и создадим снова
         if (GetArrayValueByName($new_values, 'pkname') != GetArrayValueByName($old_values, 'pkname')) {
-            $sql = "alter table " . $table_name . " drop constraint " . GetArrayValueByName($old_values, 'pkname') . ";";
+            $sql = "alter table " . $table_name . " drop constraint " . GetArrayValueByName($old_values, 'pkname');
             $statement = $con->prepare($sql);
             $statement->execute();
             log_sql($sql, '', 'write');
@@ -260,13 +264,15 @@ class ds_Table_Column extends Config
 
             if ('' != GetArrayValueByName($new_values, 'pkname')) {
                 $sql = "alter table " . $table_name . " add constraint " . GetArrayValueByName($new_values, 'pkname') .
-                    " primary key (" . $new_column_name . ");";
+                    " primary key (" . $new_column_name . ")";
                 $statement = $con->prepare($sql);
                 $statement->execute();
                 log_sql($sql, '', 'write');
                 //Если ошибка
                 if ($statement->errorCode() != '00000') {
-                    $result['Error'] .= json_encode_str("Ошибка при добавлении первичного ключа в БД. ");
+                    $errorInfo = $statement->errorInfo();
+                    $result['Error'] .= json_encode_str("Ошибка при добавлении первичного ключа в БД: " .
+                        $errorInfo[2]);
                 }
             }
         }
@@ -276,7 +282,7 @@ class ds_Table_Column extends Config
             $sql = "drop index " . GetArrayValueByName($old_values, 'indexname');
             $statement = $con->prepare($sql);
             $statement->execute();
-            log_sql($sql . ';', '', 'write');
+            log_sql($sql, '', 'write');
             //Если ошибка
             if ($statement->errorCode() != '00000') {
                 $result['Error'] .= json_encode_str("Ошибка при удалении индекса в БД. ");
@@ -284,7 +290,7 @@ class ds_Table_Column extends Config
 
             if ('' != GetArrayValueByName($new_values, 'indexname')) {
                 $sql = "create index " . GetArrayValueByName($new_values, 'indexname') .
-                    " on " . $table_name . " using btree (" . $new_column_name . ");";
+                    " on " . $table_name . " using btree (" . $new_column_name . ")";
                 $statement = $con->prepare($sql);
                 $statement->execute();
                 log_sql($sql, '', 'write');
