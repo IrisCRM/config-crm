@@ -20,7 +20,7 @@ class ds_Table_Column extends Config
             return $this->afterInsert($id);
         }
         elseif ($old_data && $new_data) {
-            return $this->afterUpdate($id, $new_data['FieldValues']);
+            return $this->afterUpdate($id, $old_data['FieldValues'], $new_data['FieldValues']);
         }
     }
 
@@ -130,31 +130,10 @@ class ds_Table_Column extends Config
         return $result;
     }
 
-    function afterUpdate($p_record_id, $p_values)
+    function afterUpdate($p_record_id, $old_values, $new_values)
     {
         $con = $this->connection;
         $result = null;
-
-        //Javascript передает сюда уже не ассоциативные массивы, а объекты, преобразуем их в ассоциативные массивы
-        $old_values = FiledValuesToAssoc(json_decode($p_values));
-
-        //Получим текущие значения полей
-        $new_values = GetFormatedFieldValuesByID('Table_Column', $p_record_id, [
-            'tableid',
-            'name',
-            'code',
-            'description',
-            'columntypeid',
-            'isnotnull',
-            'defaultvalue',
-            'fkname',
-            'fktableid',
-            'ondeleteid',
-            'onupdateid',
-            'pkname',
-            'indexname'
-        ], $con);
-        $new_values = $new_values['FieldValues'];
 
         list($table_name) = GetFieldValuesByID('Table', GetArrayValueByName($new_values, 'tableid'), ['code'], $con);
         $new_column_name = GetArrayValueByName($new_values, 'code');
