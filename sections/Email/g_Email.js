@@ -21,6 +21,7 @@ irisControllers.classes.g_Email = IrisGridController.extend({
         var recordContent = wrapper.find('tr[parent_id="' + recordId + '"]');
         if (recordContent.length === 1) {
             recordContent.show();
+            this.scrollToWrapper(el, recordContent);
             return;
         }
         var columnCount = el.find('>td').length;
@@ -56,9 +57,21 @@ irisControllers.classes.g_Email = IrisGridController.extend({
                     instanceName: self.instanceName(),
                     files: data.files
                 }));
+                self.scrollToWrapper(el, mailContent);
                 el.removeClass('grid_newmail');
             }
         });
+    },
+
+    // fix mailContent shown out of scroll range in chrome
+    scrollToWrapper: function(el, mailContent) {
+        var innerDiv = el.closest('div[conttype="inner"]');
+        var mailContentInvisibleOffset =
+            mailContent.offset().top - innerDiv.offset().top;
+
+        if (mailContentInvisibleOffset < 0) {
+            innerDiv.scrollTop(innerDiv.scrollTop() + mailContentInvisibleOffset);
+        }
     },
 
     onCloseMail: function(e) {
