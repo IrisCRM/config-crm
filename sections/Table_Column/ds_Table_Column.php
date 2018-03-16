@@ -227,13 +227,15 @@ class ds_Table_Column extends Config
             || (GetArrayValueByName($new_values, 'ondeleteid') != GetArrayValueByName($old_values, 'ondeleteid'))
             || (GetArrayValueByName($new_values, 'onupdateid') != GetArrayValueByName($old_values, 'onupdateid'))
         ) {
-            $sql = "alter table " . $table_name . " drop constraint " . GetArrayValueByName($old_values, 'fkname');
-            $statement = $con->prepare($sql);
-            $statement->execute();
-            log_sql($sql, '', 'write');
-            //Если ошибка
-            if ($statement->errorCode() != '00000') {
-                $result['Error'] .= json_encode_str("Ошибка при удалении внешнего ключа в БД. ");
+            if ('' != GetArrayValueByName($old_values, 'fkname')) {
+                $sql = "alter table " . $table_name . " drop constraint " . GetArrayValueByName($old_values, 'fkname');
+                $statement = $con->prepare($sql);
+                $statement->execute();
+                log_sql($sql, '', 'write');
+                //Если ошибка
+                if ($statement->errorCode() != '00000') {
+                    $result['Error'] .= json_encode_str("Ошибка при удалении внешнего ключа в БД. ");
+                }
             }
 
             if ('' != GetArrayValueByName($new_values, 'fkname')) {
@@ -253,13 +255,15 @@ class ds_Table_Column extends Config
 
         //Если изменили первичный ключ, то удалим его и создадим снова
         if (GetArrayValueByName($new_values, 'pkname') != GetArrayValueByName($old_values, 'pkname')) {
-            $sql = "alter table " . $table_name . " drop constraint " . GetArrayValueByName($old_values, 'pkname');
-            $statement = $con->prepare($sql);
-            $statement->execute();
-            log_sql($sql, '', 'write');
-            //Если ошибка
-            if ($statement->errorCode() != '00000') {
-                $result['Error'] .= json_encode_str("Ошибка при удалении первичного ключа в БД. ");
+            if ('' != GetArrayValueByName($old_values, 'pkname')) {
+                $sql = "alter table " . $table_name . " drop constraint " . GetArrayValueByName($old_values, 'pkname');
+                $statement = $con->prepare($sql);
+                $statement->execute();
+                log_sql($sql, '', 'write');
+                //Если ошибка
+                if ($statement->errorCode() != '00000') {
+                    $result['Error'] .= json_encode_str("Ошибка при удалении первичного ключа в БД. ");
+                }
             }
 
             if ('' != GetArrayValueByName($new_values, 'pkname')) {
@@ -279,13 +283,15 @@ class ds_Table_Column extends Config
 
         //Если изменили индекс, то удалим его и создадим снова
         if (GetArrayValueByName($new_values, 'indexname') != GetArrayValueByName($old_values, 'indexname')) {
-            $sql = "drop index " . GetArrayValueByName($old_values, 'indexname');
-            $statement = $con->prepare($sql);
-            $statement->execute();
-            log_sql($sql, '', 'write');
-            //Если ошибка
-            if ($statement->errorCode() != '00000') {
-                $result['Error'] .= json_encode_str("Ошибка при удалении индекса в БД. ");
+            if ('' != GetArrayValueByName($old_values, 'indexname')) {
+                $sql = "drop index " . GetArrayValueByName($old_values, 'indexname');
+                $statement = $con->prepare($sql);
+                $statement->execute();
+                log_sql($sql, '', 'write');
+                //Если ошибка
+                if ($statement->errorCode() != '00000') {
+                    $result['Error'] .= json_encode_str("Ошибка при удалении индекса в БД. ");
+                }
             }
 
             if ('' != GetArrayValueByName($new_values, 'indexname')) {
