@@ -61,6 +61,29 @@
          </ELEMENTS>
       </EDITCARD>
       <DETAILS>
+         <DETAIL caption="Токены" name="d_User_Token" detail_fk_column="ContactID" detail_table="iris_contact_token">
+            <GRID name="dg_User_Token" lines_count="1" sort_column="1" sort_direction="desc" display_search="yes">
+               <COLUMNS>
+                  <ITEM db_field="createdate" caption="Дата создания" width="20%" row_type="common" row_datatype="datetime"/>
+                  <ITEM db_field="name" caption="Название" width="20%" row_type="common"/>
+                  <ITEM db_field="code" caption="Токен" width="20%" row_type="common"/>
+                  <ITEM db_field="expired_date" caption="Дата окончания" width="20%" row_type="common" row_datatype="datetime"/>
+                  <ITEM caption="Активен?" db_field="isactive" width="10%" row_type="domain" row_type_domain_name="d_yn_binary"/>
+               </COLUMNS>
+            </GRID>
+            <EDITCARD name="dc_User_Token" caption="Токен" width="700" height="200" layout="1, 1, 1, 2, 2">
+               <ELEMENTS>
+                  <FIELD elem_type="lookup" caption="Контакт" db_field="ContactID" mandatory="yes" datatype="id" row_type="fk_column" row_type_parent_source_type="grid" row_type_parent_source_name="Contact" row_type_parent_display_column="Name"/>
+                  <FIELD elem_type="text" caption="Название" db_field="name" mandatory="yes" datatype="string" row_type="common"/>
+                  <FIELD elem_type="text" caption="Токен" db_field="code" mandatory="yes" datatype="string" row_type="common"/>
+                  <FIELD elem_type="text" caption="Дата окончания" db_field="expired_date" mandatory="no" datatype="datetime" row_type="date"/>
+                  <FIELD elem_type="spacer"/>
+                  <FIELD elem_type="checkbox" row_type_checked_index="1" caption="Активен" db_field="isactive" mandatory="no" datatype="int" row_type="domain" row_type_domain_name="d_yn_binary"/>
+                  <FIELD elem_type="spacer"/>
+               </ELEMENTS>
+            </EDITCARD>
+         </DETAIL>
+
          <DETAIL caption="События авторизации" name="d_Contact_Authevent" detail_fk_column="ContactID" detail_table="iris_authevent">
             <GRID lines_count="1" sort_column="1" sort_direction="desc" hide_buttons="yes" display_search="yes">
                <COLUMNS>
