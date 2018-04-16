@@ -23,7 +23,10 @@ class ds_User_Token extends Config
             return null;
         }
 
-        return FieldValueFormat('code', $this->generateToken());
+        $result = FieldValueFormat('code', $this->generateToken());
+        $result = FieldValueFormat('isactive', 1, null, $result);
+
+        return $result;
     }
 
     protected function generateToken()
