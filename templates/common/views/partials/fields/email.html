@@ -1,0 +1,11 @@
+<div class="form-group {% if errorMessage %}has-error{% endif %}">
+    <label {% if id %}for="{{ id }}"{% endif %}>{{ title }}</label>
+    <input
+            type="email"
+            name="{{ name }}"
+            class="form-control"
+            {% if id %}id="{{ id }}"{% endif %}
+            {% if value %}value="{{value}}"{% endif %}
+    >
+    <span class="help-block">{{ errorMessage ?: help }}</span>
+</div>

@@ -1,0 +1,11 @@
+<div class="form-group {% if errorMessage %}has-error{% endif %}">
+    <label {% if id %}for="{{ id }}"{% endif %}>{{ title }}</label>
+    <textarea
+            type="text"
+            name="{{ name }}"
+            class="form-control"
+            {% if id %}id="{{ id }}"{% endif %}
+            {% if rows %}rows="{{ rows }}"{% endif %}
+    >{{ value }}</textarea>
+    <span class="help-block">{{ errorMessage ?: help }}</span>
+</div>

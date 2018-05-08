@@ -1,0 +1,20 @@
+<div class="form-group {% if errorMessage %}has-error{% endif %}">
+    <label>{{ title }}</label>
+
+    {% for item in values %}
+    <div class="radio">
+        <label>
+            <input
+                    type="radio"
+                    name="{{ name }}"
+                    {% if item['id'] %}id="{{ item['id'] }}"{% endif %}
+                    value="{{ item['value'] }}"
+                    {% if checkedValue == item['value'] %}checked{% endif %}
+            >
+            {{ item['title'] }}
+            <span class="help-block">{{ item['help'] }}</span>
+        </label>
+    </div>
+    {% endfor %}
+    <span class="help-block">{{ errorMessage }}</span>
+</div>

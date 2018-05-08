@@ -1,0 +1,87 @@
+{% extends "common_layout.html" %}
+
+{% block jumbotron %}
+<h1><a href="{{ url('page/License/request') }}">Запрос лицензий</a></h1>
+{% endblock %}
+
+{% block content %}
+
+{% if data['file'] %}
+<ol class="message bg-info">
+    <li>
+        Сохраните <a href="data:application/octet-stream;charset=utf-16le;base64,{{ base64_encode(data['file']) }}"
+           download="iriscrm-lic.req">файл с запросом лицензии</a>
+    </li>
+    <li>
+        {# Отправьте его разработчикам с помощью <a href="http://license.iris-crm.ru/manual">страницы запроса лицензий</a> #}
+        Отправьте его разработчикам с помощью <a href="http://iris-crm.ru/online-license-request">страницы запроса лицензий</a>
+    </li>
+</ol>
+{% endif %}
+
+<form id="form" action="{{ url('page/License/request') }}" method="POST">
+
+    <input type="text" name="login" class="form-control hidden" id="login" value="">
+
+    {% include 'partials/fields/text.html' with {
+        name: 'email',
+        title: 'Ваш e-mail для связи',
+        errorMessage: errors['fields']['email']['message'],
+        value: request.request.get('email') ?: values['email']
+    } %}
+
+    {% include 'partials/fields/text.html' with {
+        name: 'account',
+        title: 'Компания',
+        errorMessage: errors['fields']['account']['message'],
+        value: request.request.get('account') ?: values['account']
+    } %}
+
+    {% include 'partials/fields/text.html' with {
+        name: 'allcount',
+        title: 'Общее число пользователей',
+        errorMessage: errors['fields']['allcount']['message'],
+        value: request.request.get('allcount') ?: values['allcount']
+    } %}
+
+    {% include 'partials/fields/text.html' with {
+        name: 'count',
+        title: 'Число одновременно работающих пользователей',
+        errorMessage: errors['fields']['count']['message'],
+        value: request.request.get('count') ?: values['count']
+    } %}
+
+    {% include 'partials/fields/textarea.html' with {
+        name: 'comment',
+        title: 'Комментарий',
+        errorMessage: errors['fields']['comment']['message'],
+        value: request.request.get('comment') ?: values['comment']
+    } %}
+
+    {% include 'partials/fields/radio.html' with {
+        name: 'reqtype',
+        title: 'Способ отправки запроса',
+        errorMessage: errors['fields']['reqtype']['message'],
+        checkedValue: request.request.get('reqtype') ?: values['reqtype'],
+        values: [
+            {
+                'value': 'int',
+                'title': 'Отправка запроса напрямую',
+                'help': 'Предпочтительно, если есть соединение с Интернет'
+            },
+            {
+                'value': 'file',
+                'title': 'Формирование файла для отправки вручную',
+                'help': 'Если нет соединения с Интернет'
+            }
+        ]
+    } %}
+
+    <button
+            class="btn btn-primary"
+            name="reqbtn"
+            type="submit">
+        Запросить лицензии
+    </button>
+</form>
+{% endblock %}

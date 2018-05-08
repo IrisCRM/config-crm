@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        {% block standard_css %}
+        <link href="{{ asset_path('build/themes/common/css/common.min.css') }}" rel="stylesheet" type="text/css"/>
+        <link href="{{ asset_path('build/bootstrap/css/bootstrap.css') }}" rel="stylesheet" type="text/css"/>
+        {% endblock %}
+    {% endblock %}
+</head>
+<body>
+{% block body %}
+    {% block header %}
+    <div class="jumbotron">
+        <div class="container">
+            {% block jumbotron %}
+            {% endblock %}
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block container %}
+    <div class="container">
+        {% if status %}
+        <p class="message bg-{{ status }}">{{ (messages ? implode('<br/> ', messages) : status) | raw}}</p>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% endblock %}
+
+    {% block footer %}
+    {% endblock %}
+{% endblock %}
+</body>
+</html>

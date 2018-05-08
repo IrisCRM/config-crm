@@ -1,0 +1,11 @@
+.jumbotron {
+    background-image: url('/build/images/login/gplaypattern.png');
+    box-shadow: 0 0 15pt rgba(0, 0, 0, 0.25);
+}
+.message {
+    padding: 10pt;
+}
+ol.message {
+    padding-left: 20pt;
+    padding-right: 20pt;
+}
