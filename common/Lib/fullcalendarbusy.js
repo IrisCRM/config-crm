@@ -2791,7 +2791,6 @@ function commonlyAmbiguate(inputs, preserveTime) {
 // call this if you want Moment's original format method to be used
 function momentFormat(mom, formatStr) {
     return moment(mom).format(formatStr);
-	//return moment.fn.format.call(mom, formatStr);
 }
 
 
