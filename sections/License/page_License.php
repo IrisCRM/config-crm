@@ -89,7 +89,7 @@ class page_License extends Config
             'Content-Type' => 'application/x-www-form-urlencoded',
         ];
         $fileData = 'data=' . urlencode($file);
-        $licenseRequestPage = 'http://license-request.iriscrm.ru/';
+        $licenseRequestPage = 'http://license-request.iris-crm.ru/';
         $webRequest = new Request('POST', $licenseRequestPage, $headers, $fileData);
         $response = $client->send($webRequest);
     }
