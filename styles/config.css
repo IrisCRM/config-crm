@@ -61,3 +61,7 @@ select.menu-fastcreate-select {
 .fc-sat, .fc-sun {
 	background-color: #fee;
 }
+
+.fc-day-grid .fc-row {
+  min-height: 40px;
+}
