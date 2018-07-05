@@ -66,7 +66,7 @@ class s_Project extends Config
                     $stage['probability']));
             $this->mergeFields($result, $this->formatField('ProjectStageID', 
                     $stage['id']));
-            $date = $this->_Local->dbDateTimeToLocal($this->_DB->datetime());
+            $date = $this->_Local->dbDateToLocal($this->_DB->datetime());
             $this->mergeFields($result, $this->formatField('FinishDate', $date));
         }
         return $result;
