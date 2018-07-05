@@ -301,6 +301,7 @@ irisControllers.classes.u_CalendarBusy = IrisCardController.extend({
       if (!jQuery.support.boxModel) {
         height -= 4;
       }
+      height -= 45; // fix
 
       return height;
     },
