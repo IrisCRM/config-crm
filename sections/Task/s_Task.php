@@ -296,13 +296,14 @@ class s_Task extends Config
                     $contactinfo = $cmd->fetchAll(PDO::FETCH_ASSOC); // получим компанию по номеру телефона
                 }
                 
-                $this->mergeFields($result, $this->formatField('ContactID', 
-                        $contactinfo[0]['cid'], $contactinfo[0]['cname']));
-                $this->mergeFields($result, $this->formatField('AccountID', 
-                        $contactinfo[0]['aid'], $contactinfo[0]['aname']));
-                $this->mergeFields($result, $this->formatField('ObjectID', 
-                        $contactinfo[0]['oid'], $contactinfo[0]['oname']));
-
+                if ($contactinfo != null) {
+                    $this->mergeFields($result, $this->formatField('ContactID', 
+                            $contactinfo[0]['cid'], $contactinfo[0]['cname']));
+                    $this->mergeFields($result, $this->formatField('AccountID', 
+                            $contactinfo[0]['aid'], $contactinfo[0]['aname']));
+                    $this->mergeFields($result, $this->formatField('ObjectID', 
+                            $contactinfo[0]['oid'], $contactinfo[0]['oname']));
+                }
                 $this->mergeFields($result, $this->formatField('Phone', 
                         $card_params['phone']));
                 $this->mergeFields($result, $this->formatField('PhoneAddl', 
