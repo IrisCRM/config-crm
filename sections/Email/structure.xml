@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <MENU_TAB>
    <TAB section_type="common" caption="Почта" table="iris_Email">
-      <GRID name="g_Email" lines_count="1" ondblclick="null"  sort_column="14" sort_direction="desc">
+      <GRID name="g_Email" lines_count="1" ondblclick="null"  sort_column="13" sort_direction="desc">
          <COLUMNS>
             <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="CASE WHEN exists (select 1 from iris_file where emailid=T0.id) or exists (select 1 from iris_email_file where emailid=T0.id)=true THEN '@' ELSE '' END" column_caption="files" display_format="ongrid"/>
-            <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="case when (select count(E.id) from iris_email E where E.parentemailid = T0.id) &gt; 0 then 'r' else null end" column_caption="reply" display_format="ongrid"/>
-            <ITEM caption="" width="" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="(select count(E.id) from iris_email E where E.parentemailid = T0.id)" column_caption="replycnt" display_format="hidden"/>
-            <ITEM caption="" width="" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="(select E.id from iris_email E where E.parentemailid = T0.id limit 1)" column_caption="replyfirstid" display_format="hidden"/>
+            <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="null" column_caption="answered_icon" display_format="ongrid"/>
+            <ITEM caption="" db_field="isanswered" row_type="common" display_format="hidden" column_caption="isanswered"/>
             <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="CASE WHEN isimportant=1 THEN '*' ELSE '' END" column_caption="star" display_format="ongrid"/>
             <ITEM caption="Письмо" db_field="subject || ' ' || body" width="" row_type="common" row_datatype="fulltext" display_format="none"/>
             <ITEM caption="Тема" db_field="Subject" width="40%" row_type="common"/>
@@ -39,7 +38,7 @@
             values_where_clause="isactive='Y' and (ID in (select tt.EmailAccountID from iris_emailaccount_defaultaccess tt where tt.ContactID = _iris_user_id[] and tt.r = '1') or ID in (select tt.EmailAccountID from iris_emailaccount_outboxaccess tt where tt.ContactID = _iris_user_id[] and tt.r = '1'))"/>
          </FILTERS>
       </GRID>
-      <GRID_WND name="g_Email" lines_count="1" caption="Письма" width="700" height="280">
+      <GRID_WND name="g_Email" lines_count="1" caption="Письма" width="800" height="280">
          <COLUMNS>
             <ITEM caption="Тема" db_field="Subject" width="30%" row_type="common"/>
             <ITEM db_field="body" caption="Сообщение" width="" row_type="common" display_format="none"/>

@@ -100,7 +100,9 @@ class s_Email extends Config
     function onAfterPost($tableName, $recordId, $oldData, $newData) {
         // _reply_email_id 3a79d78c-9072-4317-1a80-2fb1c6b25784
         // _params {"replyEmailId":"3a79d78c-9072-4317-1a80-2fb1c6b25784"}
-        $this->setParentEmailID($recordId, isset($_POST['_reply_email_id']) ? $_POST['_reply_email_id'] : null);
+        $replyEmailId = isset($_POST['_reply_email_id']) ? $_POST['_reply_email_id'] : null;
+        $this->setParentEmailID($recordId, $replyEmailId);
+        $this->markEmailAsAnswered($replyEmailId);
 
         if (isset($_POST['_forward_email_id'])) {
             $this->copyAttachments($recordId, $_POST['_forward_email_id']);
@@ -119,6 +121,20 @@ class s_Email extends Config
 
         $cmd = $con->prepare("update iris_email set parentemailid = :parentid where id=:id");
         $cmd->execute(array(":parentid" => $parentEmailID, ":id" => $recordId));
+    }
+
+    /**
+     * Установить флаг "Отвеченное письмо" (isanswered) для письма
+     */
+    protected function markEmailAsAnswered($emailID) {
+        $con = $this->connection;
+
+        if (empty($emailID)) {
+            return;
+        }
+
+        $cmd = $con->prepare("update iris_email set isanswered = :isanswered where id=:id");
+        $cmd->execute(array(":isanswered" => 1, ":id" => $emailID));
     }
 
     protected function copyAttachments($recordId,  $forwardEmailID)

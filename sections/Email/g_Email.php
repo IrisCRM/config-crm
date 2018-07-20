@@ -54,6 +54,25 @@ class g_Email extends Config
         return array("success" => $success, "currentValue" => $currentValue, "val" => $val);
     }
 
+    function getEmailAnswers($params) {
+        $emailId = $params['recordId'];
+        $emailInfo = $this->getEmailInfo($emailId);
+
+        // права R
+        GetUserRecordPermissions('iris_email', $emailId, GetUserId(), $permissions);
+        if ($permissions['r'] == 0) {
+            return array("success" => 0);
+        }
+
+        $con = $this->connection;
+        $cmd = $con->prepare("select id from iris_email where parentemailid=:id");
+        $cmd->execute(array(":id" => $emailId));
+        $ids = $cmd->fetchAll(PDO::FETCH_COLUMN, 0);
+        $success = ($cmd->errorCode() == '00000' ? 1 : 0);
+
+        return array("success" => $success, "answersIds" => $ids);
+    }
+
     function sendEmail($params) {
         $this->dispatch('email:send', [
             'emailId' => $params['recordId'],

@@ -108,7 +108,7 @@ irisControllers.classes.g_Email = IrisGridController.extend({
     highlightRows: function(rows) {
         var files_col_idx = getItemIndexByParamValue(rows[0].cells, 'db_field', 'files');
         var star_col_idx = getItemIndexByParamValue(rows[0].cells, 'db_field', 'star');
-        var reply_col_idx = getItemIndexByParamValue(rows[0].cells, 'db_field', 'reply');
+        var answered_col_idx = getItemIndexByParamValue(rows[0].cells, 'db_field', 'answered_icon');
 
         // со второй строки, первая - заголовок
         for (var i = 1; i < rows.length; i++) {
@@ -143,11 +143,15 @@ irisControllers.classes.g_Email = IrisGridController.extend({
             } catch (e) {}
             // прорисуем значки для писем, на которые есть ответы
             try {
-                var reply_td = $(rows[i].cells[reply_col_idx]);
-                if (parseInt(reply_td.up('tr').getAttribute('replycnt'), 10) > 0)
-                    reply_td.update('').setStyle({padding: '0'}).update('<div class="email_reply_logo" onclick="'+this.instanceName()+'.openReply(event)" ondblclick="Event.stop(event);" title="Нажмите, чтобы посмотреть ответ(ы) на письмо"></div>');
-                else
-                    reply_td.update('');
+                var tdAnsweredIcon = jQuery(rows[i].cells[answered_col_idx]);
+                if (parseInt(tdAnsweredIcon.closest('tr').attr('isanswered'), 10) > 0) {
+                    tdAnsweredIcon
+                      .html('<div class="email_reply_logo" onclick="'+this.instanceName()+'.openReply(event)" ondblclick="Event.stop(event);" title="Нажмите, чтобы посмотреть ответ(ы) на письмо"></div>')
+                      .css({padding: '0'});
+                }
+                else {
+                    // tdAnsweredIcon.html('');
+                }
             } catch (e) {}
         }
     },
@@ -312,11 +316,43 @@ irisControllers.classes.g_Email = IrisGridController.extend({
         var row = cell.up('tr');
 
         Event.stop(event); // прерываем просачивание события, чтобы не происходил выбор строки таблицы записей
-        if (row.getAttribute('replycnt') == '1')
-            openCard({source_name: 'Email', rec_id: row.getAttribute('replyfirstid')});
-        else {
-            // TODO: изменить способ передачи условия
-            opengridwindow(Math.random(), '', 'grid', 'Email', " T0.id in (select E.id from iris_email E where E.parentemailid = '"+row.getAttribute('rec_id')+"')");
-        }
+
+        Transport.request({
+            section: "Email",
+            'class': "g_Email",
+            method: 'getEmailAnswers',
+            parameters: {
+                recordId: cell.up('tr').getAttribute('rec_id'),
+            },
+            skipErrors: ['class_not_found', 'file_not_found'],
+            onSuccess: function(transport) {
+                var result = transport.responseText;
+                cell.removeClassName('email_star_logo_loading');
+                if (result.isJSON() == true) {
+                    var data = result.evalJSON().data;
+                    if (
+                        !data.success ||
+                        (data.answersIds || []).length == 0
+                    ) {
+                        wnd_alert("Писем не найдено");
+                        return;
+                    }
+                    if (data.answersIds.length == 1) {
+                        openCard({
+                            source_name: 'Email',
+                            rec_id: data.answersIds[0]
+                        });
+                        return;
+                    }
+                    if (data.answersIds.length > 1) {
+                        idStr = data.answersIds.map(
+                            function(item) { return "'" + item + "'"}
+                        ).join(', ');
+                        opengridwindow(Math.random(), '', 'grid', 'Email',
+                            " T0.id in (" + idStr + ")");
+                    }
+                }
+            }
+        });
     }
 });
