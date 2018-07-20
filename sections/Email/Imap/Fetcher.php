@@ -225,6 +225,7 @@ class Fetcher extends Config implements FetcherInterface
 
             $mailboxes = $this->getMailboxes($emailAccount);
             if (count($mailboxes) === 0) {
+                $this->debug("no mailboxes for sync");
                 continue;
             }
 

@@ -26,8 +26,8 @@ class s_EmailAccount extends Config
 
     protected function insertDefaultMailbox($id) {
         $sql = "insert into iris_emailaccount_mailbox
-            (id, name, displayname, lastuid, emailaccountid) values
-            (iris_genguid(), :name, :displayname, :lastuid, :emailaccountid)
+            (id, name, displayname, lastuid, emailaccountid, issync) values
+            (iris_genguid(), :name, :displayname, :lastuid, :emailaccountid, :issync)
         ";
         $cmd =$this->connection->prepare($sql);
         $cmd->execute(array(
@@ -35,6 +35,7 @@ class s_EmailAccount extends Config
             ":displayname" => "Входящие",
             ":lastuid" => 0,
             ":emailaccountid" => $id,
+            ":issync" => 1,
         ));
     }
 }
