@@ -4,7 +4,7 @@
       <GRID name="g_Email" lines_count="1" ondblclick="null"  sort_column="13" sort_direction="desc">
          <COLUMNS>
             <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="CASE WHEN exists (select 1 from iris_file where emailid=T0.id) or exists (select 1 from iris_email_file where emailid=T0.id)=true THEN '@' ELSE '' END" column_caption="files" display_format="ongrid"/>
-            <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="null" column_caption="answered_icon" display_format="ongrid"/>
+            <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="null::int" column_caption="answered_icon" display_format="ongrid"/>
             <ITEM caption="" db_field="isanswered" row_type="common" display_format="hidden" column_caption="isanswered"/>
             <ITEM caption="" width="20px" row_type="fk_column_extended" row_type_joins=" " row_type_display_column_with_alias="CASE WHEN isimportant=1 THEN '*' ELSE '' END" column_caption="star" display_format="ongrid"/>
             <ITEM caption="Письмо" db_field="subject || ' ' || body" width="" row_type="common" row_datatype="fulltext" display_format="none"/>
