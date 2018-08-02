@@ -14,7 +14,7 @@ function printform_createButton(p_grid_id, p_button_caption) {
 		
 	var elem = getGridFooterTable(p_grid_id);	
 	
-	var btn_id = 'el'+(Math.random()+"").slice(3);
+	var btn_id = '_el'+(Math.random()+"").slice(3);
 	var button_html = '';
 
    //var filter_where = "displayinsection='1' and T1.code='"+$(p_grid_id).getAttribute('source_name')+"'";
