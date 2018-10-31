@@ -5,7 +5,7 @@
 irisControllers.classes.c_Printform = IrisCardController.extend({
 
   events: {
-      'radiobutton:changed #IsTextUse': 'toggleFields'
+      'field:edited #IsTextUse': 'toggleFields'
   },
 
   toggleFields: function() {
