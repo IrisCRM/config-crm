@@ -608,9 +608,11 @@ class EmailFetcher extends Config
     protected function insertAttachment($attachment, $params) {
         $con = $this->connection;
         $file_real_name = create_guid();
-        $file_path = Iris::$app->getRootDir() . 'files/' . $file_real_name;
-        $this->debug($file_path, '--------------------filename');
-        file_put_contents($file_path, $attachment['Data']);
+        $temp_path = tempnam(sys_get_temp_dir(), 'fetchjob');
+        file_put_contents($temp_path, $attachment['Data']);
+        $storage = Iris::$app->getContainer()->get('storage.service');
+        $storage->storeFile($file_real_name, $temp_path);
+        unlink($temp_path);
         $attachment_name = $this->decodeAttachmentName($attachment["FileName"]);
 
         $sql = "insert into iris_file (id, createdate, file_file, file_filename, ".
