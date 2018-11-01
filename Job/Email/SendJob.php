@@ -99,6 +99,11 @@ SQL;
                 throw new IrisException($errm);
             }
 
+            // удаление созданных временных файлов
+            foreach ($attachments as $attachment) {
+                unlink($attachment['file_path']);
+            }
+
             // проставление статуса "Отправленое" (или "Рассылка - отправленное")
             $sql = "update iris_email 
                 set emailtypeid = (select et.id from iris_emailtype et where et.code=:code),
