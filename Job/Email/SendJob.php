@@ -73,11 +73,17 @@ SQL;
 SQL;
             $files = $db->exec($sql, [":emailid" => $message->emailId]);
 
+            $storage = Iris::$app->getContainer()->get('storage.service');
             $attachments = [];
             foreach ($files as $file) {
+                // сохраним вложение из хранилища во временный файл
+                $stream = $storage->getFileStream($file['file_file']);
+                $tempPath = tempnam(sys_get_temp_dir(), 'sendjob');
+                file_put_contents($tempPath, $stream);
+
                 $attachments[] = [
                     "file_name" => $file['file_filename'],
-                    "file_path" => Iris::$app->getRootDir() . 'files/' . $file['file_file'],
+                    "file_path" => $tempPath,
                 ];
             }
 
