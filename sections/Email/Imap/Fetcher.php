@@ -545,15 +545,15 @@ class Fetcher extends Config implements FetcherInterface
 
     protected function insertAttachments($emailId, $mailboxId, $accountId, $contactId, $ownerId, $incidentId, $attachments)
     {
+        $storage = Iris::$app->getContainer()->get('storage.service');
         foreach ($attachments as $attachment) {
-            $this->insertAttachment($emailId, $mailboxId, $accountId, $contactId, $ownerId, $incidentId, $attachment);
+            $this->insertAttachment($storage, $emailId, $mailboxId, $accountId, $contactId, $ownerId, $incidentId, $attachment);
         }
     }
 
-    protected function insertAttachment($emailId, $mailboxId, $accountId, $contactId, $ownerId, $incidentId, $attachment)
+    protected function insertAttachment($storage, $emailId, $mailboxId, $accountId, $contactId, $ownerId, $incidentId, $attachment)
     {
         $fileRealName = create_guid();
-        $fileRealPath = Iris::$app->getRootDir() . 'files/' . $fileRealName;
 
         $sql = "insert into iris_file (id, createdate, file_file, file_filename, 
             emailId, accountId, contactId, ownerId, incidentId, fileStateId, date) values 
@@ -577,9 +577,10 @@ class Fetcher extends Config implements FetcherInterface
             throw new EmailException('Cant insert attachment for email');
         }
 
-        if (!rename($attachment["filePath"], $fileRealPath)) {
-            throw new \RuntimeException('Attachment rename error');
+        if (!file_exists($attachment["filePath"])) {
+            throw new \RuntimeException('Attachment save error');
         }
+        $storage->storeFile($fileRealName, $attachment["filePath"]);
 
         $this->insertAccess("iris_file", $attachment["fileId"], $mailboxId);
 
