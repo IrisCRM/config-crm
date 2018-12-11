@@ -817,6 +817,7 @@ return array(
 		'Источник информации' => 'Source of information',
 		'Исходящие' => 'Outbox',
 		'Календарь' => 'Calendar',
+		'Календарь работ' => 'Work calendar',
 		'Карточки' => 'Cards',
 		'Код (алиас)' => 'Code (alias)',
 		'Количество столбцов' => 'Number of columns',
