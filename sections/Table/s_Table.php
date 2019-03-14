@@ -3,6 +3,7 @@
 namespace Iris\Config\CRM\sections\Table;
 
 use Config;
+use PDO;
 
 /**
  * Серверная логика раздела Таблицы
