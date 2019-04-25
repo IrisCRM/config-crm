@@ -28,7 +28,7 @@ irisControllers.classes.g_Changelog = IrisGridController.extend({
             onSuccess: function (transport) {
                 var data = transport.responseText.evalJSON().data;
 
-                $(elem.rows[0].cells[0]).update(data.html);
+                jQuery(elem).find('.grid_footer_left').html(data.html);
                 self.markNewChanges(gridId);
             }
         });
