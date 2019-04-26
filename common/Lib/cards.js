@@ -402,12 +402,7 @@ function c_Common_SetElementValue(p_Element, p_FieldValue) {
 		}
 		else
 		if (p_Element.getAttribute('type') == 'checkbox') {
-			if (p_FieldValue = 0) {
-				p_Element.checked = false;
-			}
-			else {
-				p_Element.checked = p_FieldValue;
-			}
+			p_Element.checked = Boolean(l_FieldValue);
 		}
 		else {
 			// miv 25.08.2010: если элемент - WYSIWYG
@@ -472,8 +467,7 @@ function c_Common_RemindDate_OnChange(p_form)
 	l_date = new Date(Date.parseFormattedString(p_form.RemindDate.value));
 	//Коррекция поля "Время напоминания" ведет к установке напоминания
 	if (l_date != 'Invalid Date') {
-		var l_value = [];
-		l_value['Value'] = 1; 
+		var l_value = {Value: 1};
 		c_Common_SetElementValue(p_form.IsRemind, l_value);
 	}  
 }
